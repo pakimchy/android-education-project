@@ -11,6 +11,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
+import java.security.cert.CertificateException;
 
 import org.apache.http.Header;
 import org.apache.http.message.BasicHeader;
@@ -48,11 +54,37 @@ public class NetworkManager {
 	}
 	private NetworkManager() {
 		mHandler = new Handler(Looper.getMainLooper());
-		client = new AsyncHttpClient();
-		client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
-		client.setTimeout(30000);
-		gson = new Gson();
-		parser = new XMLParser();
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
+			MySSLSocketFactory socketFactory = new MySSLSocketFactory(trustStore);
+			socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			client = new AsyncHttpClient();
+			client.setSSLSocketFactory(socketFactory);			
+			client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
+			client.setTimeout(30000);
+			gson = new Gson();
+			parser = new XMLParser();
+		} catch (KeyStoreException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 	public interface OnResultListener<T> {
