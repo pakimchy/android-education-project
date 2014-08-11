@@ -30,7 +30,7 @@ public class PinnedHeaderAdapter<T extends Comparable<T>> extends BaseAdapter im
 	ArrayList<Integer> mListSectionPos;
 
 	// array list to store list view data
-	ArrayList<String> mListItems;
+	ArrayList mListItems;
 	
 	ArrayList<T> mItems;
 
@@ -40,7 +40,7 @@ public class PinnedHeaderAdapter<T extends Comparable<T>> extends BaseAdapter im
 	public PinnedHeaderAdapter(Context context, ArrayList<T> items) {
 		this.mContext = context;
 		this.mItems = items;
-		this.mListItems = new ArrayList<String>();
+		this.mListItems = new ArrayList();
 		this.mListSectionPos = new ArrayList<Integer>();
 		mLayoutInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		publishResult(items);
@@ -249,12 +249,12 @@ public class PinnedHeaderAdapter<T extends Comparable<T>> extends BaseAdapter im
 
 				if (!prev_section.equals(current_section)) {
 					mListItems.add(current_section);
-					mListItems.add(current_item);
+					mListItems.add(items.get(i));
 					// array list of section positions
 					mListSectionPos.add(mListItems.indexOf(current_section));
 					prev_section = current_section;
 				} else {
-					mListItems.add(current_item);
+					mListItems.add(items.get(i));
 				}
 				i++;
 			}
