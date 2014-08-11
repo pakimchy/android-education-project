@@ -42,9 +42,15 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-				i.setType("image/*");
-				startActivityForResult(i, REQUEST_GALLERY);
+				Intent photoPickerIntent = new Intent(
+						Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				photoPickerIntent.setType("image/*");
+				photoPickerIntent.putExtra("crop", "true");
+				photoPickerIntent.putExtra(MediaStore.EXTRA_OUTPUT, getTempUri());
+				photoPickerIntent.putExtra("outputFormat",
+						Bitmap.CompressFormat.JPEG.toString());				
+				startActivityForResult(photoPickerIntent, REQUEST_GALLERY);
+				
 			}
 		});
 
@@ -80,10 +86,6 @@ public class MainActivity extends Activity {
 		if (resultCode != RESULT_OK)
 			return;
 		switch (requestCode) {
-		case REQUEST_GALLERY:
-			Uri uri = data.getData();
-			cropImage(uri);
-			break;
 		case REQUEST_CAMERA:
 			String imagePath = Environment.getExternalStorageDirectory() + "/"
 					+ TEMP_CAMERA_FILE;
@@ -99,6 +101,7 @@ public class MainActivity extends Activity {
 				e.printStackTrace();
 			}
 			break;
+		case REQUEST_GALLERY:
 		case REQUEST_CROP:
 			String filePath = Environment.getExternalStorageDirectory() + "/"
 					+ TEMP_PHOTO_FILE;
