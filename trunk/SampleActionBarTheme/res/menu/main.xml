@@ -6,7 +6,8 @@
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"
+        android:icon="@drawable/home_button"
         android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        app:showAsAction="always"/>
 
 </menu>

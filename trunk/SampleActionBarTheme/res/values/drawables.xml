@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <drawable name="actionBarBackground">#FF0000</drawable>
-    
+    <drawable name="actionBarBackground">#FFFFFF</drawable>
+    <drawable name="buttonFg">#808080</drawable>
+    <drawable name="buttonBg">#008080</drawable>
 </resources>

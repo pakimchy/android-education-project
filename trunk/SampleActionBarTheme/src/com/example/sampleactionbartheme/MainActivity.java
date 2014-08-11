@@ -24,6 +24,10 @@ public class MainActivity extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().setHomeAsUpIndicator(R.drawable.home_button);
 	}
 
 	@Override
