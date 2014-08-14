@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:background="@android:color/white"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/time_text_panel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true">
+
+        <LinearLayout
+            android:id="@+id/time_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal">
+
+            <com.tripadvisor.seekbar.LetterSpacingTextView
+                android:id="@+id/time_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="40sp"
+                custom:fontType="light" />
+
+            <com.tripadvisor.seekbar.LetterSpacingTextView
+                android:id="@+id/time_meredian_text_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/disabled_gray"
+                android:textSize="18sp"
+                android:maxWidth="60dp"
+                android:singleLine="false"
+                android:maxLines="3"
+                custom:fontType="light" />
+        </LinearLayout>
+
+        <com.tripadvisor.seekbar.RobotoTextView
+            android:id="@+id/time_week_day_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dip"
+            android:layout_marginStart="8dip"
+            android:layout_marginTop="30dip"
+            android:layout_toEndOf="@id/time_view"
+            android:layout_toRightOf="@id/time_view"
+            android:textAllCaps="true"
+            android:textColor="@color/orange"
+            android:textSize="12sp"
+            android:maxWidth="50dip"
+            android:visibility="gone"
+            android:singleLine="false"
+            android:maxLines="3"
+            custom:fontType="regular" />
+    </RelativeLayout>
+
+    <com.tripadvisor.seekbar.CircularClockSeekBar
+        android:id="@+id/clock_seek_bar"
+        android:layout_below="@id/time_text_panel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
