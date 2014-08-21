@@ -12,6 +12,7 @@ public abstract class RefreshPagerAdapter extends FragmentPagerAdapter {
 
 	ArrayList<Fragment> fragmentList = new ArrayList<Fragment>();
 	FragmentManager mFm;
+	Fragment dummy = new Fragment();
 
 	public RefreshPagerAdapter(FragmentManager fm) {
 		super(fm);
@@ -20,21 +21,30 @@ public abstract class RefreshPagerAdapter extends FragmentPagerAdapter {
 
 	public void clearAdapter() {
 		FragmentTransaction ft = mFm.beginTransaction();
+		boolean isAction = false;
 		for (Fragment fragment : fragmentList) {
 			if (fragment != null) {
 				String tag = fragment.getTag();
-				Fragment f = mFm.findFragmentByTag(tag);
-				ft.remove(f);
+				if (tag != null) {
+					Fragment f = mFm.findFragmentByTag(tag);
+					if (f != null) {
+						ft.remove(f);
+						isAction = true;
+					}
+				}
 			}
 		}
-		ft.commit();
+		if (isAction) {
+			ft.commit();
+		}
+		// mFm.executePendingTransactions();
 		fragmentList.clear();
 		notifyDataSetChanged();
 	}
-	
+
 	@Override
 	public int getItemPosition(Object object) {
-		Fragment f = (Fragment)object;
+		Fragment f = (Fragment) object;
 		int index = fragmentList.indexOf(f);
 		if (index == -1) {
 			index = POSITION_NONE;
@@ -47,13 +57,20 @@ public abstract class RefreshPagerAdapter extends FragmentPagerAdapter {
 	@Override
 	public Object instantiateItem(ViewGroup container, int position) {
 		Fragment f = (Fragment) super.instantiateItem(container, position);
-		fragmentList.add(position, f);
+		if (position < fragmentList.size()) {
+			fragmentList.add(position, f);
+		} else {
+			for (int i = fragmentList.size(); i < position; i++) {
+				fragmentList.add(dummy);
+			}
+			fragmentList.add(f);
+		}
 		return f;
 	}
-	
+
 	@Override
 	public void destroyItem(ViewGroup container, int position, Object object) {
-		Fragment fragment = (Fragment)object;
+		Fragment fragment = (Fragment) object;
 		Fragment f = mFm.findFragmentByTag(fragment.getTag());
 		if (f != null) {
 			super.destroyItem(container, position, object);
