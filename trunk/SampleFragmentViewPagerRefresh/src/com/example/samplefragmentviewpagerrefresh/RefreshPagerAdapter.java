@@ -58,7 +58,7 @@ public abstract class RefreshPagerAdapter extends FragmentPagerAdapter {
 	public Object instantiateItem(ViewGroup container, int position) {
 		Fragment f = (Fragment) super.instantiateItem(container, position);
 		if (position < fragmentList.size()) {
-			fragmentList.add(position, f);
+			fragmentList.set(position, f);
 		} else {
 			for (int i = fragmentList.size(); i < position; i++) {
 				fragmentList.add(dummy);
