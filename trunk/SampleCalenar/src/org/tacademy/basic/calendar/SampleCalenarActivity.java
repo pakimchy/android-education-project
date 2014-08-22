@@ -41,8 +41,8 @@ public class SampleCalenarActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				CalendarData data = CalendarManager.getInstance().getNextMonthCalendarData();
-				titleView.setText("" + data.year + " 년 " + (data.month + 1) + "월");
+				CalendarData data = CalendarManager.getInstance().getNextWeekCalendarData(); CalendarManager.getInstance().getNextMonthCalendarData();
+				titleView.setText("" + data.year + " Year " + (data.weekOfYear) + " Week");
 				mAdapter.setCalendarData(data);
 			}
 		});
@@ -53,8 +53,8 @@ public class SampleCalenarActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				CalendarData data = CalendarManager.getInstance().getLastMonthCalendarData();
-				titleView.setText("" + data.year + " 년 " + (data.month + 1) + "월");
+				CalendarData data = CalendarManager.getInstance().getPrevWeekCalendarData(); //CalendarManager.getInstance().getLastMonthCalendarData();
+				titleView.setText("" + data.year + " Year " + (data.weekOfYear) + " Week");
 				mAdapter.setCalendarData(data);
 			}
 		});
@@ -65,8 +65,8 @@ public class SampleCalenarActivity extends Activity {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-        CalendarData data = CalendarManager.getInstance().getCalendarData();
-		titleView.setText("" + data.year + " 년 " + (data.month + 1) + "월");
+        CalendarData data = CalendarManager.getInstance().getWeekCalendarData(); //CalendarManager.getInstance().getCalendarData();
+		titleView.setText("" + data.year + " Year " + (data.weekOfYear) + " Week");
 		mAdapter = new CalendarAdapter(this,data);
 		gridView.setAdapter(mAdapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {

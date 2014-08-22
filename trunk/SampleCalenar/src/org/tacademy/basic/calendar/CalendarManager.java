@@ -25,6 +25,7 @@ public class CalendarManager {
 	private static CalendarManager instance;
 	
 	private Calendar mCalendar;
+	private Calendar mWeekCalendar;
 	
 	private ArrayList mData = new ArrayList();
 	
@@ -37,6 +38,7 @@ public class CalendarManager {
 	
 	private CalendarManager() {
 		mCalendar = Calendar.getInstance();
+		mWeekCalendar = Calendar.getInstance();
 	}
 	
 	public void setDataObject(ArrayList data) throws NoComparableObjectException {
@@ -58,6 +60,48 @@ public class CalendarManager {
 				return clhs.compareToUsingCalendar(crhs);
 			}			
 		});
+	}
+	
+	public CalendarData getPrevWeekCalendarData() {
+		mWeekCalendar.add(Calendar.WEEK_OF_YEAR, -1);
+		return getWeekCalendarData();
+	}
+	public CalendarData getNextWeekCalendarData() {
+		mWeekCalendar.add(Calendar.WEEK_OF_YEAR, 1);
+		return getWeekCalendarData();
+	}
+	public CalendarData getWeekCalendarData() {
+		CalendarData data = new CalendarData();
+		mWeekCalendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+		data.year = mWeekCalendar.get(Calendar.YEAR);
+		data.month = mWeekCalendar.get(Calendar.MONTH);
+		data.weekOfMonth = mWeekCalendar.get(Calendar.WEEK_OF_MONTH);
+		data.weekOfYear = mWeekCalendar.get(Calendar.WEEK_OF_YEAR);
+		for (int i = 0; i < 7 ; i++) {
+			CalendarItem item = new CalendarItem();
+			item.year =mWeekCalendar.get(Calendar.YEAR);
+			item.month = mWeekCalendar.get(Calendar.MONTH);
+			item.dayOfMonth = mWeekCalendar.get(Calendar.DAY_OF_MONTH);
+			item.dayOfWeek = mWeekCalendar.get(Calendar.DAY_OF_WEEK);
+			item.inMonth = true;
+			data.days.add(item);
+			mWeekCalendar.add(Calendar.DAY_OF_YEAR, 1);
+		}
+		mWeekCalendar.add(Calendar.WEEK_OF_YEAR, -1);
+		for(int calendarIndex = 0,dataIndex = 0; calendarIndex < data.days.size() && dataIndex < mData.size(); ) {
+			CalendarComparable cc = (CalendarComparable) mData.get(dataIndex);
+			CalendarItem item = data.days.get(calendarIndex);
+			int compare = cc.compareDate(item.year, item.month, item.dayOfMonth);
+			if (compare < 0) {
+				dataIndex++;
+			} else if (compare > 0) {
+				calendarIndex++;
+			} else {
+				item.items.add(cc);
+				dataIndex++;
+			}
+		}		
+		return data;
 	}
 	
 	public CalendarData getCalendarData(int year, int month) {
