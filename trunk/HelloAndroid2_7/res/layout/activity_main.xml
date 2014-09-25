@@ -20,7 +20,6 @@
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="34dp"
         android:text="@string/my_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -29,18 +28,55 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="21dp"
         android:text="Button" />
 
     <EditText
         android:id="@+id/keyword"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="17dp"
-        android:layout_marginTop="34dp"
         android:ems="10" >
 
         <requestFocus />
     </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btn_google"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go_google" />
+
+        <Button
+            android:id="@+id/btn_dial"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="dial" />
+
+        <Button
+            android:id="@+id/btn_image"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="get image" />
+
+        <Button
+            android:id="@+id/btn_my_activity"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My" />
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/my_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
 
 </LinearLayout>
