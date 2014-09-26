@@ -4,5 +4,7 @@
     <string name="app_name">Sample5BasicWidget</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+	<string name="html"><![CDATA[<font color="red">Hello</font> world]]></string>
+	<string name="htmlstring">Html String</string>
+	<string name="hellostring"><![CDATA[<font color="red">Hello</font> String!!]]></string>
 </resources>

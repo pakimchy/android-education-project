@@ -1,16 +1,40 @@
 package com.example.sample5basicwidget;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
+	TextView messageView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		messageView = (TextView)findViewById(R.id.message);
+		Button btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String msg = getResources().getString(R.string.hellostring);
+				messageView.setText(Html.fromHtml(msg));
+				
+				Button btn = (Button)v;
+//				if (btn.isSelected()) {
+//					btn.setSelected(false);
+//				} else {
+//					btn.setSelected(true);
+//				}
+				btn.setSelected(!btn.isSelected());
+			}
+		});
 	}
 
 	@Override
