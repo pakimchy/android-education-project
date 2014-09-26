@@ -7,17 +7,33 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
 	TextView messageView;
+	CheckBox checkBox;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		messageView = (TextView)findViewById(R.id.message);
+		checkBox = (CheckBox)findViewById(R.id.checkBox1);
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					Toast.makeText(MainActivity.this, "isChecked true", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(MainActivity.this, "isChecked false", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -33,6 +49,12 @@ public class MainActivity extends ActionBarActivity {
 //					btn.setSelected(true);
 //				}
 				btn.setSelected(!btn.isSelected());
+				
+				if (checkBox.isChecked()) {
+					Toast.makeText(MainActivity.this, "checked", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(MainActivity.this, "unchecked", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
