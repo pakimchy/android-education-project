@@ -16,28 +16,34 @@
         android:text="@string/htmlstring"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/button1"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_selector"
-        android:text="Button"
-        android:textColor="@color/button_color" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <CheckBox
-        android:id="@+id/checkBox1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/checkbox_selector"
-        android:button="@drawable/check_button_selector"
-        android:text="CheckBox" />
+        <Button
+            android:id="@+id/button1"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_selector"
+            android:text="Button"
+            android:textColor="@color/button_color" />
+
+        <CheckBox
+            android:id="@+id/checkBox1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/checkbox_selector"
+            android:button="@drawable/check_button_selector"
+            android:text="CheckBox" />
+
+    </LinearLayout>
 
     <RadioGroup
         android:id="@+id/radioGroup1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <RadioButton
             android:id="@+id/radio0"
@@ -88,5 +94,11 @@
         android:imeOptions="actionSend"
         android:inputType="textEmailAddress"
         android:singleLine="true" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gallery_photo_8" />
 
 </LinearLayout>

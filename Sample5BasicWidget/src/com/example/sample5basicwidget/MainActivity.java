@@ -1,5 +1,6 @@
 package com.example.sample5basicwidget;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.text.Editable;
@@ -14,6 +15,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -25,12 +27,22 @@ public class MainActivity extends ActionBarActivity {
 	CheckBox checkBox;
 	RadioGroup radioGroup;
 	EditText emailView;
+	ImageView imageView;
 
+	int[] imageResIds = {R.drawable.gallery_photo_1, R.drawable.gallery_photo_2,
+			R.drawable.gallery_photo_3, R.drawable.gallery_photo_4,
+			R.drawable.gallery_photo_5, R.drawable.gallery_photo_6,
+			R.drawable.gallery_photo_7, R.drawable.gallery_photo_8
+	};
+	
+	int imageIndex = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		messageView = (TextView) findViewById(R.id.message);
+		imageView = (ImageView)findViewById(R.id.imageView1);
 		emailView = (EditText) findViewById(R.id.editText2);
 		emailView.addTextChangedListener(new TextWatcher() {
 
@@ -115,8 +127,14 @@ public class MainActivity extends ActionBarActivity {
 				// Toast.makeText(MainActivity.this, "unchecked",
 				// Toast.LENGTH_SHORT).show();
 				// }
-				int id = radioGroup.getCheckedRadioButtonId();
-				showSelectedRadio(id);
+//				int id = radioGroup.getCheckedRadioButtonId();
+//				showSelectedRadio(id);
+				
+				Drawable d = getResources().getDrawable(imageResIds[imageIndex]);
+				imageView.setImageDrawable(d);
+				imageIndex++;
+				imageIndex %= imageResIds.length;
+				
 			}
 		});
 	}
