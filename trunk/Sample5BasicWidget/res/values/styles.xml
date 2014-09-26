@@ -15,9 +15,7 @@
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-<!-- 
         <item name="android:buttonStyle">@style/buttonStyle</item>
- -->               
     </style>
 
 <!--     
@@ -25,9 +23,15 @@
         <item name="android:background">@drawable/button_selector</item>
         <item name="android:textColor">@color/button_color</item>
     </style>
+ -->
+    
     <style name="buttonStyle" parent="android:Widget.Button">
         <item name="android:background">@drawable/button_selector</item>
         <item name="android:textColor">@color/button_color</item>
     </style>
- -->    
+    
+    <style name="MyButtonStyle">
+        <item name="android:background">@drawable/button_selector</item>
+        <item name="android:textColor">@color/button_color</item>
+    </style>    
 </resources>
