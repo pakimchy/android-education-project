@@ -7,10 +7,13 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -25,6 +28,15 @@ public class MainActivity extends ActionBarActivity {
 		keywordView = (EditText)findViewById(R.id.editText1);
 		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
 		listView.setAdapter(mAdapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String item = (String)listView.getItemAtPosition(position);
+				Toast.makeText(MainActivity.this, "selected item : " + item, Toast.LENGTH_SHORT).show();
+			}
+		});
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
