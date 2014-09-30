@@ -1,6 +1,8 @@
 package com.example.sample5simplelist;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -24,10 +26,10 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		listView = (ListView)findViewById(R.id.listView1);
 		keywordView = (EditText)findViewById(R.id.editText1);
-		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
-		listView.setAdapter(mAdapter);
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -49,13 +51,36 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
+		
+		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+		listView.setAdapter(mAdapter);
+		
 		initData();
 	}
 	
 	private void initData() {
-		for (int i = 0 ; i < 10; i++) {
-			mAdapter.add("item " + i);
+//		for (int i = 0 ; i < 10; i++) {
+//			mAdapter.add("item " + i);
+//		}
+		String[] array = getResources().getStringArray(R.array.listitem);
+
+		for (String str : array) {
+			mAdapter.add(str);
 		}
+		
+//		List<String> list = Arrays.asList(array);
+//		
+//		for (String item : list) {
+//			
+//		}
+//		
+//		String[] aa = new String[list.size()];
+//		list.toArray(aa);
+		
+//		for (int i = 0 ; i < array.length; i++) {
+//			String str = array[i];
+//		}
+
 	}
 
 	@Override
