@@ -16,8 +16,11 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="40dp"
         android:background="@drawable/receive_bg_5"
-        android:padding="15dp"
-        android:text="Small TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall TextSmall Text"
+        android:paddingBottom="5dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="5dp"
+        android:paddingTop="5dp"
+        android:text="Small Text "
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>
