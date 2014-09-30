@@ -4,4 +4,5 @@ public class ItemData {
 	public int imageId;
 	public String title;
 	public String desc;
+	public int like;
 }

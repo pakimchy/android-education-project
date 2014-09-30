@@ -4,8 +4,11 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.sample5customlist.MyAdapter.OnAdapterItemClickListener;
 import com.example.sample5customlist.data.ItemData;
 
 public class MainActivity extends ActionBarActivity {
@@ -20,6 +23,13 @@ public class MainActivity extends ActionBarActivity {
 		listView = (ListView)findViewById(R.id.listView1);
 		
 		mAdapter = new MyAdapter(this);
+		mAdapter.setOnAdapterItemClickListener(new OnAdapterItemClickListener() {
+			
+			@Override
+			public void onAdapterItemClick(View v, ItemData data) {
+				Toast.makeText(MainActivity.this, "like click : " + data.title, Toast.LENGTH_SHORT).show();
+			}
+		});
 		listView.setAdapter(mAdapter);
 		
 		initData();
