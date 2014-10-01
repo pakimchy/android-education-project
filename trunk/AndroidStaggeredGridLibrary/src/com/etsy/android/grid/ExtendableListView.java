@@ -17,6 +17,8 @@
 
 package com.etsy.android.grid;
 
+import java.util.ArrayList;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -28,13 +30,18 @@ import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.view.*;
+import android.util.SparseBooleanArray;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
+import android.view.View;
+import android.view.ViewConfiguration;
+import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Checkable;
 import android.widget.ListAdapter;
 import android.widget.Scroller;
-
-import java.util.ArrayList;
 
 /**
  * An extendable implementation of the Android {@link android.widget.ListView}
@@ -807,6 +814,15 @@ public abstract class ExtendableListView extends AbsListView {
         super.requestDisallowInterceptTouchEvent(disallowIntercept);
     }
 
+    @Override
+    public int pointToPosition(int x, int y) {
+    	int position = super.pointToPosition(x, y);
+    	if (position != INVALID_POSITION) {
+    		return position + mFirstPosition;
+    	}
+    	return INVALID_POSITION;
+    }
+    
     private boolean onTouchDown(final MotionEvent event) {
         final int x = (int) event.getX();
         final int y = (int) event.getY();
@@ -1463,6 +1479,16 @@ public abstract class ExtendableListView extends AbsListView {
         if (updateChildPressed) {
             child.setPressed(isPressed);
         }
+        
+        if (getChoiceMode() != CHOICE_MODE_NONE && getCheckedItemPositions() != null) {
+            if (child instanceof Checkable) {
+                ((Checkable) child).setChecked(getCheckedItemPositions().get(position));
+            } else if (getContext().getApplicationInfo().targetSdkVersion
+                    >= android.os.Build.VERSION_CODES.HONEYCOMB) {
+                child.setActivated(getCheckedItemPositions().get(position));
+            }
+        }
+
 
         if (needToMeasure) {
             if (DBG) Log.d(TAG, "setupChild onMeasureChild position:" + position);
@@ -2740,11 +2766,38 @@ public abstract class ExtendableListView extends AbsListView {
             if (adapter != null && mItemCount > 0 &&
                     motionPosition != INVALID_POSITION &&
                     motionPosition < adapter.getCount() && sameWindow()) {
-                final View view = getChildAt(motionPosition); // a fix by @pboos
+                final View view = getChildAt(motionPosition - mFirstPosition); // a fix by @pboos
 
                 if (view != null) {
-                    performItemClick(view, motionPosition + mFirstPosition, adapter.getItemId(motionPosition));
+                    performItemClick(view, motionPosition, adapter.getItemId(motionPosition));
                 }
+            }
+        }
+    }
+
+    @Override
+    public boolean performItemClick(View view, int position, long id) {
+    	boolean isClicked = super.performItemClick(view, position, id);
+    	if (getChoiceMode() != CHOICE_MODE_NONE) {
+    		updateOnScreenCheckedViews();
+    	}
+    	return isClicked;
+    }
+    
+    private void updateOnScreenCheckedViews() {
+        final int firstPos = mFirstPosition;
+        final int count = getChildCount();
+        final boolean useActivated = getContext().getApplicationInfo().targetSdkVersion
+                >= android.os.Build.VERSION_CODES.HONEYCOMB;
+        SparseBooleanArray checkStates = getCheckedItemPositions();
+        for (int i = 0; i < count; i++) {
+            final View child = getChildAt(i);
+            final int position = firstPos + i;
+
+            if (child instanceof Checkable) {
+                ((Checkable) child).setChecked(checkStates.get(position));
+            } else if (useActivated) {
+                child.setActivated(checkStates.get(position));
             }
         }
     }
