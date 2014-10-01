@@ -1,5 +1,6 @@
 package com.example.sample5applicationcomponent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ public class MainActivity extends ActionBarActivity {
 
 	EditText inputView;
 	TextView messageView;
+	private final static int REQUEST_CODE_MY_ACTIVITY = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +34,7 @@ public class MainActivity extends ActionBarActivity {
 				String text = inputView.getText().toString();
 				i.putExtra(MyActivity.PARAM_MESSAGE, text);
 				i.putExtra(MyActivity.PARAM_AGE, 40);
-				startActivity(i);
+				startActivityForResult(i, REQUEST_CODE_MY_ACTIVITY);
 			}
 		});
 		
@@ -47,6 +49,15 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_MY_ACTIVITY && resultCode == Activity.RESULT_OK) {
+			String result = data.getStringExtra(MyActivity.PARAM_RESULT);
+			messageView.setText(result);
+		}
+		
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
