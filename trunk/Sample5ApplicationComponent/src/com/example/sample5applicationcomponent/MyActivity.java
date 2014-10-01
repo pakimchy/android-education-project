@@ -14,6 +14,7 @@ public class MyActivity extends Activity {
 	public static final String PARAM_MESSAGE = "message";
 	public static final String PARAM_AGE = "age";
 	public static final String PARAM_RESULT = "result";
+	public static final String PARAM_PERSON = "person";
 	
 	TextView messageView;
 	EditText resultView;
@@ -40,7 +41,7 @@ public class MyActivity extends Activity {
 		
 		Intent i = getIntent();
 		String text = i.getStringExtra(PARAM_MESSAGE);
-		Person p = i.getParcelableExtra("person");
+		Person p = i.getParcelableExtra(PARAM_PERSON);
 		
 		Toast.makeText(this, "person " + p.name + "," + p.age, Toast.LENGTH_SHORT).show();
 //		Person p = (Person)i.getSerializableExtra("person");
