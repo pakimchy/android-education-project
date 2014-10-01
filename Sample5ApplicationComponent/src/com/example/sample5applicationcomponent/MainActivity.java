@@ -32,6 +32,10 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
 				String text = inputView.getText().toString();
+				Person p = new Person();
+				p.name = "ysi";
+				p.age = 40;
+				i.putExtra("person", p);
 				i.putExtra(MyActivity.PARAM_MESSAGE, text);
 				i.putExtra(MyActivity.PARAM_AGE, 40);
 				startActivityForResult(i, REQUEST_CODE_MY_ACTIVITY);

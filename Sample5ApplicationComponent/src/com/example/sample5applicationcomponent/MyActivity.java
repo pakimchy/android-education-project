@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MyActivity extends Activity {
 	
@@ -39,6 +40,11 @@ public class MyActivity extends Activity {
 		
 		Intent i = getIntent();
 		String text = i.getStringExtra(PARAM_MESSAGE);
+		Person p = i.getParcelableExtra("person");
+		
+		Toast.makeText(this, "person " + p.name + "," + p.age, Toast.LENGTH_SHORT).show();
+//		Person p = (Person)i.getSerializableExtra("person");
+		
 		int age = i.getIntExtra(PARAM_AGE, 0);
 		messageView.setText(text + ", age : " + age);
 	}
