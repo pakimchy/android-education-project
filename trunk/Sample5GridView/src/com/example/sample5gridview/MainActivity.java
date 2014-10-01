@@ -12,7 +12,7 @@ import android.widget.GridView;
 public class MainActivity extends ActionBarActivity {
 
 	GridView gridView;
-//	ArrayAdapter mAdapter;
+//	ArrayAdapter<String> mAdapter;
 	MyAdapter mAdapter;
 	
 	int[] imageIds = { R.drawable.gallery_photo_1, 
@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		gridView = (GridView)findViewById(R.id.gridView1);
 		
-//		mAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
+//		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, new ArrayList<String>());
 		mAdapter = new MyAdapter(this);
 		
 		gridView.setAdapter(mAdapter);
@@ -40,6 +40,7 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void initData() {
 		for (int i = 0; i < 100; i++) {
+//			mAdapter.add("item " + i);
 			mAdapter.add(imageIds[i % imageIds.length]);
 		}
 	}
