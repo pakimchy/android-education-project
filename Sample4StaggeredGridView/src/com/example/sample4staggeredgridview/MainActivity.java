@@ -3,6 +3,10 @@ package com.example.sample4staggeredgridview;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
 
@@ -47,8 +51,16 @@ public class MainActivity extends Activity {
 		gridView = (StaggeredGridView)findViewById(R.id.gridView);
 		View v = getLayoutInflater().inflate(R.layout.header_view, null);
 		gridView.addHeaderView(v);
+		gridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		mAdapter = new MyAdapter(this,urls);
 		gridView.setAdapter(mAdapter);
-		
+		gridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Toast.makeText(MainActivity.this, "position : " + position, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }

@@ -8,12 +8,14 @@ import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.view.LayoutInflater;
+import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ItemView extends FrameLayout {
+public class ItemView extends FrameLayout implements Checkable {
 
 	public ItemView(Context context) {
 		super(context);
@@ -27,6 +29,7 @@ public class ItemView extends FrameLayout {
 	ImageLoader mLoader;
 	private void init() {
 		LayoutInflater.from(getContext()).inflate(R.layout.item_layout, this);
+		setPadding(20, 20, 20, 20);
 		iconView = (ImageView)findViewById(R.id.image_view);
 		urlView = (TextView)findViewById(R.id.url_view);
 		mLoader = ImageLoader.getInstance();
@@ -50,11 +53,39 @@ public class ItemView extends FrameLayout {
 			}
 		})
 		.build();
+		drawChecked();
 	}
 	
 	public void setUrl(String url) {
 		urlView.setText(url);
 		mLoader.displayImage(url, iconView, options);
+	}
+
+	boolean isChecked = false;
+	
+	private void drawChecked() {
+		if (isChecked) {
+			setBackgroundColor(Color.DKGRAY);
+		} else {
+			setBackgroundColor(Color.WHITE);
+		}
+	}
+	@Override
+	public void setChecked(boolean checked) {
+		if (isChecked != checked) {
+			isChecked = checked;
+			drawChecked();
+		}
+	}
+
+	@Override
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	@Override
+	public void toggle() {
+		setChecked(!isChecked);
 	}
 
 }
