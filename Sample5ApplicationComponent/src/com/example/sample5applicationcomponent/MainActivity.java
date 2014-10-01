@@ -8,19 +8,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
+	EditText inputView;
+	TextView messageView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		inputView = (EditText)findViewById(R.id.edit_input);
+		messageView = (TextView)findViewById(R.id.message);
+		
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
+				String text = inputView.getText().toString();
+				i.putExtra(MyActivity.PARAM_MESSAGE, text);
+				i.putExtra(MyActivity.PARAM_AGE, 40);
 				startActivity(i);
 			}
 		});
