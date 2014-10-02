@@ -50,9 +50,14 @@ public class MainActivity extends ActionBarActivity {
 				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				startActivity(i);
 			}
-		});
+		});		
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);		
+	}
+	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
