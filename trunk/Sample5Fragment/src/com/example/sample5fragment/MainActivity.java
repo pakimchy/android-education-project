@@ -15,8 +15,10 @@ implements FragmentOne.OnFragmentMessage {
 
 	FragmentOne f1;
 	FragmentTwo f2;
+	FragmentThree f3;
 	private static final String F1_TAG = "f1";
 	private static final String F2_TAG = "f2";
+	private static final String F3_TAG = "f3";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +52,19 @@ implements FragmentOne.OnFragmentMessage {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_tab3);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (getSupportFragmentManager().findFragmentByTag(F3_TAG) == null) {
+					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+					ft.replace(R.id.container, f3, F3_TAG);
+					ft.commit();
+				}
+			}
+		});
+		
 		btn = (Button)findViewById(R.id.btn_activity);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -73,6 +88,7 @@ implements FragmentOne.OnFragmentMessage {
 		ft.commit();	
 		
 		f2 = new FragmentTwo();
+		f3 = new FragmentThree();
 	}
 	
 	public void onFragmentDataChanged(String text) {
