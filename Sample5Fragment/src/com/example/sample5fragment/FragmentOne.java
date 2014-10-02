@@ -1,5 +1,6 @@
 package com.example.sample5fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,19 @@ import android.widget.Toast;
 public class FragmentOne extends Fragment {
 
 	String message;
+
+	public interface OnFragmentMessage {
+		public void onFragmentMessage(String message);
+	}
+	
+	public interface OnResultListener {
+		public void onResult(String message);
+	}
+	
+	OnResultListener mListener;
+	public void setOnResultListener(OnResultListener listener) {
+		mListener = listener;
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -40,6 +54,30 @@ public class FragmentOne extends Fragment {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(getActivity(), "message : " + message, Toast.LENGTH_SHORT).show();
+				((MainActivity)getActivity()).onFragmentDataChanged("i am fragment one");
+			}
+		});
+		
+		btn = (Button)view.findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Activity activity = getActivity();
+				if (activity instanceof OnFragmentMessage) {
+					((OnFragmentMessage)activity).onFragmentMessage("i am fragment!!!");
+				}
+			}
+		});
+		
+		btn = (Button)view.findViewById(R.id.button3);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mListener != null) {
+					mListener.onResult("I am FragmentOne!!!");
+				}
 			}
 		});
 	}
