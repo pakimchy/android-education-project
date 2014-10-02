@@ -22,4 +22,9 @@ public class FragmentThree extends PagerFragment {
 		tv.setText("Fragment Three");
 	}
 
+	@Override
+	public void onPageCurrent() {
+		super.onPageCurrent();
+		getActivity().setTitle("FragmentThree");
+	}
 }
