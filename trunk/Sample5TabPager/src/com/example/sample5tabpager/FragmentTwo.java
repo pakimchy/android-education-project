@@ -21,5 +21,11 @@ public class FragmentTwo extends PagerFragment {
 		TextView tv = (TextView)view.findViewById(R.id.message);
 		tv.setText("Fragment Two");
 	}
+	
+	@Override
+	public void onPageCurrent() {
+		super.onPageCurrent();
+		getActivity().setTitle("FragmentTwo");
+	}
 
 }
