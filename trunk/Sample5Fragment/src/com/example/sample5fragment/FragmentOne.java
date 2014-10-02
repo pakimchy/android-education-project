@@ -6,13 +6,21 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class FragmentOne extends Fragment {
 
+	String message;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Bundle b = getArguments();
+		if (b != null) {
+			message = b.getString("message");
+		}
 	}
 	
 	@Override
@@ -26,5 +34,13 @@ public class FragmentOne extends Fragment {
 	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 		textView = (TextView)view.findViewById(R.id.textView1);
+		Button btn = (Button)view.findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(), "message : " + message, Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 }

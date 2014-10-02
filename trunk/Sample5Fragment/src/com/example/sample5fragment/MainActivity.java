@@ -39,10 +39,16 @@ public class MainActivity extends ActionBarActivity {
 		});
 		
 		FragmentOne f = new FragmentOne();
+		
+		Bundle b = new Bundle();
+		b.putString("message", "i am activity");
+		
+		f.setArguments(b);
+		
+		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.replace(R.id.container, f);
-		ft.commit();
-		
+		ft.commit();	
 	}
 
 	@Override
