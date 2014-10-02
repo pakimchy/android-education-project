@@ -25,32 +25,34 @@
             android:layout_height="match_parent"
             android:orientation="vertical" >
 
-
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="0dp"
                 android:layout_height="0dp" />
-            
-            <FrameLayout 
+
+            <FrameLayout
                 android:id="@+id/realtabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1" />
-            <LinearLayout 
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-                <ImageView 
+                android:orientation="horizontal" >
+
+                <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_launcher"/>
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@null" >
-            </TabWidget>
+                    android:src="@drawable/ic_launcher" />
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@null" >
+                </TabWidget>
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.app.FragmentTabHost>
