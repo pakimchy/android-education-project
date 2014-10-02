@@ -13,6 +13,11 @@ import android.widget.Toast;
 public class MainActivity extends ActionBarActivity 
 implements FragmentOne.OnFragmentMessage {
 
+	FragmentOne f1;
+	FragmentTwo f2;
+	private static final String F1_TAG = "f1";
+	private static final String F2_TAG = "f2";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,10 +27,12 @@ implements FragmentOne.OnFragmentMessage {
 			
 			@Override
 			public void onClick(View v) {
-				FragmentOne f = new FragmentOne();
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.container, f);
-				ft.commit();
+//				FragmentOne f = new FragmentOne();
+				if (getSupportFragmentManager().findFragmentByTag(F1_TAG) == null) {
+					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+					ft.replace(R.id.container, f1, F1_TAG);
+					ft.commit();
+				}
 			}
 		});
 		
@@ -34,10 +41,12 @@ implements FragmentOne.OnFragmentMessage {
 			
 			@Override
 			public void onClick(View v) {
-				FragmentTwo f = new FragmentTwo();
-				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-				ft.replace(R.id.container, f);
-				ft.commit();
+//				FragmentTwo f = new FragmentTwo();
+				if (getSupportFragmentManager().findFragmentByTag(F2_TAG) == null) {
+					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+					ft.replace(R.id.container, f2, F2_TAG);
+					ft.commit();
+				}
 			}
 		});
 		
@@ -51,17 +60,19 @@ implements FragmentOne.OnFragmentMessage {
 			}
 		});
 		
-		FragmentOne f = new FragmentOne();
+		f1 = new FragmentOne();
 		
 		Bundle b = new Bundle();
 		b.putString("message", "i am activity");
 		
-		f.setArguments(b);
+		f1.setArguments(b);
 		
 		
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		ft.replace(R.id.container, f);
+		ft.replace(R.id.container, f1, F1_TAG);
 		ft.commit();	
+		
+		f2 = new FragmentTwo();
 	}
 	
 	public void onFragmentDataChanged(String text) {
