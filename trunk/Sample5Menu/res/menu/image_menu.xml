@@ -2,6 +2,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/image_menu_1" android:orderInCategory="100" android:title="IM1"></item>
     <item android:id="@+id/image_menu_2" android:orderInCategory="101" android:title="IM2"></item>
-    
-
 </menu>
