@@ -32,6 +32,7 @@
                 <data android:scheme="http"/>
             </intent-filter>
         </activity>
+        <service android:name="MyService"></service>
     </application>
 
 </manifest>

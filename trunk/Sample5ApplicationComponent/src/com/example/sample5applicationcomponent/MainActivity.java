@@ -50,7 +50,28 @@ public class MainActivity extends ActionBarActivity {
 				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
 				startActivity(i);
 			}
-		});		
+		});
+		
+		btn = (Button)findViewById(R.id.button3);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MyService.class);
+				i.putExtra(MyService.PARAM_COUNT, 100);
+				startService(i);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.button4);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MyService.class);
+				stopService(i);
+			}
+		});
 	}
 
 	@Override
