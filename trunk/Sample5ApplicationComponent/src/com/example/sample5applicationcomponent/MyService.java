@@ -1,7 +1,10 @@
 package com.example.sample5applicationcomponent;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -39,8 +42,24 @@ public class MyService extends Service {
 				}
 			}
 		}).start();
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(receiver, filter);
 	}
 	
+	
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				Log.i("MyService", "Screen off");
+			} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				Log.i("MyService", "Screen on");
+				Toast.makeText(context, "Screen ON", Toast.LENGTH_SHORT).show();
+			}
+		}
+	};
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Toast.makeText(this, "onStartCommand", Toast.LENGTH_SHORT).show();
@@ -54,5 +73,7 @@ public class MyService extends Service {
 		super.onDestroy();
 		Toast.makeText(this, "onDestroy", Toast.LENGTH_SHORT).show();
 		isRunning = false;
+		
+		unregisterReceiver(receiver);
 	}
 }
