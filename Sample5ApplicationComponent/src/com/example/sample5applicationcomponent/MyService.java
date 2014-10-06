@@ -12,6 +12,7 @@ import android.widget.Toast;
 public class MyService extends Service {
 
 	public static final String PARAM_COUNT = "count";
+	public static final String ACTION_COUNT = "com.example.sample5applicationcomponent.action.COUNT";
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -31,6 +32,11 @@ public class MyService extends Service {
 			@Override
 			public void run() {
 				while(isRunning) {
+					if (mCount % 10 == 0) {
+						Intent event = new Intent(ACTION_COUNT);
+						event.putExtra(PARAM_COUNT, mCount);
+						sendBroadcast(event);
+					}
 					Log.i("MyService", "count : " + mCount);
 					mCount++;
 					try {
