@@ -1,11 +1,11 @@
 package com.example.sample5dialog;
 
-import android.support.v7.app.ActionBarActivity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -168,6 +168,36 @@ public class MainActivity extends ActionBarActivity {
 				dialog.setTitle("Dialog progress");
 				dialog.setMessage("dialog ...");
 				dialog.show();
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_dialog_fragment);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyDialogFragment dialog = new MyDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_custom_dialog);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyCustomDialogFragment dialog = new MyCustomDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_activity_dialog);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, DialogActivity.class);
+				startActivity(i);
 			}
 		});
 	}
