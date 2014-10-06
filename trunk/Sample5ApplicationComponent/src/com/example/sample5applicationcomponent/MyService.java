@@ -1,5 +1,6 @@
 package com.example.sample5applicationcomponent;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -35,7 +36,18 @@ public class MyService extends Service {
 					if (mCount % 10 == 0) {
 						Intent event = new Intent(ACTION_COUNT);
 						event.putExtra(PARAM_COUNT, mCount);
-						sendBroadcast(event);
+//						sendBroadcast(event);
+						sendOrderedBroadcast(event, null, new BroadcastReceiver(){
+							
+							public void onReceive(Context context, Intent intent) {
+								int result = getResultCode();
+								if (result == Activity.RESULT_CANCELED) {
+									Toast.makeText(MyService.this, "event not process", Toast.LENGTH_SHORT).show();
+								} else {
+									Toast.makeText(MyService.this, "event process", Toast.LENGTH_SHORT).show();
+								}
+							}
+						}, null, Activity.RESULT_CANCELED, null, null);
 					}
 					Log.i("MyService", "count : " + mCount);
 					mCount++;

@@ -93,6 +93,7 @@ public class MainActivity extends ActionBarActivity {
 		public void onReceive(Context context, Intent intent) {
 			int count = intent.getIntExtra(MyService.PARAM_COUNT, 0);
 			Toast.makeText(MainActivity.this, "count : " + count, Toast.LENGTH_SHORT).show();
+			setResultCode(Activity.RESULT_OK);
 		}
 	};
 	@Override
