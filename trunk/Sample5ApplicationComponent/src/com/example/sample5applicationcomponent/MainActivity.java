@@ -1,7 +1,10 @@
 package com.example.sample5applicationcomponent;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -72,8 +76,25 @@ public class MainActivity extends ActionBarActivity {
 				stopService(i);
 			}
 		});
+		
+		IntentFilter filter = new IntentFilter(MyService.ACTION_COUNT);
+		registerReceiver(mReceiver, filter);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(mReceiver);
 	}
 
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra(MyService.PARAM_COUNT, 0);
+			Toast.makeText(MainActivity.this, "count : " + count, Toast.LENGTH_SHORT).show();
+		}
+	};
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);		
