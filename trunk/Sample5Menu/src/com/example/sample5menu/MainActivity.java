@@ -1,13 +1,17 @@
 package com.example.sample5menu;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +28,20 @@ public class MainActivity extends ActionBarActivity {
 		registerForContextMenu(tv);
 		ImageView iv = (ImageView)findViewById(R.id.imageView1);
 		registerForContextMenu(iv);
+		
+		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setTitle("");
+		getSupportActionBar().setIcon(android.R.drawable.ic_dialog_alert);
+		
+		getSupportActionBar().setDisplayShowCustomEnabled(true);
+		
+		TextView tt = new TextView(this);
+		tt.setText("ActionBar Test");
+		tt.setTextColor(Color.WHITE);
+		tt.setTextSize(20);
+		
+		ActionBar.LayoutParams lp = new ActionBar.LayoutParams(Gravity.CENTER);
+		getSupportActionBar().setCustomView(tt, lp);
 	}
 
 	@Override
@@ -87,6 +105,9 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		} else if (id == R.id.menu_2) {
 			Toast.makeText(this, "Menu 2 select", Toast.LENGTH_SHORT).show();
+			return true;
+		} else if (id == android.R.id.home) {
+			Toast.makeText(this, "Home selected", Toast.LENGTH_SHORT).show();
 			return true;
 		}
 		
