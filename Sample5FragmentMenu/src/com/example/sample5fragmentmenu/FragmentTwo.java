@@ -2,6 +2,8 @@ package com.example.sample5fragmentmenu;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,11 +14,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FragmentTwo extends PagerFragment {
-
+	ActionBar actionBar;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+		actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
 	}
 	
 	@Override
@@ -43,8 +47,19 @@ public class FragmentTwo extends PagerFragment {
 		if (item.getItemId() == R.id.f2_menu) {
 			Toast.makeText(getActivity(), "f2 menu", Toast.LENGTH_SHORT).show();
 			return true;
+		} else if (item.getItemId() == android.R.id.home) {
+			Toast.makeText(getActivity(), "f2 home", Toast.LENGTH_SHORT).show();
+			return true;
 		}
  		return super.onOptionsItemSelected(item);
+	}
+	
+	@Override
+	public void onPageCurrent() {
+		super.onPageCurrent();
+		actionBar.setTitle("F2 Fragment");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setHomeButtonEnabled(true);
 	}
 	
 }
