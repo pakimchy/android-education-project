@@ -115,6 +115,49 @@ public class MyView extends View {
 	public String getViewMessage() {
 		return "Hello, MyView!";
 	}
+	
+	public void setBitmap(Bitmap bitmap) {
+		mBitmap = bitmap;
+		requestLayout();
+	}
+	
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int width = getPaddingLeft()  + getPaddingRight();
+		int height = getPaddingTop() + getPaddingBottom();
+		if (mBitmap != null) {
+			width += mBitmap.getWidth();
+			height += mBitmap.getHeight();
+		}
+		
+//		int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+//		int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+//		switch(widthMode) {
+//		case MeasureSpec.UNSPECIFIED :
+//			break;
+//		case MeasureSpec.EXACTLY :
+//			width = widthSize;
+//			break;
+//		case MeasureSpec.AT_MOST :
+//			width = (width < widthSize)?width:widthSize;
+//			break;
+//		}
+//		
+		width = resolveSize(width, widthMeasureSpec);
+		height = resolveSize(height, heightMeasureSpec);
+		setMeasuredDimension(width, height);
+ 	}
+	
+	int mX, mY;
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		mX = (right - left - mBitmap.getWidth()) / 2;
+		mY = (bottom - top - mBitmap.getHeight()) / 2;
+	}
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
@@ -124,9 +167,16 @@ public class MyView extends View {
 	}
 	
 	
+	int dx = 0;
 	private void drawSimpleBitmap(Canvas canvas) {
-		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+		canvas.drawBitmap(mBitmap, mX + dx, mY, mPaint);
+		dx++;
+		if (dx > 100) {
+			dx = 0;
+		}
+		invalidate();
 	}
+	
 	private void drawColorEffect(Canvas canvas) {
 		canvas.drawBitmap(mBitmap, 0,  0, mPaint);
 		ColorMatrix cm = new ColorMatrix();
