@@ -29,7 +29,10 @@ import android.graphics.Shader;
 import android.graphics.SweepGradient;
 import android.graphics.Xfermode;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 public class MyView extends View {
 
@@ -107,9 +110,55 @@ public class MyView extends View {
 								    100, 300, 150, 350, 200, 300, 250, 350, 300, 300
 	};
 	
+	GestureDetector mDetector;
+	
 	private void init() {
 		mPaint = new Paint();	
 		initBitmap();
+		mDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+			
+			@Override
+			public boolean onDoubleTap(MotionEvent e) {
+				Toast.makeText(getContext(), "Double Tap", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+				if (e2.getX() - e1.getX() > 50) {
+					// left ==> right
+					if (Math.abs(e2.getY() - e1.getY()) < 10) {
+						// velocityX ==> 
+						return true;
+					}
+				}
+				return super.onFling(e1, e2, velocityX, velocityY);
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2,
+					float distanceX, float distanceY) {
+				// TODO Auto-generated method stub
+				return super.onScroll(e1, e2, distanceX, distanceY);
+			}
+			
+			@Override
+			public boolean onSingleTapConfirmed(MotionEvent e) {
+				// TODO Auto-generated method stub
+				return super.onSingleTapConfirmed(e);
+			}
+			
+			@Override
+			public void onLongPress(MotionEvent e) {
+				// TODO Auto-generated method stub
+				super.onLongPress(e);
+			}
+		});
 	}
 	
 	public String getViewMessage() {
@@ -121,6 +170,56 @@ public class MyView extends View {
 		requestLayout();
 	}
 	
+	int mode;
+	private static final int MODE_DOWN = 0;
+	private static final int MODE_MOVE = 1;
+	private static final int MODE_UP = 2;
+	
+	float downX, downY;
+	long downTime;
+	int downCount = 0;
+	long oneTapTime;
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+//		int action = event.getAction();
+//		float x = event.getX();
+//		float y = event.getY();
+//		switch(action) {
+//		case MotionEvent.ACTION_DOWN :
+//			downX = x;
+//			downY = y;
+//			downTime = System.currentTimeMillis();
+//			return true;
+//		case MotionEvent.ACTION_MOVE :
+//			break;
+//		case MotionEvent.ACTION_UP :
+//			long currentTime = System.currentTimeMillis();
+//			if (Math.abs(downX - x) < 10 && Math.abs(downY - y) < 10 && (currentTime - downTime) < 500)  {
+//				if (downCount == 0) {
+//					downCount++;
+//					oneTapTime = currentTime;
+//				} else {
+//					if ((currentTime - oneTapTime) < 1000) {
+//						onDoubleTabAction();
+//					} else {
+//						downCount = 0;
+//					}
+//				}
+//			} else {
+//				downCount = 0;
+//			}
+//			return true;
+//		}
+		boolean bReturn = mDetector.onTouchEvent(event);
+		if (!bReturn) {
+			bReturn = super.onTouchEvent(event);
+		}
+		return bReturn;
+	}
+	
+	public void onDoubleTabAction() {
+		Toast.makeText(getContext(), "double tab", Toast.LENGTH_SHORT).show();
+	}
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		int width = getPaddingLeft()  + getPaddingRight();
