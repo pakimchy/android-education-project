@@ -68,6 +68,55 @@ public class MainActivity extends ActionBarActivity {
 				imageView.startAnimation(anim);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_slide_in);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				imageView.setVisibility(View.VISIBLE);
+				Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_in);
+				imageView.startAnimation(anim);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_slide_out);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.slide_out);
+				anim.setAnimationListener(new Animation.AnimationListener() {
+					
+					@Override
+					public void onAnimationStart(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						
+					}
+					
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						imageView.setVisibility(View.GONE);
+					}
+				});
+				imageView.startAnimation(anim);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_compose);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.compose_anim);
+				imageView.startAnimation(anim);
+			}
+		});
+//		imageView.setVisibility(View.GONE);
 	}
 
 	@Override
