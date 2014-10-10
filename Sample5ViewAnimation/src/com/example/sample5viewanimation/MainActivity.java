@@ -116,6 +116,28 @@ public class MainActivity extends ActionBarActivity {
 				imageView.startAnimation(anim);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_my_anim);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyAnimation anim = new MyAnimation();
+				anim.setDuration(1000);
+				imageView.startAnimation(anim);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_3d_anim);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				My3DAnimation anim = new My3DAnimation();
+				anim.setDuration(2000);
+				imageView.startAnimation(anim);
+			}
+		});
 //		imageView.setVisibility(View.GONE);
 	}
 
