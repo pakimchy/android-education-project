@@ -1,5 +1,6 @@
 package com.example.sample5thead;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -49,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
+				new MyTask().execute("url1","url2");
 				new Thread(new Runnable() {
 					
 					@Override
@@ -79,9 +81,50 @@ public class MainActivity extends ActionBarActivity {
 						
 						mHandler.post(new DoneRunnable());
 					}
-				}).start();
+				});
 			}
 		});
+	}
+	
+	class MyTask extends AsyncTask<String, Integer, Boolean> {
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			progressBar.setMax(100);
+			messageView.setText("initialize...");
+		}
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			int count = 0;
+			while(count < 20) {
+				publishProgress(count, count * 5);
+				count++;
+				try {
+					Thread.sleep(300);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return true;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			int count = values[0];
+			int progress = values[1];
+			progressBar.setProgress(progress);
+			messageView.setText("progress : " + progress);			
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			if (result != null && result) {
+				progressBar.setProgress(100);
+				messageView.setText("progress done");
+			}
+		}
 	}
 	
 	class ProgressRunnable implements Runnable {
