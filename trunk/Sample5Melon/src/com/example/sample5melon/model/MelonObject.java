@@ -1,4 +1,4 @@
-package com.example.sample5melon;
+package com.example.sample5melon.model;
 
 public class MelonObject {
 	public int menuId;
