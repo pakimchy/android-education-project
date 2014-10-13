@@ -33,7 +33,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, 1, 10, new OnResultListener<NaverMovies>() {
+					NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, 1, 20, new OnResultListener<NaverMovies>() {
 						
 						@Override
 						public void onSuccess(NaverMovies result) {
