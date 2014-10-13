@@ -1,14 +1,7 @@
 package com.example.sample5melon;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -20,11 +13,9 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sample5melon.model.MelonObject;
-import com.example.sample5melon.model.MelonResult;
 import com.example.sample5melon.model.NetworkManager;
 import com.example.sample5melon.model.NetworkManager.OnResultListener;
 import com.example.sample5melon.model.Song;
-import com.google.gson.Gson;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -47,11 +38,11 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 //				new MyMelonTask().execute(1, 10);
-				NetworkManager.getInstance().getMelonChart(1, 10, new OnResultListener<MelonObject>() {
+				NetworkManager.getInstance().getMelonChart(MainActivity.this, 1, 10, new OnResultListener<MelonObject>() {
 					
 					@Override
 					public void onSuccess(MelonObject result) {
-						for (Song s : result.songs.song) {
+						for (Song s : result.songList.song) {
 							mAdapter.add(s);
 						}
 					}
