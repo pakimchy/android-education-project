@@ -2,6 +2,10 @@ package com.example.sample5navermovie;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -10,8 +14,13 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 
 import org.apache.http.Header;
+import org.apache.http.client.HttpClient;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.begentgroup.xmlparser.XMLParser;
 import com.loopj.android.http.AsyncHttpClient;
@@ -29,8 +38,12 @@ public class NetworkManager {
 		return instance;
 	}
 	
+	Handler mHandler;
+	
 	AsyncHttpClient client;
 	private NetworkManager() {
+		mHandler = new Handler(Looper.getMainLooper());
+		
 		try {
 			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 			trustStore.load(null, null);
@@ -84,6 +97,45 @@ public class NetworkManager {
 				listener.onFail(statusCode);
 			}
 		});
+	}
+	
+	public interface OnImageListener {
+		public void onSuccess(String url, Bitmap bitmap);
+		public void onFail(String url, int code);
+	}
+	public void getNetworkImage(final String urlText, final OnImageListener listener) {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					URL url = new URL(urlText);
+					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+					int code = conn.getResponseCode();
+					if (code == HttpURLConnection.HTTP_OK) {
+						InputStream is = conn.getInputStream();
+						final Bitmap bm = BitmapFactory.decodeStream(is);
+						mHandler.post(new Runnable() {
+							
+							@Override
+							public void run() {
+								listener.onSuccess(urlText, bm);
+							}
+						});
+					}
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		}).start();
+	}
+	public HttpClient getHttpClient() {
+		return client.getHttpClient();
 	}
 	
 }
