@@ -17,7 +17,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.sample5melon.model.MelonObject;
+import com.example.sample5melon.model.MelonResult;
+import com.example.sample5melon.model.NetworkManager;
+import com.example.sample5melon.model.NetworkManager.OnResultListener;
+import com.example.sample5melon.model.Song;
 import com.google.gson.Gson;
 
 public class MainActivity extends ActionBarActivity {
@@ -40,68 +46,82 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				new MyMelonTask().execute(1, 10);
+//				new MyMelonTask().execute(1, 10);
+				NetworkManager.getInstance().getMelonChart(1, 10, new OnResultListener<MelonObject>() {
+					
+					@Override
+					public void onSuccess(MelonObject result) {
+						for (Song s : result.songs.song) {
+							mAdapter.add(s);
+						}
+					}
+					
+					@Override
+					public void onFail(int code) {
+						Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 		});
 	}
 
-	public static final String URL_TEXT = "http://apis.skplanetx.com/melon/charts/realtime";
-	public static final String APP_KEY = "458a10f5-c07e-34b5-b2bd-4a891e024c2a";
-
-	class MyMelonTask extends AsyncTask<Integer, Integer, MelonObject> {
-		@Override
-		protected MelonObject doInBackground(Integer... params) {
-			int page = params[0];
-			int count = params[1];
-
-			String urlText = URL_TEXT + "?version=1&page=" + page + "&count="
-					+ count;
-			try {
-				URL url = new URL(urlText);
-				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
-				conn.setRequestMethod("GET");
-				conn.setRequestProperty("Accept", "application/json");
-				conn.setRequestProperty("appKey", APP_KEY);
-				conn.setConnectTimeout(30000);
-				conn.setReadTimeout(30000);
-				int code = conn.getResponseCode();
-				if (code == HttpURLConnection.HTTP_OK) {
-					InputStream is = conn.getInputStream();
-					// BufferedReader br = new BufferedReader(new
-					// InputStreamReader(is));
-					// StringBuilder sb = new StringBuilder();
-					// String line;
-					// while((line = br.readLine()) != null) {
-					// sb.append(line + "\n\r");
-					// }
-					// return sb.toString();
-					Gson gson = new Gson();
-					MelonResult result = gson.fromJson(
-							new InputStreamReader(is), MelonResult.class);
-					return result.melon;
-				}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-
-		@Override
-		protected void onPostExecute(MelonObject result) {
-			super.onPostExecute(result);
-			if (result != null) {
-				// messageView.setText(result);
-				for (Song s : result.songs.song) {
-					mAdapter.add(s);
-				}
-			}
-		}
-	}
+//	public static final String URL_TEXT = "http://apis.skplanetx.com/melon/charts/realtime";
+//	public static final String APP_KEY = "458a10f5-c07e-34b5-b2bd-4a891e024c2a";
+//
+//	class MyMelonTask extends AsyncTask<Integer, Integer, MelonObject> {
+//		@Override
+//		protected MelonObject doInBackground(Integer... params) {
+//			int page = params[0];
+//			int count = params[1];
+//
+//			String urlText = URL_TEXT + "?version=1&page=" + page + "&count="
+//					+ count;
+//			try {
+//				URL url = new URL(urlText);
+//				HttpURLConnection conn = (HttpURLConnection) url
+//						.openConnection();
+//				conn.setRequestMethod("GET");
+//				conn.setRequestProperty("Accept", "application/json");
+//				conn.setRequestProperty("appKey", APP_KEY);
+//				conn.setConnectTimeout(30000);
+//				conn.setReadTimeout(30000);
+//				int code = conn.getResponseCode();
+//				if (code == HttpURLConnection.HTTP_OK) {
+//					InputStream is = conn.getInputStream();
+//					// BufferedReader br = new BufferedReader(new
+//					// InputStreamReader(is));
+//					// StringBuilder sb = new StringBuilder();
+//					// String line;
+//					// while((line = br.readLine()) != null) {
+//					// sb.append(line + "\n\r");
+//					// }
+//					// return sb.toString();
+//					Gson gson = new Gson();
+//					MelonResult result = gson.fromJson(
+//							new InputStreamReader(is), MelonResult.class);
+//					return result.melon;
+//				}
+//			} catch (MalformedURLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//
+//		@Override
+//		protected void onPostExecute(MelonObject result) {
+//			super.onPostExecute(result);
+//			if (result != null) {
+//				// messageView.setText(result);
+//				for (Song s : result.songs.song) {
+//					mAdapter.add(s);
+//				}
+//			}
+//		}
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
