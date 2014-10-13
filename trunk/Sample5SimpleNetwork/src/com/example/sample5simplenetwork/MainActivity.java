@@ -52,6 +52,8 @@ public class MainActivity extends ActionBarActivity {
 			super.onPreExecute();
 			messageView.setText("loading...");
 		}
+		
+		String contentType;
 
 		@Override
 		protected String doInBackground(String... params) {
@@ -68,8 +70,9 @@ public class MainActivity extends ActionBarActivity {
 				int responseCode = conn.getResponseCode();
 				if (responseCode == HttpURLConnection.HTTP_OK) {
 					InputStream is = conn.getInputStream();
+					contentType = conn.getContentType();
 					BufferedReader br = new BufferedReader(
-							new InputStreamReader(is));
+							new InputStreamReader(is,"euc-kr"));
 					StringBuilder sb = new StringBuilder();
 					String line;
 					while ((line = br.readLine()) != null) {
@@ -91,8 +94,9 @@ public class MainActivity extends ActionBarActivity {
 			super.onPostExecute(result);
 			if (result != null) {
 				messageView.setText(result);
+				Toast.makeText(MainActivity.this, "content-type : " + contentType, Toast.LENGTH_SHORT).show();
 				Toast.makeText(MainActivity.this, result, Toast.LENGTH_SHORT).show();
-				webView.loadData(result, "text/html", "utf8");
+				webView.loadData(result, "text/html", null);
 			}
 		}
 	}
