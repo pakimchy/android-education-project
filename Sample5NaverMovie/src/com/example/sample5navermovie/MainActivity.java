@@ -1,10 +1,14 @@
 package com.example.sample5navermovie;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -25,6 +29,21 @@ public class MainActivity extends ActionBarActivity {
 		listView = (ListView)findViewById(R.id.listView1);
 		mAdapter = new MyAdapter(this);
 		listView.setAdapter(mAdapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				MovieItem item = (MovieItem)listView.getItemAtPosition(position);				
+				
+				if (item.link != null && !item.link.equals("")) {
+					Intent i = new Intent(MainActivity.this, BrowserActivity.class);
+					i.putExtra(BrowserActivity.PARAM_URL, item.link);
+//					Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(item.link));
+					startActivity(i);
+				}
+			}
+		});
 		keywordView = (EditText)findViewById(R.id.keyword);
 		Button btn = (Button)findViewById(R.id.btn_search);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -33,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, 1, 20, new OnResultListener<NaverMovies>() {
+					NetworkManager.getInstance().getNaverMovie(MainActivity.this, keyword, 1, 10, new OnResultListener<NaverMovies>() {
 						
 						@Override
 						public void onSuccess(NaverMovies result) {
