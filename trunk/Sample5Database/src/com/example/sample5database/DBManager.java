@@ -81,6 +81,17 @@ public class DBManager {
 		}
 	}
 	
+	public Cursor getPersonCursor() {
+		SQLiteDatabase db = mHelper.getReadableDatabase();
+		
+		String[] columns = {PersonTable._ID, PersonTable.FIELD_NAME, PersonTable.FIELD_AGE };
+		String selection = PersonTable.FIELD_AGE + " > ? AND " + PersonTable.FIELD_AGE + " < ?";
+		String[] selectionArgs = {"20","50"};
+		
+		Cursor c = db.query(PersonTable.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
+		
+		return c;
+	}
 	
 	public ArrayList<Person> getPersonList() {
 		ArrayList<Person> list = new ArrayList<Person>();
