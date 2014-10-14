@@ -1,11 +1,14 @@
 package com.example.sample5contentprovider;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.provider.ContactsContract.Contacts;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,6 +37,35 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					showContacts(keyword);
+				} else {
+					showAll();
+				}
+			}
+		});
+		
+		keywordView.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				String keyword = s.toString();
+				if (keyword != null && !keyword.equals("")) {
+					showContacts(keyword);
+				} else {
+					showAll();
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
 				
 			}
 		});
@@ -43,8 +75,18 @@ public class MainActivity extends ActionBarActivity {
 		mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null, from, to, 0);
 		listView.setAdapter(mAdapter);
 		
+		showAll();
+	}
+	
+	private void showAll() {
 		Cursor c = getContentResolver().query(ContactsContract.Contacts.CONTENT_URI, projection, selection, null, orderBy);
-		mAdapter.swapCursor(c);
+		mAdapter.swapCursor(c);		
+	}
+	
+	private void showContacts(String keyword) {
+		Uri uri = Uri.withAppendedPath(Contacts.CONTENT_FILTER_URI, Uri.encode(keyword));
+		Cursor c = getContentResolver().query(uri, projection, selection, null, orderBy);
+		mAdapter.swapCursor(c);		
 	}
 
 	@Override
