@@ -10,14 +10,27 @@ import android.widget.BaseAdapter;
 public class MyAdapter extends BaseAdapter {
 	Context mContext;
 	ArrayList<MovieItem> items  = new ArrayList<MovieItem>();
+	int totalCount;
 	
 	public MyAdapter(Context context) {
 		mContext = context;
 	}
 	
+	public void clearAll() {
+		items.clear();
+		notifyDataSetChanged();
+	}
 	public void addAll(ArrayList<MovieItem> items) {
 		this.items.addAll(items);
 		notifyDataSetChanged();
+	}
+	
+	public void setTotal(int total) {
+		this.totalCount = total;
+	}
+	
+	public int getTotal() {
+		return totalCount;
 	}
 	
 	@Override
