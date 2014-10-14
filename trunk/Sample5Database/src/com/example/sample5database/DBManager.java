@@ -41,7 +41,7 @@ public class DBManager {
 			p.age = c.getInt(c.getColumnIndex(PersonTable.FIELD_AGE));
 			list.add(p);
 		}
-		
+		c.close();
 		
 		return list;
 	}
