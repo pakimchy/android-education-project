@@ -43,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
 								@Override
 								public void onSuccess(NaverMovies result) {
-									mAdapter.addAll(result.item);
+									mAdapter.addAll(result.items);
 									mAdapter.setTotal(result.total);
 									pullView.onRefreshComplete();
 								}
@@ -114,7 +114,7 @@ public class MainActivity extends ActionBarActivity {
 
 								@Override
 								public void onSuccess(NaverMovies result) {
-									mAdapter.addAll(result.item);
+									mAdapter.addAll(result.items);
 									mAdapter.setTotal(result.total);
 								}
 
