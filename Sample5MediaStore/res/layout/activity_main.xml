@@ -15,10 +15,18 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <ListView
-        android:id="@+id/listView1"
+    <Button
+        android:id="@+id/button1"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Button" />
+
+    <GridView
+        android:id="@+id/gridView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="wrap_content"
+        android:numColumns="3" >
+    </GridView>
 
 </LinearLayout>
