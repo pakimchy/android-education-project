@@ -45,6 +45,13 @@
             android:layout_height="wrap_content"
             android:text="stop" />
 
+        <Button
+            android:id="@+id/btn_list"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="list" />
+
     </LinearLayout>
 
     <SeekBar
