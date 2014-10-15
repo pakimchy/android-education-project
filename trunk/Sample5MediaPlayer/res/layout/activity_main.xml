@@ -47,4 +47,15 @@
 
     </LinearLayout>
 
+    <SeekBar
+        android:id="@+id/volume_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <CheckBox
+        android:id="@+id/check_mute"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
 </LinearLayout>

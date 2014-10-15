@@ -2,6 +2,8 @@ package com.example.sample5mediaplayer;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -29,6 +33,8 @@ public class MainActivity extends ActionBarActivity {
 	Handler mHandler = new Handler();
 	private static final int INTERVAL = 100;
 
+	SeekBar volumeView;
+
 	Runnable updateRunnable = new Runnable() {
 
 		@Override
@@ -44,6 +50,8 @@ public class MainActivity extends ActionBarActivity {
 	};
 
 	boolean isStartTracking = false;
+
+	AudioManager mAudioManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,49 @@ public class MainActivity extends ActionBarActivity {
 					this.progress = progress;
 				}
 
+			}
+		});
+
+		volumeView = (SeekBar) findViewById(R.id.volume_bar);
+		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		int max = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setMax(max);
+		int current = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setProgress(current);
+		volumeView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+							progress, 0);
+				}
+			}
+		});
+		CheckBox check = (CheckBox) findViewById(R.id.check_mute);
+		check.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
+					volume = 1;
+					mHandler.post(downRunnable);
+				} else {
+					volume = 0;
+					mHandler.post(upRunnable);
+				}
 			}
 		});
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
@@ -133,6 +184,35 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 	}
+
+	float volume = 1.0f;
+	Runnable downRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			if (volume >= 0) {
+				mPlayer.setVolume(volume, volume);
+				volume -= 0.2f;
+				mHandler.postDelayed(this, 200);
+			} else {
+				volume = 0;
+			}
+		}
+	};
+
+	Runnable upRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			if (volume <= 1) {
+				mPlayer.setVolume(volume, volume);
+				volume += 0.2f;
+				mHandler.postDelayed(this, 200);
+			} else {
+				volume = 1;
+			}
+		}
+	};
 
 	@Override
 	protected void onDestroy() {
