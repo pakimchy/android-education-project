@@ -1,7 +1,11 @@
 package com.example.sample5mediastore;
 
+import java.util.ArrayList;
+
+import android.content.ContentUris;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
@@ -11,42 +15,78 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
+import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>{
+public class MainActivity extends ActionBarActivity implements
+		LoaderCallbacks<Cursor> {
 
-	ListView listView;
+	GridView gridView;
 	SimpleCursorAdapter mAdapter;
-	
+
 	int idIndex = -1;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		listView = (ListView)findViewById(R.id.listView1);
-		String[] from = {MediaStore.Images.Media._ID, MediaStore.Images.Media.TITLE};
-		int[] to = {R.id.thumb_image, R.id.title};
-		mAdapter = new SimpleCursorAdapter(this, R.layout.item_layout, null, from, to, 0);
+		gridView = (GridView) findViewById(R.id.gridView1);
+		String[] from = { MediaStore.Images.Media._ID,
+				MediaStore.Images.Media.TITLE };
+		int[] to = { R.id.thumb_image, R.id.title };
+		mAdapter = new SimpleCursorAdapter(this, R.layout.check_layout, null,
+				from, to, 0);
 		mAdapter.setViewBinder(new ViewBinder() {
-			
+
 			@Override
-			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+			public boolean setViewValue(View view, Cursor cursor,
+					int columnIndex) {
 				if (columnIndex == idIndex) {
 					long id = cursor.getLong(columnIndex);
-					Bitmap bm = Images.Thumbnails.getThumbnail(getContentResolver(), id, Images.Thumbnails.MICRO_KIND, null);
-					ImageView iv = (ImageView)view;
+					Bitmap bm = Images.Thumbnails.getThumbnail(
+							getContentResolver(), id,
+							Images.Thumbnails.MINI_KIND, null);
+					ImageView iv = (ImageView) view;
 					iv.setImageBitmap(bm);
 					return true;
 				}
 				return false;
 			}
 		});
-		listView.setAdapter(mAdapter);
+		gridView.setAdapter(mAdapter);
+		gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
+		Button btn = (Button) findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				SparseBooleanArray array = gridView.getCheckedItemPositions();
+				ArrayList<Uri> uris = new ArrayList<Uri>();
+				ArrayList<String> files = new ArrayList<String>();
+				for (int i = 0; i < array.size(); i++) {
+					int position = array.keyAt(i);
+					if (array.get(position)) {
+						long id = gridView.getItemIdAtPosition(position);
+						Cursor c = (Cursor)gridView.getItemAtPosition(position);
+						String path = c.getString(c.getColumnIndex(Images.Media.DATA));
+						files.add(path);
+						Uri uri = ContentUris.withAppendedId(
+								Images.Media.EXTERNAL_CONTENT_URI, id);
+						uris.add(uri);
+					}
+				}
+				
+				Toast.makeText(MainActivity.this, "uris : " + uris.toString(), Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "files : " + files.toString(), Toast.LENGTH_SHORT).show();
+
+			}
+		});
 		getSupportLoaderManager().initLoader(0, null, this);
 	}
 
@@ -69,12 +109,16 @@ public class MainActivity extends ActionBarActivity implements LoaderCallbacks<C
 		return super.onOptionsItemSelected(item);
 	}
 
-	String[] projection = {Images.Media._ID, Images.Media.TITLE, Images.Media.DATE_ADDED};
-	String selection = "((" + Images.Media.TITLE + " NOTNULL) AND (" + Images.Media.TITLE + " != ''))";
+	String[] projection = { Images.Media._ID, Images.Media.TITLE,
+			Images.Media.DATE_ADDED, Images.Media.DATA };
+	String selection = "((" + Images.Media.TITLE + " NOTNULL) AND ("
+			+ Images.Media.TITLE + " != ''))";
 	String sortOrder = Images.Media.TITLE + " COLLATE LOCALIZED ASC";
+
 	@Override
 	public Loader<Cursor> onCreateLoader(int code, Bundle b) {
-		return new CursorLoader(this, Images.Media.EXTERNAL_CONTENT_URI, projection, selection, null, sortOrder);
+		return new CursorLoader(this, Images.Media.EXTERNAL_CONTENT_URI,
+				projection, selection, null, sortOrder);
 	}
 
 	@Override
