@@ -1,10 +1,17 @@
 package com.example.sample5camera;
 
 import java.io.IOException;
+import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore.Images;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -36,9 +43,82 @@ public class MainActivity extends ActionBarActivity implements
 				changeCamera(type);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_effect);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mCamera != null) {
+					Camera.Parameters params = mCamera.getParameters();
+					List<String> effectlist = params.getSupportedColorEffects();
+					AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+					builder.setTitle("Select Effect");
+					builder.setIcon(R.drawable.ic_launcher);
+					final String[] items = new String[effectlist.size()];
+					effectlist.toArray(items);
+					builder.setItems(items, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Camera.Parameters params = mCamera.getParameters();
+							params.setColorEffect(items[which]);
+							mCamera.setParameters(params);
+						}
+					});
+					builder.create().show();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_capture);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mCamera != null) {
+					mHandler.removeCallbacks(takePictureRunnable);
+					picture_count = 3;
+					mHandler.postDelayed(takePictureRunnable, 5000);
+				}
+			}
+		});
 		changeCamera(TYPE_BACK);
 		
 	}
+	
+	
+	Camera.PictureCallback pictureCallback = new Camera.PictureCallback() {
+		
+		@Override
+		public void onPictureTaken(byte[] data, Camera camera) {
+			BitmapFactory.Options opts = new BitmapFactory.Options();
+			opts.inSampleSize = 2;
+			Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length, opts);
+			Images.Media.insertImage(getContentResolver(), bitmap, "Camera Image", "my camera picture");
+			
+//			File f = new File("/a/b/c.jpg");
+//			FileOutputStream fos = new FileOutputStream(f);
+//			fos.write(data);
+//			fos.close();
+		}
+	};
+	Handler mHandler = new Handler();
+
+	int picture_count = 3;
+	int picture_interval = 1000;
+	
+	Runnable takePictureRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (mCamera != null && picture_count > 0) {
+				mCamera.takePicture(null, null, pictureCallback);
+				picture_count--;
+				mHandler.postDelayed(this, picture_interval);
+			}
+		}
+	};
 	
 	private static final int TYPE_BACK = 1;
 	private static final int TYPE_FRONT = 2;
@@ -64,7 +144,6 @@ public class MainActivity extends ActionBarActivity implements
 					mCamera.setPreviewDisplay(mHolder);
 					mCamera.startPreview();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
