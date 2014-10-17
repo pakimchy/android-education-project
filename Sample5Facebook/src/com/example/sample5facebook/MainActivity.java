@@ -16,9 +16,12 @@ import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
 import com.facebook.SessionState;
 import com.facebook.model.GraphUser;
+import com.facebook.widget.LoginButton;
 
 public class MainActivity extends ActionBarActivity {
 
+	LoginButton authButton;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,6 +49,18 @@ public class MainActivity extends ActionBarActivity {
 						}
 					}
 				});
+			}
+		});
+		
+		authButton = (LoginButton)findViewById(R.id.btn_auth);
+		authButton.setReadPermissions("email");
+		authButton.setSessionStatusCallback(new StatusCallback() {
+			
+			@Override
+			public void call(Session session, SessionState state, Exception exception) {
+				if (session.isOpened()) {
+					Toast.makeText(MainActivity.this, "login...", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
