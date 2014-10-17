@@ -25,6 +25,7 @@ import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.Callback;
 import com.facebook.Request.GraphUserCallback;
+import com.facebook.Request.GraphUserListCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.Session.NewPermissionsRequest;
@@ -226,6 +227,43 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_friend_list);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Session.openActiveSession(MainActivity.this, true, new StatusCallback() {
+					
+					@Override
+					public void call(Session session, SessionState state, Exception exception) {
+						if (session.isOpened()) {
+							Request.newMyFriendsRequest(session, new GraphUserListCallback() {
+								
+								@Override
+								public void onCompleted(List<GraphUser> users, Response response) {
+									if (users != null) {
+										Toast.makeText(MainActivity.this, "users : " + users.toString(), Toast.LENGTH_SHORT).show();
+									} else {
+										Toast.makeText(MainActivity.this, "error ", Toast.LENGTH_SHORT).show();
+									}
+								}
+							}).executeAsync();
+						}
+					}
+				});
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_show_fragment);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MyFragmentActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 	
 	public static final List<String> READ_PERMISSIONS = Arrays
@@ -270,7 +308,6 @@ public class MainActivity extends ActionBarActivity {
 							String id = obj.getString("id");
 							Toast.makeText(MainActivity.this, "id : " + id, Toast.LENGTH_SHORT).show();
 						} catch (JSONException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						
@@ -280,7 +317,6 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}).executeAsync();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
