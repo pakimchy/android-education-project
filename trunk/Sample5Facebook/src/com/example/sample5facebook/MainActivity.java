@@ -1,5 +1,7 @@
 package com.example.sample5facebook;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -8,7 +10,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +23,7 @@ import android.widget.Toast;
 import com.facebook.FacebookRequestError;
 import com.facebook.HttpMethod;
 import com.facebook.Request;
+import com.facebook.Request.Callback;
 import com.facebook.Request.GraphUserCallback;
 import com.facebook.Response;
 import com.facebook.Session;
@@ -162,6 +167,122 @@ public class MainActivity extends ActionBarActivity {
 						});
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_picture_upload);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Cursor c = getContentResolver().query(Images.Media.EXTERNAL_CONTENT_URI, new String[]{Images.Media.DATA}, null, null, null);
+				String path = null;
+				if (c.moveToNext()) {
+					path = c.getString(c.getColumnIndex(Images.Media.DATA));
+				}
+				c.close();
+				if (path != null) {
+					Session session = Session.getActiveSession();
+					final File file = new File(path);
+					if (session == null) {
+						session = Session.openActiveSessionFromCache(MainActivity.this);
+					}
+					if (session != null && session.isOpened()) {
+						session.addCallback(new StatusCallback() {
+							
+							@Override
+							public void call(Session session, SessionState state, Exception exception) {
+								uploadImage(session, file);
+							}
+						});
+						uploadImage(session, file);
+					} else {
+						Toast.makeText(MainActivity.this, "facebook not login", Toast.LENGTH_SHORT).show();
+					}
+				} else {
+					Toast.makeText(MainActivity.this, "no photo", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_read);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Session session = Session.getActiveSession();
+				if (session == null) {
+					session = Session.openActiveSessionFromCache(MainActivity.this);
+				}
+				if (session != null && session.isOpened()) {
+					session.addCallback(new StatusCallback() {
+						
+						@Override
+						public void call(Session session, SessionState state, Exception exception) {
+							readPost(session);
+						}
+					});
+					readPost(session);
+				} else {
+					Toast.makeText(MainActivity.this, "facebook not login", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+	}
+	
+	public static final List<String> READ_PERMISSIONS = Arrays
+			.asList("read_stream");
+	private void readPost(Session session) {
+		List<String> permissions = session.getPermissions();
+		if (!isSubsetOf(READ_PERMISSIONS, permissions)) {
+			session.requestNewReadPermissions(new NewPermissionsRequest(this, READ_PERMISSIONS));
+			return;
+		}
+		Bundle params = new Bundle();
+//		params.putString("until","" + (System.currentTimeMillis() / 1000));
+		Request request = new Request(session, "me/feed", params, HttpMethod.GET, new Callback() {
+			
+			@Override
+			public void onCompleted(Response response) {
+				if (response.getGraphObject() != null) {
+					JSONObject obj = response.getGraphObject().getInnerJSONObject();
+					Toast.makeText(MainActivity.this, "list : " + obj.toString(), Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(MainActivity.this, "error : " + response.getError(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		request.executeAsync();
+	}
+	private void uploadImage(Session session, File file) {
+		List<String> permissions = session.getPermissions();
+		if (!isSubsetOf(PERMISSIONS, permissions)) {
+			session.requestNewPublishPermissions(new NewPermissionsRequest(this, PERMISSIONS));
+			return;
+		}
+		
+		try {
+			Request.newUploadPhotoRequest(session, file, new Callback() {
+				
+				@Override
+				public void onCompleted(Response response) {
+					if (response.getGraphObject() != null) {
+						JSONObject obj = response.getGraphObject().getInnerJSONObject();
+						try {
+							String id = obj.getString("id");
+							Toast.makeText(MainActivity.this, "id : " + id, Toast.LENGTH_SHORT).show();
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					} else {
+						Toast.makeText(MainActivity.this, "error : " + response.getError(), Toast.LENGTH_SHORT).show();
+					}
+				}
+			}).executeAsync();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
