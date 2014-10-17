@@ -47,4 +47,18 @@
         android:layout_height="wrap_content"
         android:text="read" />
 
+    <Button
+        android:id="@+id/btn_friend_list"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="friend list" />
+
+    <Button
+        android:id="@+id/btn_show_fragment"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="fragment activity" />
+
 </LinearLayout>
