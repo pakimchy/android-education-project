@@ -77,9 +77,9 @@ implements MenuFragment.MenuClickListener {
 	Handler mHandler = new Handler();
 	
 	public void hideMenu() {
-		mHandler.postDelayed(disableMenu, 100);
+		mHandler.postDelayed(hideMenuRunnable, 100);
 	}
-	Runnable disableMenu = new Runnable() {
+	Runnable hideMenuRunnable = new Runnable() {
 		
 		@Override
 		public void run() {
