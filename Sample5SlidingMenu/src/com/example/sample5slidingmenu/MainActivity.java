@@ -5,6 +5,8 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -18,11 +20,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 
 	SlidingMenu sm;
 
+	ImageView dimImage;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		setBehindContentView(R.layout.menu_frame);
+		dimImage = (ImageView)findViewById(R.id.image_dim);
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
@@ -38,6 +43,20 @@ public class MainActivity extends SlidingFragmentActivity implements
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		sm.setOnOpenedListener(new SlidingMenu.OnOpenedListener() {
+			
+			@Override
+			public void onOpened() {
+				dimImage.setVisibility(View.VISIBLE);
+			}
+		});
+		sm.setOnCloseListener(new SlidingMenu.OnCloseListener() {
+			
+			@Override
+			public void onClose() {
+				dimImage.setVisibility(View.GONE);
+			}
+		});
 		getSupportActionBar().setHomeButtonEnabled(true);
 	}
 
