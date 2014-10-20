@@ -15,9 +15,6 @@
  */
 package com.example.samplegcmgoogleplaytest;
 
-import static com.example.samplegcmgoogleplaytest.CommonUtilities.SERVER_URL;
-import static com.example.samplegcmgoogleplaytest.CommonUtilities.TAG;
-
 import android.content.Context;
 import android.util.Log;
 
@@ -47,8 +44,8 @@ public final class ServerUtilities {
      * @return whether the registration succeeded or not.
      */
     static boolean register(final Context context, final String regId) {
-        Log.i(TAG, "registering device (regId = " + regId + ")");
-        String serverUrl = SERVER_URL + "/register";
+        Log.i(CommonUtilities.TAG, "registering device (regId = " + regId + ")");
+        String serverUrl = CommonUtilities.SERVER_URL + "/register";
         Map<String, String> params = new HashMap<String, String>();
         params.put("regId", regId);
         long backoff = BACKOFF_MILLI_SECONDS + random.nextInt(1000);
@@ -56,7 +53,7 @@ public final class ServerUtilities {
         // demo server. As the server might be down, we will retry it a couple
         // times.
         for (int i = 1; i <= MAX_ATTEMPTS; i++) {
-            Log.d(TAG, "Attempt #" + i + " to register");
+            Log.d(CommonUtilities.TAG, "Attempt #" + i + " to register");
             try {
                 post(serverUrl, params);
                 return true;
@@ -64,16 +61,16 @@ public final class ServerUtilities {
                 // Here we are simplifying and retrying on any error; in a real
                 // application, it should retry only on unrecoverable errors
                 // (like HTTP error code 503).
-                Log.e(TAG, "Failed to register on attempt " + i, e);
+                Log.e(CommonUtilities.TAG, "Failed to register on attempt " + i, e);
                 if (i == MAX_ATTEMPTS) {
                     break;
                 }
                 try {
-                    Log.d(TAG, "Sleeping for " + backoff + " ms before retry");
+                    Log.d(CommonUtilities.TAG, "Sleeping for " + backoff + " ms before retry");
                     Thread.sleep(backoff);
                 } catch (InterruptedException e1) {
                     // Activity finished before we complete - exit.
-                    Log.d(TAG, "Thread interrupted: abort remaining retries!");
+                    Log.d(CommonUtilities.TAG, "Thread interrupted: abort remaining retries!");
                     Thread.currentThread().interrupt();
                     return false;
                 }
@@ -88,8 +85,8 @@ public final class ServerUtilities {
      * Unregister this account/device pair within the server.
      */
     static void unregister(final Context context, final String regId) {
-        Log.i(TAG, "unregistering device (regId = " + regId + ")");
-        String serverUrl = SERVER_URL + "/unregister";
+        Log.i(CommonUtilities.TAG, "unregistering device (regId = " + regId + ")");
+        String serverUrl = CommonUtilities.SERVER_URL + "/unregister";
         Map<String, String> params = new HashMap<String, String>();
         params.put("regId", regId);
         try {
@@ -126,7 +123,7 @@ public final class ServerUtilities {
             }
         }
         String body = bodyBuilder.toString();
-        Log.v(TAG, "Posting '" + body + "' to " + url);
+        Log.v(CommonUtilities.TAG, "Posting '" + body + "' to " + url);
         byte[] bytes = body.getBytes();
         HttpURLConnection conn = null;
         try {
