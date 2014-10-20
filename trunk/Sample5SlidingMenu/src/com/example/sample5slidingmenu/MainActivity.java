@@ -2,17 +2,22 @@ package com.example.sample5slidingmenu;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class MainActivity extends SlidingFragmentActivity 
-implements MenuFragment.MenuClickListener {
+public class MainActivity extends SlidingFragmentActivity implements
+		MenuFragment.MenuClickListener {
+
+	private static final String TAG_MENU_MAIN = "menu";
+	private static final String TAG_MENU_ONE = "one";
+	private static final String TAG_MENU_TWO = "two";
 
 	SlidingMenu sm;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,11 +26,12 @@ implements MenuFragment.MenuClickListener {
 
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new MainFragment()).commit();
+					.add(R.id.container, new MainFragment(), TAG_MENU_MAIN)
+					.commit();
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.menu_container, new MenuFragment()).commit();
 		}
-		
+
 		sm = getSlidingMenu();
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setShadowDrawable(R.drawable.shadow);
@@ -35,7 +41,6 @@ implements MenuFragment.MenuClickListener {
 		getSupportActionBar().setHomeButtonEnabled(true);
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
@@ -57,30 +62,61 @@ implements MenuFragment.MenuClickListener {
 		return super.onOptionsItemSelected(item);
 	}
 
-
 	@Override
 	public void selectMenu(int menu) {
-		switch(menu) {
-		case MenuFragment.MENU_MAIN :
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
+		switch (menu) {
+		case MenuFragment.MENU_MAIN:
+
+			emptyBackStack();
+//			Fragment f = getSupportFragmentManager().findFragmentByTag(
+//					TAG_MENU_MAIN);
+//			if (f == null) {
+//				getSupportFragmentManager()
+//						.beginTransaction()
+//						.replace(R.id.container, new MainFragment(),
+//								TAG_MENU_MAIN).commit();
+//			}
 			break;
-		case MenuFragment.MENU_ONE :
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MenuOneFragment()).commit();
+		case MenuFragment.MENU_ONE:
+			Fragment f1 = getSupportFragmentManager().findFragmentByTag(
+					TAG_MENU_ONE);
+			if (f1 == null) {
+				emptyBackStack();
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(R.id.container, new MenuOneFragment(),
+								TAG_MENU_ONE).addToBackStack(null).commit();
+			}
 			break;
-		case MenuFragment.MENU_TWO :
-			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MenuTwoFragment()).commit();
+		case MenuFragment.MENU_TWO:
+			Fragment f2 = getSupportFragmentManager().findFragmentByTag(
+					TAG_MENU_TWO);
+			if (f2 == null) {
+				emptyBackStack();
+				getSupportFragmentManager()
+						.beginTransaction()
+						.replace(R.id.container, new MenuTwoFragment(),
+								TAG_MENU_TWO).addToBackStack(null).commit();
+			}
 			break;
 		}
 		hideMenu();
 	}
 	
+	private void emptyBackStack() {
+		while(getSupportFragmentManager().getBackStackEntryCount() > 0) {
+			getSupportFragmentManager().popBackStackImmediate();
+		}
+	}
+
 	Handler mHandler = new Handler();
-	
+
 	public void hideMenu() {
 		mHandler.postDelayed(hideMenuRunnable, 100);
 	}
+
 	Runnable hideMenuRunnable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			showContent();
