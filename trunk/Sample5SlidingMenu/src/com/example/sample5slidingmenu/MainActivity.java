@@ -1,13 +1,15 @@
 package com.example.sample5slidingmenu;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class MainActivity extends SlidingFragmentActivity {
+public class MainActivity extends SlidingFragmentActivity 
+implements MenuFragment.MenuClickListener {
 
 	SlidingMenu sm;
 	
@@ -30,12 +32,12 @@ public class MainActivity extends SlidingFragmentActivity {
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setFadeDegree(0.35f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		getSupportActionBar().setHomeButtonEnabled(true);
 	}
 
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
@@ -48,7 +50,40 @@ public class MainActivity extends SlidingFragmentActivity {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			return true;
+		} else if (id == android.R.id.home) {
+			toggle();
+			return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
+
+
+	@Override
+	public void selectMenu(int menu) {
+		switch(menu) {
+		case MenuFragment.MENU_MAIN :
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MainFragment()).commit();
+			break;
+		case MenuFragment.MENU_ONE :
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MenuOneFragment()).commit();
+			break;
+		case MenuFragment.MENU_TWO :
+			getSupportFragmentManager().beginTransaction().replace(R.id.container, new MenuTwoFragment()).commit();
+			break;
+		}
+		hideMenu();
+	}
+	
+	Handler mHandler = new Handler();
+	
+	public void hideMenu() {
+		mHandler.postDelayed(disableMenu, 100);
+	}
+	Runnable disableMenu = new Runnable() {
+		
+		@Override
+		public void run() {
+			showContent();
+		}
+	};
 }
