@@ -2,6 +2,7 @@ package com.example.sample5slidingmenu;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,14 @@ import android.widget.ListView;
 
 public class MenuFragment extends Fragment {
 
+	public static final int MENU_MAIN = 0;
+	public static final int MENU_ONE = 1;
+	public static final int MENU_TWO = 2;
+	
+	public interface MenuClickListener {
+		public void selectMenu(int menu);
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -49,8 +58,10 @@ public class MenuFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				// TODO Auto-generated method stub
-				
+				Activity activity = getActivity();
+				if (activity instanceof MenuClickListener) {
+					((MenuClickListener)activity).selectMenu(position);
+				}				
 			}
 		});
 	}
