@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 import com.skp.Tmap.TMapView.OnApiKeyListenerCallback;
 
@@ -75,6 +77,35 @@ public class MainActivity extends ActionBarActivity {
 				mMapView.MapZoomOut();
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_add_marker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TMapPoint point = mMapView.getCenterPoint();
+				addMarker(point.getLatitude(), point.getLongitude());
+			}
+		});
+		
+	}
+	
+	int id = 0;
+	private void addMarker(double lat, double lng) {
+		TMapMarkerItem item = new TMapMarkerItem();
+		Bitmap bm = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_alert)).getBitmap();
+		item.setIcon(bm);
+		item.setTMapPoint(new TMapPoint(lat, lng));
+		item.setPosition(0.5f, 1);
+		item.setCalloutTitle("marker");
+		item.setCalloutSubTitle("my icon");
+		Bitmap left = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_email)).getBitmap();
+		Bitmap right = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_map)).getBitmap();
+		item.setCalloutLeftImage(left);
+		item.setCalloutRightButtonImage(right);
+		item.setCanShowCallout(true);
+		
+		mMapView.addMarkerItem("marker" + id++, item);
 		
 	}
 	
@@ -146,6 +177,13 @@ public class MainActivity extends ActionBarActivity {
 //		mMapView.setTrackingMode(true);
 		setMyLocation(37.46628337, 126.9605881);
 		
+		mMapView.setOnCalloutRightButtonClickListener(new TMapView.OnCalloutRightButtonClickCallback() {
+			
+			@Override
+			public void onCalloutRightButton(TMapMarkerItem item) {
+				Toast.makeText(MainActivity.this, "item : " + item.getID(), Toast.LENGTH_SHORT).show();
+			}
+		});
 		if (cacheLocation != null) {
 			moveMap(cacheLocation);
 		}
