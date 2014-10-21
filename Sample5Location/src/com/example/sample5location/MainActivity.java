@@ -14,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -123,7 +124,13 @@ public class MainActivity extends ActionBarActivity {
 
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-
+			switch(status) {
+			case LocationProvider.OUT_OF_SERVICE :
+			case LocationProvider.TEMPORARILY_UNAVAILABLE :
+				break;
+			case LocationProvider.AVAILABLE :
+				break;
+			}
 		}
 
 		@Override
@@ -143,7 +150,7 @@ public class MainActivity extends ActionBarActivity {
 					"Location : " + location.getLatitude() + ","
 							+ location.getLongitude(), Toast.LENGTH_SHORT)
 					.show();
-			mLM.removeUpdates(this);
+//			mLM.removeUpdates(this);
 			if (Geocoder.isPresent()) {
 				Geocoder geo = new Geocoder(MainActivity.this, Locale.getDefault());
 				try {
@@ -182,7 +189,9 @@ public class MainActivity extends ActionBarActivity {
 			mListener.onLocationChanged(location);
 		}
 
-		mLM.requestLocationUpdates(mProvider, 0, 0, mListener);
+		mLM.requestLocationUpdates(mProvider, 10000, 0, mListener);
+		
+//		mLM.requestSingleUpdate(mProvider, mListener, null);
 	}
 
 	@Override
