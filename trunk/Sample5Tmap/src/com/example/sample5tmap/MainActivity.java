@@ -2,7 +2,9 @@ package com.example.sample5tmap;
 
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
@@ -23,9 +25,11 @@ import android.widget.Toast;
 
 import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapData.FindAllPOIListenerCallback;
+import com.skp.Tmap.TMapData.TMapPathType;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 import com.skp.Tmap.TMapView.OnApiKeyListenerCallback;
 
@@ -149,6 +153,33 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_route);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startItem != null && endItem != null) {
+					TMapData data = new TMapData();
+					data.findPathDataWithType(TMapPathType.CAR_PATH, startItem.getTMapPoint(), endItem.getTMapPoint(), new TMapData.FindPathDataListenerCallback() {
+						
+						@Override
+						public void onFindPathData(final TMapPolyLine path) {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									mMapView.addTMapPath(path);
+									moveMap(startItem.getTMapPoint().getLatitude(), startItem.getTMapPoint().getLongitude());
+//									mMapView.setTMapPathIcon(start, end)
+								}
+							});
+						}
+					});
+				} else {
+					Toast.makeText(MainActivity.this, "start or end is null", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 	
 	int id = 0;
@@ -251,12 +282,14 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	boolean isInitialized = false;
+	TMapMarkerItem startItem;
+	TMapMarkerItem endItem;
 	
 	private void setupMap() {
 		isInitialized = true;
 		mMapView.setLanguage(mMapView.LANGUAGE_KOREAN);
 		mMapView.setMapType(mMapView.MAPTYPE_STANDARD);
-		mMapView.setTrafficInfo(true);
+//		mMapView.setTrafficInfo(true);
 //		mMapView.setCompassMode(true);
 //		mMapView.setTrackingMode(true);
 		setMyLocation(37.46628337, 126.9605881);
@@ -264,8 +297,35 @@ public class MainActivity extends ActionBarActivity {
 		mMapView.setOnCalloutRightButtonClickListener(new TMapView.OnCalloutRightButtonClickCallback() {
 			
 			@Override
-			public void onCalloutRightButton(TMapMarkerItem item) {				
+			public void onCalloutRightButton(final TMapMarkerItem item) {				
 				Toast.makeText(MainActivity.this, "item : " + item.getID(), Toast.LENGTH_SHORT).show();
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setIcon(R.drawable.ic_launcher);
+				builder.setTitle("Select");
+				builder.setMessage("start or end");
+				builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						startItem = item;
+					}
+				});
+				builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+					}
+				});
+				builder.setNegativeButton("End", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						endItem = item;
+					}
+				});
+				
+				builder.create().show();
 			}
 		});
 		if (cacheLocation != null) {
