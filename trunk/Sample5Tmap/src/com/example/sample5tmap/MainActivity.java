@@ -1,5 +1,7 @@
 package com.example.sample5tmap;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -11,10 +13,18 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapData.FindAllPOIListenerCallback;
 import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 import com.skp.Tmap.TMapView.OnApiKeyListenerCallback;
@@ -24,11 +34,27 @@ public class MainActivity extends ActionBarActivity {
 	TMapView mMapView;
 	LocationManager mLM;
 	String mProvider = LocationManager.GPS_PROVIDER;
+	ListView listView;
+	ArrayAdapter<ListItem> mAdapter;
+	EditText keywordView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		listView = (ListView)findViewById(R.id.listView1);
+		keywordView = (EditText)findViewById(R.id.keyword);
+		mAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, new ArrayList<ListItem>());
+		listView.setAdapter(mAdapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ListItem item = (ListItem)listView.getItemAtPosition(position);
+				moveMap(item.item.getPOIPoint().getLatitude(), item.item.getPOIPoint().getLongitude());
+			}
+		});
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		mMapView = (TMapView)findViewById(R.id.mapView);
 		
@@ -88,6 +114,36 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					TMapData data = new TMapData();
+					data.findAllPOI(keyword, new FindAllPOIListenerCallback() {
+						
+						@Override
+						public void onFindAllPOI(final ArrayList<TMapPOIItem> poilist) {
+							runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									for (TMapPOIItem poi : poilist) {
+										ListItem item = new ListItem();
+										item.item = poi;
+										mAdapter.add(item);
+										addMarker(item);
+									}
+								}
+							});
+						}
+					});
+				}
+			}
+		});
+		
 	}
 	
 	int id = 0;
@@ -106,8 +162,27 @@ public class MainActivity extends ActionBarActivity {
 		item.setCanShowCallout(true);
 		
 		mMapView.addMarkerItem("marker" + id++, item);
-		
 	}
+
+	private int poiIndex = 0;
+	private void addMarker(ListItem list) {
+		TMapMarkerItem item = new TMapMarkerItem();
+		Bitmap bm = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_alert)).getBitmap();
+		item.setIcon(bm);
+		item.setTMapPoint(list.item.getPOIPoint());
+		item.setPosition(0.5f, 1);
+		item.setCalloutTitle(list.item.getPOIName());
+		item.setCalloutSubTitle(list.item.getPOIContent());
+		Bitmap left = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_email)).getBitmap();
+		Bitmap right = ((BitmapDrawable)getResources().getDrawable(android.R.drawable.ic_dialog_map)).getBitmap();
+		item.setCalloutLeftImage(left);
+		item.setCalloutRightButtonImage(right);
+		item.setCanShowCallout(true);
+		list.id = "poi" + poiIndex++;
+		mMapView.addMarkerItem(list.id, item);
+	}
+	
+	private 
 	
 	LocationListener mListener = new LocationListener() {
 		
@@ -141,6 +216,10 @@ public class MainActivity extends ActionBarActivity {
 	
 	private void moveMap(Location location) {
 		mMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
+	}
+	
+	private void moveMap(double lat, double lng) {
+		mMapView.setCenterPoint(lng, lat);
 	}
 	
 	private void setMyLocation(double lat, double lng) {
@@ -180,7 +259,7 @@ public class MainActivity extends ActionBarActivity {
 		mMapView.setOnCalloutRightButtonClickListener(new TMapView.OnCalloutRightButtonClickCallback() {
 			
 			@Override
-			public void onCalloutRightButton(TMapMarkerItem item) {
+			public void onCalloutRightButton(TMapMarkerItem item) {				
 				Toast.makeText(MainActivity.this, "item : " + item.getID(), Toast.LENGTH_SHORT).show();
 			}
 		});
