@@ -130,6 +130,11 @@ public class MainActivity extends ActionBarActivity {
 								
 								@Override
 								public void run() {
+									for (int i = 0; i < mAdapter.getCount(); i++) {
+										ListItem item = mAdapter.getItem(i);
+										mMapView.removeMarkerItem(item.id);
+									}
+									mAdapter.clear();
 									for (TMapPOIItem poi : poilist) {
 										ListItem item = new ListItem();
 										item.item = poi;
