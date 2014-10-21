@@ -58,7 +58,10 @@ public class MainActivity extends Activity {
 			}
 		});
 		if (savedInstanceState != null) {
-			mSavedFile = new File(savedInstanceState.getString("filename"));
+			String file = savedInstanceState.getString("filename");
+			if (file != null) {
+				mSavedFile = new File(file);
+			}
 		}
 	}
 
@@ -80,7 +83,9 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString("filename", mSavedFile.getAbsolutePath());
+		if (mSavedFile != null) {
+			outState.putString("filename", mSavedFile.getAbsolutePath());
+		}
 	}
 	
 	@Override
