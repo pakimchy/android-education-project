@@ -26,15 +26,28 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void SKPMapApikeySucceed() {
-				Toast.makeText(MainActivity.this, "api setup success", Toast.LENGTH_SHORT).show();
-				setupMap();
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.this, "api setup success", Toast.LENGTH_SHORT).show();
+						setupMap();
+					}
+				});
 			}
 			
 			@Override
 			public void SKPMapApikeyFailed(String arg0) {
-				Toast.makeText(MainActivity.this, "api setup fail", Toast.LENGTH_SHORT).show();
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						Toast.makeText(MainActivity.this, "api setup fail", Toast.LENGTH_SHORT).show();						
+					}
+				});
 			}
 		});
+		
 	}
 	
 	private void setupMap() {
