@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
@@ -49,9 +50,13 @@ public class MainActivity extends ActionBarActivity {
 		listView2.setOnDropListener(new OnDropListener() {
 			
 			@Override
-			public void onDrop(Object info) {
+			public void onDrop(Object info, int position) {
 				String text = (String)info;
-				mAdapter2.add(text);
+				if (position == AbsListView.INVALID_POSITION) {
+					mAdapter2.add(text);
+				} else {
+					mAdapter2.insert(text, position);
+				}
 			}
 		});
 		mController = new DragController(this);
