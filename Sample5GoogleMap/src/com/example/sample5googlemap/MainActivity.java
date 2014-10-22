@@ -31,36 +31,38 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity implements
 		GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener,
-		GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerDragListener {
+		GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerDragListener,
+		GoogleMap.OnCameraChangeListener {
 
 	GoogleMap mMap;
 	ListView listView;
 	ArrayAdapter<POI> mAdapter;
 	EditText keywordView;
-	
-	HashMap<POI,Marker> mMarkerResolver = new HashMap<POI,Marker>();
-	HashMap<Marker,POI> mPOIResolver = new HashMap<Marker, POI>();
-	
+
+	HashMap<POI, Marker> mMarkerResolver = new HashMap<POI, Marker>();
+	HashMap<Marker, POI> mPOIResolver = new HashMap<Marker, POI>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		listView = (ListView)findViewById(R.id.listView1);
-		mAdapter = new ArrayAdapter<POI>(this, android.R.layout.simple_list_item_1, new ArrayList<POI>());
+		listView = (ListView) findViewById(R.id.listView1);
+		mAdapter = new ArrayAdapter<POI>(this,
+				android.R.layout.simple_list_item_1, new ArrayList<POI>());
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				POI poi = (POI)listView.getItemAtPosition(position);
+				POI poi = (POI) listView.getItemAtPosition(position);
 				Marker marker = mMarkerResolver.get(poi);
-				moveMap(marker.getPosition().latitude, marker.getPosition().longitude);
-				marker.showInfoWindow();				
+				moveMap(marker.getPosition().latitude,
+						marker.getPosition().longitude);
+				marker.showInfoWindow();
 			}
 		});
-		keywordView = (EditText)findViewById(R.id.keyword);
+		keywordView = (EditText) findViewById(R.id.keyword);
 		setupMapIfNeeded();
 		Button btn = (Button) findViewById(R.id.btn_zoom_in);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -104,35 +106,45 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.btn_search);
+
+		btn = (Button) findViewById(R.id.btn_search);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getTMapPOI(MainActivity.this, keyword, new OnResultListener<POIResult>() {
-						
-						@Override
-						public void onSuccess(POIResult result) {
-							for (POI poi : result.searchPoiInfo.pois.poi) {
-								mAdapter.add(poi);
-								addMarker(poi);
-							}
-						}
-						
-						@Override
-						public void onFail(int code) {
-							Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
-						}
-					});
+					NetworkManager.getInstance().getTMapPOI(MainActivity.this,
+							keyword, new OnResultListener<POIResult>() {
+
+								@Override
+								public void onSuccess(POIResult result) {
+									for (int i = 0; i < mAdapter.getCount(); i++) {
+										POI p = mAdapter.getItem(i);
+										Marker m = mMarkerResolver.get(p);
+										m.remove();
+										mMarkerResolver.remove(p);
+										mPOIResolver.remove(m);
+									}
+									mAdapter.clear();
+									for (POI poi : result.searchPoiInfo.pois.poi) {
+										mAdapter.add(poi);
+										addMarker(poi);
+									}
+								}
+
+								@Override
+								public void onFail(int code) {
+									Toast.makeText(MainActivity.this, "fail",
+											Toast.LENGTH_SHORT).show();
+								}
+							});
 				}
 			}
 		});
 
 	}
-	
+
 	private void addMarker(POI poi) {
 		MarkerOptions options = new MarkerOptions();
 		LatLng latLng = new LatLng(poi.getLatitude(), poi.getLongitude());
@@ -175,6 +187,9 @@ public class MainActivity extends ActionBarActivity implements
 		mMap.setOnMarkerClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setOnMarkerDragListener(this);
+		mMap.setOnCameraChangeListener(this);
+		
+		mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this, mPOIResolver));
 		// mMap.setTrafficEnabled(true);
 		// mMap.getUiSettings().setZoomControlsEnabled(false);
 		// mMap.getUiSettings().setMyLocationButtonEnabled(false);
@@ -260,5 +275,13 @@ public class MainActivity extends ActionBarActivity implements
 	@Override
 	public void onMarkerDragStart(Marker arg0) {
 
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition arg0) {
+		if (mCircle != null) {
+			mCircle.remove();
+			mCircle = null;
+		}
 	}
 }
