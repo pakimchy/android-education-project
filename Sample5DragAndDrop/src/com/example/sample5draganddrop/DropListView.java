@@ -20,7 +20,7 @@ public class DropListView extends ListView implements DropTarget {
 	}
 
 	public interface OnDropListener {
-		public void onDrop(Object info);
+		public void onDrop(Object info, int position);
 	}
 	OnDropListener mListener;
 	public void setOnDropListener(OnDropListener listener) {
@@ -31,7 +31,8 @@ public class DropListView extends ListView implements DropTarget {
 	public void onDrop(DragSource source, int x, int y, int xOffset,
 			int yOffset, DragView dragView, Object dragInfo) {
 		if (mListener != null) {
-			mListener.onDrop(dragInfo);
+			int position = pointToPosition(x, y);
+			mListener.onDrop(dragInfo,position);
 		}
 	}
 
