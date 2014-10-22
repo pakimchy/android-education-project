@@ -3,11 +3,13 @@ package com.example.sample5googlemap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -112,6 +114,8 @@ public class MainActivity extends ActionBarActivity implements
 
 			@Override
 			public void onClick(View v) {
+				InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(keywordView.getWindowToken(), 0);
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
 					NetworkManager.getInstance().getTMapPOI(MainActivity.this,
