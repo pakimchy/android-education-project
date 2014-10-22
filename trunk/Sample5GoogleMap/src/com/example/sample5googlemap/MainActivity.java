@@ -1,10 +1,17 @@
 package com.example.sample5googlemap;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,6 +29,7 @@ import com.example.sample5googlemap.NetworkManager.OnResultListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.SnapshotReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -143,6 +151,36 @@ public class MainActivity extends ActionBarActivity implements
 											Toast.LENGTH_SHORT).show();
 								}
 							});
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_capture);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mMap != null) {
+					mMap.snapshot(new SnapshotReadyCallback() {
+						
+						@Override
+						public void onSnapshotReady(Bitmap bitmap) {
+							File mybitmap = new File(Environment.getExternalStorageDirectory(), "map.jpg");
+							try {
+								FileOutputStream fos = new FileOutputStream(mybitmap);
+								bitmap.compress(CompressFormat.JPEG, 100, fos);
+								fos.close();
+//								NetworkManager.getInstance().uploadMapFile(MainActivity.this, "title", mybitmap, mybitmap, listener)
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+						}
+					});
 				}
 			}
 		});

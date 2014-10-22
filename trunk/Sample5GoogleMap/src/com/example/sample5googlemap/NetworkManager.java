@@ -1,5 +1,7 @@
 package com.example.sample5googlemap;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -94,6 +96,39 @@ public class NetworkManager {
 			}
 		});
 		
+	}
+	
+	public void uploadMapFile(Context context, String title, File file, File file2, final OnResultListener<String> listener) {
+		RequestParams params = new RequestParams();
+		params.put("title", title);
+		try {
+			params.put("myfile", file);
+			params.put("myfile", file2);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		client.post(context,  "http://...." , params, new TextHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					String responseString) {
+				listener.onSuccess(responseString);
+			}
+			
+			@Override
+			public void onProgress(int bytesWritten, int totalSize) {
+				super.onProgress(bytesWritten, totalSize);
+				
+			}
+			
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					String responseString, Throwable throwable) {
+				listener.onFail(statusCode);
+			}
+		});
 	}
 	
 }
