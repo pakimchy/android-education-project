@@ -7,8 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.os.Environment;
@@ -38,6 +41,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainActivity extends ActionBarActivity implements
 		GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener,
@@ -184,9 +189,54 @@ public class MainActivity extends ActionBarActivity implements
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_route);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startMarker != null && endMarker != null) {
+					NetworkManager.getInstance().searchRoute(MainActivity.this, startMarker.getPosition().latitude, startMarker.getPosition().longitude, endMarker.getPosition().latitude, endMarker.getPosition().longitude, new OnResultListener<CarRouteInfo>() {
+
+						@Override
+						public void onSuccess(CarRouteInfo result) {
+							if (result.features != null && result.features.size() > 0) {
+								int totaltime = result.features.get(0).properties.totalTime;
+								int totaldistance = result.features.get(0).properties.totalDistance;
+								PolylineOptions options = new PolylineOptions();
+								options.width(5);
+								options.color(Color.RED);
+//								options.geodesic(true);
+								for (CarFeature feature : result.features) {
+									if (feature.geometry.type.equals("LineString")) {
+										double[] coords = feature.geometry.coordinates;
+										for (int i = 0; i < coords.length ; i += 2) {
+											options.add(new LatLng(coords[i+1] , coords[i]));
+										}
+									}
+								}
+								
+								mPolyline = mMap.addPolyline(options);
+							}
+							
+						}
+
+						@Override
+						public void onFail(int code) {
+							Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
+						}
+						
+					});
+				} else {
+					Toast.makeText(MainActivity.this, "start or end not setting", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 
 	}
 
+	Polyline mPolyline;
+	
 	private void addMarker(POI poi) {
 		MarkerOptions options = new MarkerOptions();
 		LatLng latLng = new LatLng(poi.getLatitude(), poi.getLongitude());
@@ -295,16 +345,46 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public boolean onMarkerClick(Marker marker) {
-		Toast.makeText(this, "marker : " + marker.getTitle(),
-				Toast.LENGTH_SHORT).show();
+//		Toast.makeText(this, "marker : " + marker.getTitle(),
+//				Toast.LENGTH_SHORT).show();
 		marker.showInfoWindow();
 		return true;
 	}
 
+	Marker startMarker;
+	Marker endMarker;
+	
 	@Override
-	public void onInfoWindowClick(Marker marker) {
-		Toast.makeText(this, "info window click", Toast.LENGTH_SHORT).show();
+	public void onInfoWindowClick(final Marker marker) {
+//		Toast.makeText(this, "info window click", Toast.LENGTH_SHORT).show();
 		marker.hideInfoWindow();
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setIcon(R.drawable.ic_launcher);
+		builder.setTitle("select point");
+		builder.setMessage("start or end?");
+		builder.setPositiveButton("Start", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				startMarker = marker;
+			}
+		});
+		builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+			}
+		});
+		
+		builder.setNegativeButton("End", new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				endMarker = marker;
+			}
+		});
+		builder.create().show();
 	}
 
 	@Override
