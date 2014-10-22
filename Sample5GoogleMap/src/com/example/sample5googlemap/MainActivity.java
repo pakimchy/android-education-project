@@ -156,8 +156,9 @@ public class MainActivity extends ActionBarActivity implements
 		options.anchor(0.5f, 1);
 		options.title(poi.name);
 		options.snippet(poi.detailAddrName);
-		options.icon(BitmapDescriptorFactory
-				.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+//		options.icon(BitmapDescriptorFactory
+//				.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+		options.icon(BitmapDescriptorFactory.fromBitmap(infoBitmap.getMarkerBitmap(poi)));
 		options.draggable(false);
 		// options.visible(true);
 		Marker marker = mMap.addMarker(options);
@@ -184,6 +185,7 @@ public class MainActivity extends ActionBarActivity implements
 		}
 	}
 
+	InfoBitmap infoBitmap;
 	private void setupMap() {
 		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		mMap.setMyLocationEnabled(true);
@@ -194,6 +196,7 @@ public class MainActivity extends ActionBarActivity implements
 		mMap.setOnCameraChangeListener(this);
 		
 		mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this, mPOIResolver));
+		infoBitmap = new InfoBitmap(this);
 		// mMap.setTrafficEnabled(true);
 		// mMap.getUiSettings().setZoomControlsEnabled(false);
 		// mMap.getUiSettings().setMyLocationButtonEnabled(false);
