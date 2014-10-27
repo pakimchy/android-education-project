@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Toast;
 
 import com.etsy.android.grid.StaggeredGridView;
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
 		gridView = (StaggeredGridView)findViewById(R.id.gridView);
 		View v = getLayoutInflater().inflate(R.layout.header_view, null);
 		gridView.addHeaderView(v);
-		gridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+//		gridView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 		mAdapter = new MyAdapter(this,urls);
 		gridView.setAdapter(mAdapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -60,6 +61,16 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Toast.makeText(MainActivity.this, "position : " + position, Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		gridView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Toast.makeText(MainActivity.this, "long click", Toast.LENGTH_SHORT).show();
+				return false;
 			}
 		});
 	}
