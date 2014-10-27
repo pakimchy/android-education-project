@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res/com.example.coverflow"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal" >
+
+    <com.example.coverflow.CoverFlow
+        android:id="@+id/coverflow"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        custom:orientation="semicircle" />
+    <!-- Custom orientation attribute can have two values 
+    vertical/semicircle according to the usage-->
+</LinearLayout>
