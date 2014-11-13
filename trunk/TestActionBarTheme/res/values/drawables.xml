@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="actionBarBackground">#FF00FF</drawable>
+    <drawable name="actionButtonBackground">#FF0000</drawable>
+    <drawable name="buttonNormal">#FF0000</drawable>
+    <drawable name="buttonPressed">#00FF00</drawable>
+    
+</resources>
