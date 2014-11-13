@@ -1,0 +1,38 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+		<item name="actionBarSize">@dimen/actionbar_height</item>
+        <item name="actionBarStyle">@style/CustomActionStyle</item>
+        <item name="actionButtonStyle">@style/CustomActionButtonStyle</item>
+	</style>
+    
+    <style name="CustomActionStyle" parent="Widget.AppCompat.Light.ActionBar">
+        <item name="android:background">@drawable/actionBarBackground</item>
+    </style>
+    
+    <style name="CustomActionButtonStyle" parent="Widget.AppCompat.ActionButton">
+        <item name="android:background">@drawable/btn_selector</item>
+        <item name="android:paddingLeft">12dip</item>
+        <item name="android:paddingRight">12dip</item>
+        <item name="android:minWidth">48dip</item>
+        <item name="android:minHeight">48dip</item>
+        <item name="android:scaleType">center</item>
+        <item name="android:gravity">center</item>
+        <item name="android:maxLines">2</item>
+    </style>
+    
+</resources>
