@@ -90,7 +90,7 @@ public class DragView extends View
 
     @Override
     protected void onDraw(Canvas canvas) {
-        if (true) {
+        if (false) {
             // for debugging
             Paint p = new Paint();
             p.setStyle(Paint.Style.FILL);

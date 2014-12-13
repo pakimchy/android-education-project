@@ -56,7 +56,7 @@ public class DragController {
     private static final boolean PROFILE_DRAWING_DURING_DRAG = false;
 
     private Context mContext;
-    private Vibrator mVibrator;
+//    private Vibrator mVibrator;
 
     // temporaries to avoid gc thrash
     private Rect mRectTemp = new Rect();
@@ -134,7 +134,7 @@ public class DragController {
      */
     public DragController(Context context) {
         mContext = context;
-        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+//        mVibrator = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 
     }
 
@@ -222,7 +222,7 @@ public class DragController {
         mDragSource = source;
         mDragInfo = dragInfo;
 
-        mVibrator.vibrate(VIBRATE_DURATION);
+//        mVibrator.vibrate(VIBRATE_DURATION);
         DragView dragView = mDragView = new DragView(mContext, b, registrationX, registrationY,
                 textureLeft, textureTop, textureWidth, textureHeight);
         dragView.show(mWindowToken, (int)mMotionDownX, (int)mMotionDownY);
