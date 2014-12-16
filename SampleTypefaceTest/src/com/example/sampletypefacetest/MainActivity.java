@@ -19,34 +19,12 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 
-	File fontFile = new File(Environment.getExternalStorageDirectory(),
-			"nanumgothic");
 	Typeface nanum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (!fontFile.exists()) {
-			InputStream is = getResources().openRawResource(R.raw.nanumgothic);
-			try {
-				OutputStream os = new FileOutputStream(fontFile);
-				byte[] buffer = new byte[8096];
-				int len;
-				while ((len = is.read(buffer)) > 0) {
-					os.write(buffer, 0, len);
-				}
-				os.flush();
-				is.close();
-				os.close();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		nanum = Typeface.createFromFile(fontFile);
+		nanum = Typeface.createFromAsset(getResources().getAssets(), "nanumgothic.ttf");
 		setContentView(R.layout.activity_main);
 	}
 
