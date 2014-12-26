@@ -19,6 +19,7 @@ public class MyActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(MyActivity.this, "MyActivity finished", Toast.LENGTH_SHORT).show();
+				
 				finish();
 			}
 		});
