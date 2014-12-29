@@ -5,11 +5,16 @@ import android.support.v7.app.ActionBarActivity;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
 	TextView messageView;
+	CheckBox checkBox;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,39 @@ public class MainActivity extends ActionBarActivity {
 		String text = getResources().getString(R.string.hi);
 //		int count = 10;
 		messageView.setText(Html.fromHtml(text));
+		
+//		Button btn = (Button)findViewById(R.id.button1);
+//		btn.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				Toast.makeText(MainActivity.this, "Button Clicked", Toast.LENGTH_SHORT).show();
+//			}
+//		});
+		
+		checkBox = (CheckBox)findViewById(R.id.checkBox1);
+		
+		checkBox.setChecked(true);
+		
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				Toast.makeText(MainActivity.this, "checked changed!!!", Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+	}
+	
+	public void onClickButton(View v) {
+		boolean isChecked = checkBox.isChecked();
+		String message;
+		if (isChecked) {
+			message = getResources().getString(R.string.check_message);
+		} else {
+			message = getResources().getString(R.string.not_check_message);
+		}
+		Toast.makeText(this, "Button Clicked : " + message, Toast.LENGTH_SHORT).show();
 	}
 
 	@Override
