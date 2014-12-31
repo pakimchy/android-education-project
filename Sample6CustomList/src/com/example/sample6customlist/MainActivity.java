@@ -6,7 +6,13 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.sample6customlist.MyAdapter.OnAdapterItemClickListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -19,7 +25,24 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		listView = (ListView)findViewById(R.id.listView1);
 		mAdapter = new MyAdapter(this);
+		mAdapter.setOnAdapterItemClickListener(new OnAdapterItemClickListener() {
+			
+			@Override
+			public void onAdapterItemClick(MyAdapter adapter, View view, ItemData item) {
+				Toast.makeText(MainActivity.this, "like click : " + item.title, Toast.LENGTH_SHORT).show();
+			}
+		});
 		listView.setAdapter(mAdapter);
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ItemData item = (ItemData)listView.getItemAtPosition(position);
+				Toast.makeText(MainActivity.this, "item click : " + item.title, Toast.LENGTH_SHORT).show();
+			}
+		});
 		
 		initData();
 	}
