@@ -17,7 +17,7 @@ public class DataManager {
 	
 	public List<ItemData> getItemDataList() {
 		ArrayList<ItemData> items = new ArrayList<ItemData>();
-		for (int i = 0; i < 10 ; i++) {
+		for (int i = 0; i < 20 ; i++) {
 			ItemData id = new ItemData();
 			id.iconId = R.drawable.ic_launcher;
 			id.title = "title" + i;
