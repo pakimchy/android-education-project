@@ -1,5 +1,7 @@
 package com.example.sample6simplechoice;
 
+import java.util.ArrayList;
+
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.SparseBooleanArray;
@@ -37,6 +39,7 @@ public class MainActivity extends ActionBarActivity {
 				} else if (listView.getChoiceMode() == ListView.CHOICE_MODE_MULTIPLE) {
 					SparseBooleanArray array = listView.getCheckedItemPositions();
 					StringBuilder sb = new StringBuilder();
+					ArrayList<String> removeStrings = new ArrayList<String>();
 					boolean isFirst = true;
 					for (int i = 0 ; i < array.size(); i++) {
 						int position = array.keyAt(i);
@@ -46,14 +49,26 @@ public class MainActivity extends ActionBarActivity {
 							}
 							sb.append((String)listView.getItemAtPosition(position));
 							isFirst = false;
+//							mAdapter.remove((String)listView.getItemAtPosition(position));
+							removeStrings.add((String)listView.getItemAtPosition(position));
 						}
 					}
+
+					for (String s : removeStrings) {
+						mAdapter.remove(s);
+					}
+					
+					listView.clearChoices();
+					mAdapter.notifyDataSetChanged();
 					
 					Toast.makeText(MainActivity.this, "choice : " + sb.toString(), Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
 		initData();
+		
+		listView.setItemChecked(1, true);
+		listView.setItemChecked(3, true);
 	}
 	
 	private void initData() {
