@@ -1,5 +1,6 @@
 package com.example.sample6applicationcomponent;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -15,7 +16,8 @@ public class MyActivity extends ActionBarActivity {
 	public static final String EXTRA_NAME = "name";
 	public static final String EXTRA_AGE = "age";
 	public static final String EXTRA_PERSON = "person";
-	
+	public static final String RESULT_MESSAGE ="message";
+	Person p;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -27,12 +29,22 @@ public class MyActivity extends ActionBarActivity {
 //		String text = intent.getStringExtra(EXTRA_NAME);
 //		int age = intent.getIntExtra(EXTRA_AGE, 0);
 //		Person p = (Person)intent.getSerializableExtra(EXTRA_PERSON);
-		Person p = intent.getParcelableExtra(EXTRA_PERSON);
+		p = intent.getParcelableExtra(EXTRA_PERSON);
 		messageView.setText(p.name + "(" + p.age +")");
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				String message;
+				if (p.age < 35) {
+					message = "young";
+				} else {
+					message = "old";
+				}
+				Intent result = new Intent();
+				result.putExtra(RESULT_MESSAGE, message);
+				setResult(Activity.RESULT_OK, result);
+				
 				finish();
 			}
 		});
