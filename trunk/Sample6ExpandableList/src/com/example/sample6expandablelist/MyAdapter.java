@@ -18,17 +18,28 @@ public class MyAdapter extends BaseExpandableListAdapter {
 	
 	public void put(String key, String title) {
 		GroupItem group = null;
-		for (GroupItem item : items) {
-			if (item.key.equals(key)) {
+		int index = -1;
+		for (int i = 0; i < items.size(); i++) {
+			GroupItem item = items.get(i);
+			int c = item.key.compareTo(key);
+			if ( c == 0) {
 				group = item;
 				break;
+			} else if (c > 0){
+				index = i;
+				break;
 			}
+			
 		}
 		if (group == null) {
 			group = new GroupItem();
 			group.key = key;
 			group.title = key;
-			items.add(group);
+			if (index == -1) {
+				items.add(group);
+			} else {
+				items.add(index, group);
+			}
 		}
 		
 		if (title != null) {
