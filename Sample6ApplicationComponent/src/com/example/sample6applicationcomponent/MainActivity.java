@@ -23,8 +23,15 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				i.putExtra(MyActivity.EXTRA_NAME, nameView.getText().toString());
-				i.putExtra(MyActivity.EXTRA_AGE, 41);
+//				i.putExtra(MyActivity.EXTRA_NAME, nameView.getText().toString());
+//				i.putExtra(MyActivity.EXTRA_AGE, 41);
+				Person p = new Person();
+				p.name = nameView.getText().toString();
+				p.age = 41;
+				p.weight = 80;
+				p.height = 180;
+				
+				i.putExtra(MyActivity.EXTRA_PERSON, p);
 				startActivity(i);
 			}
 		});
