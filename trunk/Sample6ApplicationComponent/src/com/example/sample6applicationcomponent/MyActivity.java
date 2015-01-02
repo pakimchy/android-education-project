@@ -14,6 +14,8 @@ public class MyActivity extends ActionBarActivity {
 	TextView messageView;
 	public static final String EXTRA_NAME = "name";
 	public static final String EXTRA_AGE = "age";
+	public static final String EXTRA_PERSON = "person";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -22,9 +24,11 @@ public class MyActivity extends ActionBarActivity {
 		
 		Button btn = (Button)findViewById(R.id.btn_finish);
 		Intent intent = getIntent();
-		String text = intent.getStringExtra(EXTRA_NAME);
-		int age = intent.getIntExtra(EXTRA_AGE, 0);
-		messageView.setText(text + "(" + age +")");
+//		String text = intent.getStringExtra(EXTRA_NAME);
+//		int age = intent.getIntExtra(EXTRA_AGE, 0);
+//		Person p = (Person)intent.getSerializableExtra(EXTRA_PERSON);
+		Person p = intent.getParcelableExtra(EXTRA_PERSON);
+		messageView.setText(p.name + "(" + p.age +")");
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
