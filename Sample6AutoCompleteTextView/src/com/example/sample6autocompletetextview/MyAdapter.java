@@ -84,8 +84,10 @@ public class MyAdapter extends BaseAdapter implements Filterable {
 		protected void publishResults(CharSequence constraint,
 				FilterResults fr) {
 			results.clear();
-			if (fr == null || fr.count == 0 || fr.values == null) return;
-			results.addAll((ArrayList<Person>)fr.values);
+			if (fr == null || fr.count == 0 || fr.values == null) {
+			} else {
+				results.addAll((ArrayList<Person>)fr.values);
+			}
 			notifyDataSetChanged();
 		}
 		
