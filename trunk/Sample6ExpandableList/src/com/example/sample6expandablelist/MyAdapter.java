@@ -47,6 +47,8 @@ public class MyAdapter extends BaseExpandableListAdapter {
 			child.title = title;
 			group.children.add(child);
 		}
+		
+		notifyDataSetChanged();
 	}
 
 	@Override
