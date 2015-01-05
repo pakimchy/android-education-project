@@ -9,8 +9,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+import com.example.sample6fragment.TabOneFragment.OnMessageListener;
+
+public class MainActivity extends ActionBarActivity 
+	implements TabOneFragment.MessageReceiver {
 
 //	Fragment tabOneFragment, tabTwoFragment;
 	private static final String F1_TAG = "tab1";
@@ -19,12 +24,14 @@ public class MainActivity extends ActionBarActivity {
 	Button btnTab1, btnTab2;
 	EditText inputView;
 	TabOneFragment tabOneFragment;
+	TextView messageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
+		messageView = (TextView)findViewById(R.id.text_message);
+		
 		inputView = (EditText)findViewById(R.id.edit_input);
 		Button btn = (Button)findViewById(R.id.btn_send);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -81,13 +88,25 @@ public class MainActivity extends ActionBarActivity {
 		});
 
 		tabOneFragment = new TabOneFragment();
-
+		tabOneFragment.setOnMessageListener(new OnMessageListener() {
+			
+			@Override
+			public void onReceiveMessage(String message) {
+				Toast.makeText(MainActivity.this, "message : " + message, Toast.LENGTH_SHORT).show();
+			}
+		});
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.container, tabOneFragment, F1_TAG);
 		ft.commit();
 		btnTab1.setSelected(true);
 		btnTab2.setSelected(false);
 	}
+	
+	@Override
+	public void setMessage(String message) {
+		messageView.setText(message);
+	}
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
