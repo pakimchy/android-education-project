@@ -31,7 +31,7 @@
         android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/edit_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
@@ -40,10 +40,10 @@
     </EditText>
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/btn_send"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="send activity" />
 
 </LinearLayout>
