@@ -8,20 +8,34 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends ActionBarActivity {
 
-	Fragment tabOneFragment, tabTwoFragment;
+//	Fragment tabOneFragment, tabTwoFragment;
 	private static final String F1_TAG = "tab1";
 	private static final String F2_TAG = "tab2";
 
 	Button btnTab1, btnTab2;
+	EditText inputView;
+	TabOneFragment tabOneFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
+		inputView = (EditText)findViewById(R.id.edit_input);
+		Button btn = (Button)findViewById(R.id.btn_send);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (tabOneFragment != null) {
+					tabOneFragment.setMessage(inputView.getText().toString());
+				}
+			}
+		});
 		btnTab1 = (Button) findViewById(R.id.btn_tab1);
 		btnTab1.setOnClickListener(new View.OnClickListener() {
 
@@ -35,7 +49,11 @@ public class MainActivity extends ActionBarActivity {
 				if (f == null) {
 					FragmentTransaction ft = getSupportFragmentManager()
 							.beginTransaction();
-					// TabOneFragment f = new TabOneFragment();
+					Bundle b = new Bundle();
+					b.putString("message", inputView.getText().toString());
+					tabOneFragment = new TabOneFragment();
+					tabOneFragment.setArguments(b);
+					
 					ft.replace(R.id.container, tabOneFragment, F1_TAG);
 					ft.commit();
 				}
@@ -54,15 +72,15 @@ public class MainActivity extends ActionBarActivity {
 				if (f == null) {
 					FragmentTransaction ft = getSupportFragmentManager()
 							.beginTransaction();
-					// TabTwoFragment f = new TabTwoFragment();
-					ft.replace(R.id.container, tabTwoFragment, F2_TAG);
+					f = new TabTwoFragment();
+					ft.replace(R.id.container, f, F2_TAG);
 					ft.commit();
+					tabOneFragment = null;
 				}
 			}
 		});
 
 		tabOneFragment = new TabOneFragment();
-		tabTwoFragment = new TabTwoFragment();
 
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.add(R.id.container, tabOneFragment, F1_TAG);

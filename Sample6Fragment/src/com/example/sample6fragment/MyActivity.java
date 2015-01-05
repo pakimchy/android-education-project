@@ -1,9 +1,14 @@
 package com.example.sample6fragment;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MyActivity extends ActionBarActivity {
 
@@ -11,6 +16,22 @@ public class MyActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my);
+		Intent intent = getIntent();
+		String message = intent.getStringExtra("message");
+		((TextView)findViewById(R.id.text_message)).setText(message);
+		
+		
+		Button btn = (Button)findViewById(R.id.btn_finish);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent data = new Intent();
+				data.putExtra("result", "result message");
+				setResult(Activity.RESULT_OK, data);
+				finish();
+			}
+		});
 	}
 
 	@Override
