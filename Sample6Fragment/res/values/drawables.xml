@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="btn_bg_select">#00FF00</drawable>
+    <drawable name="btn_bg_normal">#A0A0A0</drawable>
+    
+</resources>

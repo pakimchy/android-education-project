@@ -18,14 +18,16 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tab1" />
+            android:text="Tab1"
+            android:background="@drawable/btn_selector" />
 
         <Button
             android:id="@+id/btn_tab2"
             style="?android:attr/buttonStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tab2" />
+            android:text="Tab2"
+            android:background="@drawable/btn_selector" />
 
     </LinearLayout>
 
