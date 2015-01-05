@@ -2,7 +2,10 @@ package com.example.sample6service;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -39,6 +42,29 @@ public class MainActivity extends ActionBarActivity {
 				stopService(i);
 			}
 		});
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		IntentFilter filter = new IntentFilter(MyService.ACTION_DIV_TEN);
+		registerReceiver(mReceiver, filter);
+	}
+	
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra("count", 0);
+			Toast.makeText(MainActivity.this, "Count(Activity) : " + count, Toast.LENGTH_SHORT).show();
+			setResultCode(Activity.RESULT_OK);
+		}
+	};
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		unregisterReceiver(mReceiver);
 	}
 
 	@Override

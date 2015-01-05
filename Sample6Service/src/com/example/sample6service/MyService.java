@@ -16,6 +16,8 @@ public class MyService extends Service {
 
 	private static final String TAG = "MyService";
 	
+	public static final String ACTION_DIV_TEN = "com.example.sample6service.action.DIV_TEN";
+	
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -35,6 +37,19 @@ public class MyService extends Service {
 				while(isRunning) {
 					mCount++;
 					Log.i(TAG, "count : " + mCount);
+					if (mCount % 10 == 0) {
+						Intent i = new Intent(ACTION_DIV_TEN);
+						i.putExtra("count", mCount);
+						sendOrderedBroadcast(i, null, new BroadcastReceiver() {
+							@Override
+							public void onReceive(Context context, Intent intent) {
+								int code = getResultCode();
+								if (code == Activity.RESULT_CANCELED) {
+									Toast.makeText(MyService.this, "not received", Toast.LENGTH_SHORT).show();
+								}
+							}
+						}, null, Activity.RESULT_CANCELED, null, null);
+					}
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
