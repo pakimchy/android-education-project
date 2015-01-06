@@ -1,0 +1,26 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.sample6menu.MainActivity" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/menu_one"
+        android:icon="@drawable/ic_launcher"
+        android:orderInCategory="101"
+        app:showAsAction="ifRoom"
+        android:title="M1">
+    </item>
+
+    <item android:id="@+id/menu_sub" android:orderInCategory="102" android:title="SUB">
+        <menu>
+            <item android:id="@+id/item_sub_one" android:orderInCategory="201" android:title="MS1"/>
+            <item android:id="@+id/item_sub_two" android:orderInCategory="202" android:title="MS2"/>
+        </menu>
+    </item>
+
+</menu>
