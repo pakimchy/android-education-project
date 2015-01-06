@@ -13,8 +13,8 @@
         android:icon="@drawable/ic_launcher"
         android:orderInCategory="101"
         android:title="M1"
-        app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="ifRoom|collapseActionView">
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        app:showAsAction="always">
     </item>
     <item
         android:id="@+id/menu_sub"
