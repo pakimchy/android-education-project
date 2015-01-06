@@ -3,6 +3,8 @@ package com.example.sample6fragmenttab;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,6 +18,20 @@ public class TwoFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 	}
+	ActionBar actionBar;
+	public ActionBar getActionBar() {
+		if (actionBar == null) {
+			actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		}
+		return actionBar;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActionBar().setTitle("Fragment2");
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

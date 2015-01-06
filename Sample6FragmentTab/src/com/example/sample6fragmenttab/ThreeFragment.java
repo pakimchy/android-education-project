@@ -3,6 +3,8 @@ package com.example.sample6fragmenttab;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +17,20 @@ public class ThreeFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
+	}
+	
+	ActionBar actionBar;
+	public ActionBar getActionBar() {
+		if (actionBar == null) {
+			actionBar = ((ActionBarActivity)getActivity()).getSupportActionBar();
+		}
+		return actionBar;
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActionBar().setTitle("Fragment3");
 	}
 
 	@Override
