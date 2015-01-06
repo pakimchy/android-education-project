@@ -48,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
 	protected void onStart() {
 		super.onStart();
 		IntentFilter filter = new IntentFilter(MyService.ACTION_DIV_TEN);
-		registerReceiver(mReceiver, filter);
+		registerReceiver(mReceiver, filter , MyService.PERMISSION_DIV_TEN, null);
 	}
 	
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {

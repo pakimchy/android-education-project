@@ -17,6 +17,7 @@ public class MyService extends Service {
 	private static final String TAG = "MyService";
 	
 	public static final String ACTION_DIV_TEN = "com.example.sample6service.action.DIV_TEN";
+	public static final String PERMISSION_DIV_TEN = "com.example.sample6service.permission.DIV_COUNT";
 	
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -40,7 +41,7 @@ public class MyService extends Service {
 					if (mCount % 10 == 0) {
 						Intent i = new Intent(ACTION_DIV_TEN);
 						i.putExtra("count", mCount);
-						sendOrderedBroadcast(i, null, new BroadcastReceiver() {
+						sendOrderedBroadcast(i, PERMISSION_DIV_TEN, new BroadcastReceiver() {
 							@Override
 							public void onReceive(Context context, Intent intent) {
 								int code = getResultCode();
