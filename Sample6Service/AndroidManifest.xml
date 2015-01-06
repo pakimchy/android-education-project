@@ -8,6 +8,8 @@
         android:minSdkVersion="8"
         android:targetSdkVersion="21" />
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <permission android:protectionLevel="signature" android:name="com.example.sample6service.permission.DIV_COUNT"></permission>
+    <uses-permission android:name="com.example.sample6service.permission.DIV_COUNT"/>
 
     <application
         android:allowBackup="true"
