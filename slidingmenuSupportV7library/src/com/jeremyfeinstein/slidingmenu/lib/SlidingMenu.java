@@ -799,6 +799,7 @@ public class SlidingMenu extends RelativeLayout {
 	 * @param b true to enable fade, false to disable it
 	 */
 	public void setFadeEnabled(boolean b) {
+		mViewAbove.setFadeEnabled(b);
 		mViewBehind.setFadeEnabled(b);
 	}
 
@@ -809,6 +810,7 @@ public class SlidingMenu extends RelativeLayout {
 	 * @param f the new fade degree, between 0.0f and 1.0f
 	 */
 	public void setFadeDegree(float f) {
+		mViewAbove.setFadeDegree(f);
 		mViewBehind.setFadeDegree(f);
 	}
 
