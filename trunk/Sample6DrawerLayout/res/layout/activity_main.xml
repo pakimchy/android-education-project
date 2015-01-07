@@ -1,0 +1,46 @@
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/drawer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.sample6drawerlayout.MainActivity" >
+
+
+    <FrameLayout 
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <TextView 
+            android:id="@+id/text_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Content...." />
+    </FrameLayout>
+    
+    <FrameLayout
+        android:id="@+id/left_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" 
+        android:background="#ccc"
+        android:layout_gravity="start">
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Left...." />
+    </FrameLayout>
+        
+    <FrameLayout
+        android:id="@+id/left_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" 
+        android:background="#ccc"
+        android:layout_gravity="end">
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Right...." />
+    </FrameLayout>
+    
+</android.support.v4.widget.DrawerLayout>
