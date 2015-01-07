@@ -9,4 +9,11 @@
         android:title="@string/action_settings"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu_second"
+        android:orderInCategory="101"
+        android:title="SM"
+        android:icon="@drawable/ic_drawer"
+        app:showAsAction="always"/>
+    
 </menu>

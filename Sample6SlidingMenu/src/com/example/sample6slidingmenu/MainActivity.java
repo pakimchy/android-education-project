@@ -10,6 +10,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 public class MainActivity extends SlidingFragmentActivity implements
 		MenuFragment.MenuCallback {
 
+	SlidingMenu sm;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -25,12 +26,15 @@ public class MainActivity extends SlidingFragmentActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
 
-		SlidingMenu sm = getSlidingMenu();
+		sm = getSlidingMenu();
+		sm.setMode(SlidingMenu.LEFT_RIGHT);
+		sm.setSecondaryMenu(R.layout.secondary_menu);
 		sm.setBehindOffsetRes(R.dimen.slidingmenu_offset);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setShadowDrawable(R.drawable.shadow);
 		sm.setFadeDegree(0.5f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
+		setSlidingActionBarEnabled(false);
 	}
 
 	@Override
@@ -51,6 +55,14 @@ public class MainActivity extends SlidingFragmentActivity implements
 			return true;
 		}
 		if (id == R.id.action_settings) {
+			return true;
+		}
+		if (id == R.id.menu_second) {
+			if (sm.isSecondaryMenuShowing()) {
+				sm.showContent();
+			} else {
+				sm.showSecondaryMenu(true);
+			}
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
