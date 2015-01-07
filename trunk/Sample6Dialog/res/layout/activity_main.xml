@@ -63,4 +63,11 @@
         android:layout_height="wrap_content"
         android:text="dialog fragment" />
 
+    <Button
+        android:id="@+id/btn_show_custom"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="custom dialog" />
+
 </LinearLayout>
