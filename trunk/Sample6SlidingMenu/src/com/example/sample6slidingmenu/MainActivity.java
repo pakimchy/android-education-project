@@ -1,6 +1,7 @@
 package com.example.sample6slidingmenu;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,6 +12,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 		MenuFragment.MenuCallback {
 
 	SlidingMenu sm;
+	private static final String TAG_MAIN = "main";
+	private static final String TAG_ONE = "one";
+	private static final String TAG_TWO = "two";
+	
+	private String currentTag;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,6 +28,18 @@ public class MainActivity extends SlidingFragmentActivity implements
 					.add(R.id.container, new MainFragment()).commit();
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.menu_container, new MenuFragment()).commit();
+			currentTag = TAG_MAIN;
+		} else {
+			String tag = savedInstanceState.getString("tag");
+			if (tag.equals(TAG_MAIN)) {
+				currentTag = TAG_MAIN;
+			} else if (tag.equals(TAG_ONE)) {
+				currentTag = TAG_ONE;
+			} else if (tag.equals(TAG_TWO)) {
+				currentTag = TAG_TWO;
+			} else {
+				currentTag = TAG_MAIN;
+			}
 		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -35,6 +54,12 @@ public class MainActivity extends SlidingFragmentActivity implements
 		sm.setFadeDegree(0.5f);
 		sm.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);
 		setSlidingActionBarEnabled(false);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("tag", currentTag);
 	}
 
 	@Override
@@ -68,20 +93,31 @@ public class MainActivity extends SlidingFragmentActivity implements
 		return super.onOptionsItemSelected(item);
 	}
 
+	
 	@Override
 	public void selectMenu(int menuId) {
 		switch (menuId) {
 		case MenuFragment.MENU_MAIN:
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, new MainFragment()).commit();
+			if (currentTag != TAG_MAIN) {
+				getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				currentTag = TAG_MAIN;
+			}
 			break;
 		case MenuFragment.MENU_ONE:
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, new OneFragment()).commit();
+			if (currentTag != TAG_ONE) {
+				getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, new OneFragment()).addToBackStack(null).commit();
+				currentTag = TAG_ONE;
+			}
 			break;
 		case MenuFragment.MENU_TWO:
-			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.container, new TwoFragment()).commit();
+			if (currentTag != TAG_TWO) {
+				getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				getSupportFragmentManager().beginTransaction()
+					.replace(R.id.container, new TwoFragment()).addToBackStack(null).commit();
+				currentTag = TAG_TWO;
+			}
 			break;
 		}
 		showContent();
