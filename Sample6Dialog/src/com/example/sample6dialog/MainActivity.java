@@ -185,6 +185,16 @@ public class MainActivity extends ActionBarActivity {
 				dialog.show();
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_fragment);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyListDialogFragment f = new MyListDialogFragment();
+				f.show(getSupportFragmentManager(), "dialog");
+			}
+		});
 	}
 	final String[] items = {"item1", "item2" , "item3"};
 
