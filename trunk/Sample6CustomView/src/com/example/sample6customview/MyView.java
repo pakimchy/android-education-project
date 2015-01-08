@@ -3,6 +3,7 @@ package com.example.sample6customview;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,8 +34,14 @@ public class MyView extends View {
 
 	public MyView(Context context, AttributeSet attrs) {
 		super(context, attrs);
+//		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyView);
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyView, R.attr.myViewStyle, 0);
+		message = ta.getString(R.styleable.MyView_message);
+		ta.recycle();
 		init();
 	}
+	
+	String message = "Hello, Android";
 
 	private static final int LENGTH = 300;
 	private static final int COUNT = 30;
@@ -49,6 +56,11 @@ public class MyView extends View {
 		initBitmap();
 	}
 
+	public void setText(String text) {
+		message = text;
+		invalidate();
+	}
+	
 	Bitmap mBitmap;
 	Matrix mMatrix = new Matrix();
 
@@ -135,7 +147,12 @@ public class MyView extends View {
 		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(m);
 		mPaint.setColorFilter(filter);
 		
-		canvas.drawBitmap(mBitmap, 100, 100, mPaint);
+		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+		int y = mBitmap.getHeight() + 40;
+		if (message != null) {
+			mPaint.setTextSize(40);
+			canvas.drawText(message, 0, y, mPaint);
+		}
 	}
 	
 	private void drawShader(Canvas canvas) {
