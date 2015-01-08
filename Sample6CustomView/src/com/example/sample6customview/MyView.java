@@ -10,16 +10,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.DashPathEffect;
-import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.PathDashPathEffect;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Path.Direction;
-import android.graphics.RadialGradient;
-import android.graphics.Shader.TileMode;
+import android.graphics.PathDashPathEffect;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
@@ -34,13 +31,16 @@ public class MyView extends View {
 
 	public MyView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-//		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyView);
-		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyView, R.attr.myViewStyle, 0);
+		// TypedArray ta = context.obtainStyledAttributes(attrs,
+		// R.styleable.MyView);
+		// int[] ids = {R.attr.message};
+		TypedArray ta = context.obtainStyledAttributes(attrs,
+				R.styleable.MyView, R.attr.myViewStyle, 0);
 		message = ta.getString(R.styleable.MyView_message);
 		ta.recycle();
 		init();
 	}
-	
+
 	String message = "Hello, Android";
 
 	private static final int LENGTH = 300;
@@ -54,13 +54,84 @@ public class MyView extends View {
 		initLinePoint();
 		initPath();
 		initBitmap();
+		mPaint.setTextSize(40);
 	}
 
 	public void setText(String text) {
 		message = text;
-		invalidate();
+		requestLayout();
+	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int width = getPaddingLeft() + getPaddingRight();
+		int height = getPaddingTop() + getPaddingBottom();
+		int maxWidth = 0;
+		if (mBitmap != null) {
+			maxWidth = mBitmap.getWidth();
+			height += mBitmap.getHeight();
+		}
+		
+		if (message != null) {
+			Rect bounds = new Rect();
+			mPaint.getTextBounds(message, 0, message.length() - 1, bounds);
+			int tw = bounds.right - bounds.left;
+			int th = bounds.bottom - bounds.top;
+			maxWidth = (maxWidth>tw)? maxWidth : tw;
+			height += th;
+		}
+		width += maxWidth;
+		width = resolveSize(width, widthMeasureSpec);
+		height = resolveSize(height, heightMeasureSpec);
+
+		setMeasuredDimension(width, height);
+		
+//		int mode = MeasureSpec.getMode(widthMeasureSpec);
+//		int size = MeasureSpec.getSize(widthMeasureSpec);
+//		switch(mode) {
+//		case MeasureSpec.AT_MOST :
+//			width = (width>size)?size:width;
+//			break;
+//		case MeasureSpec.EXACTLY :
+//			width = size;
+//			break;
+//		case MeasureSpec.UNSPECIFIED :
+//			default :
+//				break;
+//		}
 	}
 	
+	float bx, by;
+	float tx, ty;
+	
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+		
+		int height = 0;
+		if (mBitmap != null) {
+			height+= mBitmap.getHeight();
+			bx = ( (right - left) - mBitmap.getWidth() ) / 2;
+		}
+		if (message != null) {
+			Rect bounds = new Rect();
+			mPaint.getTextBounds(message, 0, message.length() - 1, bounds);
+			int tw = bounds.right - bounds.left;
+			int th = bounds.bottom - bounds.top;
+			height += th;
+			tx = ( (right - left) - tw) / 2;
+		}
+		
+		by = (bottom - top - height) / 2;
+		if (mBitmap != null) {
+			ty = by+mBitmap.getHeight();
+		} else {
+			ty = by;
+		}
+		if (message != null) {
+			ty += (-mPaint.ascent());
+		}
+	}
+
 	Bitmap mBitmap;
 	Matrix mMatrix = new Matrix();
 
@@ -70,24 +141,21 @@ public class MyView extends View {
 		BitmapFactory.Options opts = new BitmapFactory.Options();
 		opts.inSampleSize = 2;
 		mBitmap = BitmapFactory.decodeStream(is, null, opts);
-		
+
 		Bitmap bm = Bitmap.createScaledBitmap(mBitmap, 200, 200, false);
-		
+
 		mBitmap.recycle();
-		
+
 		mBitmap = bm;
-		
 
 	}
 
 	Path mPath;
 	Path mBasePath;
 	Path mArrowPath;
-	
-	float[] vertixs = {100, 100, 200, 50, 300, 100,
-					   50, 200, 200, 200, 350, 200,
-					   100, 300, 200, 350, 300, 300
-	};
+
+	float[] vertixs = { 100, 100, 200, 50, 300, 100, 50, 200, 200, 200, 350,
+			200, 100, 300, 200, 350, 300, 300 };
 
 	private void initPath() {
 		mPath = new Path();
@@ -100,7 +168,7 @@ public class MyView extends View {
 
 		mBasePath = new Path();
 		mBasePath.addCircle(300, 300, 200, Direction.CW);
-		
+
 		mArrowPath = new Path();
 		mArrowPath.moveTo(0, 0);
 		mArrowPath.lineTo(-5, -5);
@@ -108,7 +176,7 @@ public class MyView extends View {
 		mArrowPath.lineTo(5, 0);
 		mArrowPath.lineTo(0, 5);
 		mArrowPath.lineTo(-5, 5);
-		
+
 	}
 
 	private void initLinePoint() {
@@ -131,36 +199,38 @@ public class MyView extends View {
 		// drawCircle(canvas);
 		// drawArc(canvas);
 		// drawPath(canvas);
-//		drawText(canvas);
-//		drawBitmap(canvas);
-//		drawBitmapMesh(canvas);
-//		drawPathEffect(canvas);
-//		drawColor(canvas);
-//		drawShader(canvas);
+		// drawText(canvas);
+		// drawBitmap(canvas);
+		// drawBitmapMesh(canvas);
+		// drawPathEffect(canvas);
+		// drawColor(canvas);
+		// drawShader(canvas);
 		drawColorFilter(canvas);
 	}
-	
+
 	private void drawColorFilter(Canvas canvas) {
-		ColorMatrix m = new ColorMatrix();
-		m.setSaturation(0);
-		
-		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(m);
-		mPaint.setColorFilter(filter);
-		
-		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-		int y = mBitmap.getHeight() + 40;
+		if (mBitmap != null) {
+			ColorMatrix m = new ColorMatrix();
+			m.setSaturation(0);
+
+			ColorMatrixColorFilter filter = new ColorMatrixColorFilter(m);
+			mPaint.setColorFilter(filter);
+
+			canvas.drawBitmap(mBitmap, bx, by, mPaint);
+		}
 		if (message != null) {
-			mPaint.setTextSize(40);
-			canvas.drawText(message, 0, y, mPaint);
+			canvas.drawText(message, tx, ty, mPaint);
 		}
 	}
-	
+
 	private void drawShader(Canvas canvas) {
-//		int[] colors = {Color.RED, Color.YELLOW, Color.BLUE};
-//		float[] position = {0, 0.3f, 1};
-//		LinearGradient shader = new LinearGradient(50, 0, 150, 0, colors, position, TileMode.REPEAT);
-//		RadialGradient shader = new RadialGradient(100, 100, 100, Color.RED, Color.BLUE, TileMode.CLAMP);
-		int[] colors = {Color.RED, Color.BLUE,Color.RED};
+		// int[] colors = {Color.RED, Color.YELLOW, Color.BLUE};
+		// float[] position = {0, 0.3f, 1};
+		// LinearGradient shader = new LinearGradient(50, 0, 150, 0, colors,
+		// position, TileMode.REPEAT);
+		// RadialGradient shader = new RadialGradient(100, 100, 100, Color.RED,
+		// Color.BLUE, TileMode.CLAMP);
+		int[] colors = { Color.RED, Color.BLUE, Color.RED };
 		SweepGradient shader = new SweepGradient(100, 100, colors, null);
 		mPaint.setShader(shader);
 		canvas.save();
@@ -168,8 +238,7 @@ public class MyView extends View {
 		canvas.drawCircle(100, 100, 100, mPaint);
 		canvas.restore();
 	}
-	
-	
+
 	private void drawColor(Canvas canvas) {
 		int color = Color.argb(0x80, 0xFF, 0x80, 0x00);
 		mPaint.setColor(color);
@@ -177,23 +246,25 @@ public class MyView extends View {
 		mPaint.setAlpha(0x80);
 		canvas.drawBitmap(mBitmap, 200, 200, mPaint);
 	}
-	
+
 	private void drawPathEffect(Canvas canvas) {
 		mPaint.setColor(Color.BLACK);
 		mPaint.setStyle(Style.STROKE);
 		mPaint.setStrokeWidth(10);
-		
-//		float[] intervals = {20, 10, 10, 5};
-//		DashPathEffect patheffect = new DashPathEffect(intervals, 10);
-		
-		PathDashPathEffect patheffect = new PathDashPathEffect(mArrowPath, 10, 0, PathDashPathEffect.Style.ROTATE);
+
+		// float[] intervals = {20, 10, 10, 5};
+		// DashPathEffect patheffect = new DashPathEffect(intervals, 10);
+
+		PathDashPathEffect patheffect = new PathDashPathEffect(mArrowPath, 10,
+				0, PathDashPathEffect.Style.ROTATE);
 		mPaint.setPathEffect(patheffect);
-//		canvas.drawRect(100, 100, 300, 300, mPaint);
+		// canvas.drawRect(100, 100, 300, 300, mPaint);
 		canvas.drawCircle(200, 200, 100, mPaint);
 	}
-	
+
 	int delta = 0;
 	boolean direction = true;
+
 	private void drawBitmapMesh(Canvas canvas) {
 		if (direction) {
 			delta++;
@@ -217,10 +288,10 @@ public class MyView extends View {
 		mMatrix.postTranslate(100, 300);
 		mMatrix.postSkew(0.5f, 0, 100, 300);
 		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
-		
-		canvas.drawBitmap(mBitmap, 100,  100, mPaint);
+
+		canvas.drawBitmap(mBitmap, 100, 100, mPaint);
 	}
-	
+
 	float hOffset;
 	private static final String HELLO_ANDROID = "Hello, Android!!!";
 
