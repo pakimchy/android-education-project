@@ -7,12 +7,20 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.DashPathEffect;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.PathDashPathEffect;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Path.Direction;
+import android.graphics.RadialGradient;
+import android.graphics.Shader.TileMode;
 import android.graphics.RectF;
+import android.graphics.SweepGradient;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -62,6 +70,7 @@ public class MyView extends View {
 
 	Path mPath;
 	Path mBasePath;
+	Path mArrowPath;
 	
 	float[] vertixs = {100, 100, 200, 50, 300, 100,
 					   50, 200, 200, 200, 350, 200,
@@ -79,6 +88,15 @@ public class MyView extends View {
 
 		mBasePath = new Path();
 		mBasePath.addCircle(300, 300, 200, Direction.CW);
+		
+		mArrowPath = new Path();
+		mArrowPath.moveTo(0, 0);
+		mArrowPath.lineTo(-5, -5);
+		mArrowPath.lineTo(0, -5);
+		mArrowPath.lineTo(5, 0);
+		mArrowPath.lineTo(0, 5);
+		mArrowPath.lineTo(-5, 5);
+		
 	}
 
 	private void initLinePoint() {
@@ -103,7 +121,58 @@ public class MyView extends View {
 		// drawPath(canvas);
 //		drawText(canvas);
 //		drawBitmap(canvas);
-		drawBitmapMesh(canvas);
+//		drawBitmapMesh(canvas);
+//		drawPathEffect(canvas);
+//		drawColor(canvas);
+//		drawShader(canvas);
+		drawColorFilter(canvas);
+	}
+	
+	private void drawColorFilter(Canvas canvas) {
+		ColorMatrix m = new ColorMatrix();
+		m.setSaturation(0);
+		
+		ColorMatrixColorFilter filter = new ColorMatrixColorFilter(m);
+		mPaint.setColorFilter(filter);
+		
+		canvas.drawBitmap(mBitmap, 100, 100, mPaint);
+	}
+	
+	private void drawShader(Canvas canvas) {
+//		int[] colors = {Color.RED, Color.YELLOW, Color.BLUE};
+//		float[] position = {0, 0.3f, 1};
+//		LinearGradient shader = new LinearGradient(50, 0, 150, 0, colors, position, TileMode.REPEAT);
+//		RadialGradient shader = new RadialGradient(100, 100, 100, Color.RED, Color.BLUE, TileMode.CLAMP);
+		int[] colors = {Color.RED, Color.BLUE,Color.RED};
+		SweepGradient shader = new SweepGradient(100, 100, colors, null);
+		mPaint.setShader(shader);
+		canvas.save();
+		canvas.translate(100, 100);
+		canvas.drawCircle(100, 100, 100, mPaint);
+		canvas.restore();
+	}
+	
+	
+	private void drawColor(Canvas canvas) {
+		int color = Color.argb(0x80, 0xFF, 0x80, 0x00);
+		mPaint.setColor(color);
+		canvas.drawRect(100, 100, 300, 300, mPaint);
+		mPaint.setAlpha(0x80);
+		canvas.drawBitmap(mBitmap, 200, 200, mPaint);
+	}
+	
+	private void drawPathEffect(Canvas canvas) {
+		mPaint.setColor(Color.BLACK);
+		mPaint.setStyle(Style.STROKE);
+		mPaint.setStrokeWidth(10);
+		
+//		float[] intervals = {20, 10, 10, 5};
+//		DashPathEffect patheffect = new DashPathEffect(intervals, 10);
+		
+		PathDashPathEffect patheffect = new PathDashPathEffect(mArrowPath, 10, 0, PathDashPathEffect.Style.ROTATE);
+		mPaint.setPathEffect(patheffect);
+//		canvas.drawRect(100, 100, 300, 300, mPaint);
+		canvas.drawCircle(200, 200, 100, mPaint);
 	}
 	
 	int delta = 0;
