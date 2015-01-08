@@ -45,7 +45,10 @@ public class MyView extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
-		
+		drawLineAndPoint(canvas);
+	}
+	
+	private void drawLineAndPoint(Canvas canvas) {
 		canvas.save();
 		
 		canvas.translate(100, 100);
