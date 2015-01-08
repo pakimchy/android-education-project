@@ -20,6 +20,10 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 public class MyView extends View {
@@ -50,7 +54,39 @@ public class MyView extends View {
 
 	Paint mPaint = new Paint();
 
+	GestureDetector mDetector;
+	ScaleGestureDetector mScaleDetector;
+	
+	float mScaleFactor = 1.0f;
+	
 	private void init() {
+		mScaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+			@Override
+			public boolean onScale(ScaleGestureDetector detector) {
+				float factor = detector.getScaleFactor();
+				mScaleFactor *= factor;
+				invalidate();
+				return super.onScale(detector);
+			}
+		});
+		mDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+				Log.i("MyView", "fling....");
+				return super.onFling(e1, e2, velocityX, velocityY);
+			}
+			
+			@Override
+			public boolean onDoubleTap(MotionEvent e) {
+				return super.onDoubleTap(e);
+			}
+		});
 		initLinePoint();
 		initPath();
 		initBitmap();
@@ -207,8 +243,17 @@ public class MyView extends View {
 		// drawShader(canvas);
 		drawColorFilter(canvas);
 	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		boolean isConsumed = mDetector.onTouchEvent(event);
+		mScaleDetector.onTouchEvent(event);
+		return isConsumed || super.onTouchEvent(event);
+	}
 
 	private void drawColorFilter(Canvas canvas) {
+		canvas.save();
+		canvas.scale(mScaleFactor, mScaleFactor);
 		if (mBitmap != null) {
 			ColorMatrix m = new ColorMatrix();
 			m.setSaturation(0);
@@ -221,6 +266,7 @@ public class MyView extends View {
 		if (message != null) {
 			canvas.drawText(message, tx, ty, mPaint);
 		}
+		canvas.restore();
 	}
 
 	private void drawShader(Canvas canvas) {
