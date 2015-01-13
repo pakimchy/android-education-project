@@ -60,7 +60,7 @@ public class MainActivity extends ActionBarActivity
 					b.putString("message", inputView.getText().toString());
 					tabOneFragment = new TabOneFragment();
 					tabOneFragment.setArguments(b);
-					
+					ft.setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out);
 					ft.replace(R.id.container, tabOneFragment, F1_TAG);
 					ft.commit();
 				}
