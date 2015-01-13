@@ -62,6 +62,7 @@ public class MainActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, MyActivity.class);
 				startActivity(intent);
+//				overridePendingTransition(R.anim.slide_right_in, R.anim.slide_right_out);
 			}
 		});
 
