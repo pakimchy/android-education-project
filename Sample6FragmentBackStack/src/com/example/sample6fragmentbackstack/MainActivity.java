@@ -43,18 +43,22 @@ public class MainActivity extends ActionBarActivity {
 				int count = getSupportFragmentManager()
 						.getBackStackEntryCount();
 				if (count < list.length) {
-					getSupportFragmentManager().beginTransaction()
+					getSupportFragmentManager().beginTransaction().setCustomAnimations(R.anim.slide_left_in, R.anim.slide_left_out, R.anim.slide_right_in, R.anim.slide_right_out)
 							.replace(R.id.container, list[count])
 							.addToBackStack(null).commit();
 				} else {
-					Toast.makeText(MainActivity.this, "max fragment", Toast.LENGTH_SHORT).show();
-					getSupportFragmentManager().popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+					Toast.makeText(MainActivity.this, "max fragment",
+							Toast.LENGTH_SHORT).show();
+					getSupportFragmentManager().popBackStack(null,
+							FragmentManager.POP_BACK_STACK_INCLUSIVE);
 				}
 			}
 		});
 
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.container, new BaseFragment()).commit();
+		if (savedInstanceState == null) {
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.container, new BaseFragment()).commit();
+		}
 	}
 
 	@Override
