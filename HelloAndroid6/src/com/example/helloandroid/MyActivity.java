@@ -21,6 +21,7 @@ public class MyActivity extends ActionBarActivity {
 				Toast.makeText(MyActivity.this, "MyActivity finished", Toast.LENGTH_SHORT).show();
 				
 				finish();
+//				overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
 			}
 		});
 	}
