@@ -46,7 +46,7 @@ public class NetworkManager {
 			String keyword = params[0];
 			if (keyword != null && !keyword.equals("")) {
 				try {
-					String urlString = "http://openapi.naver.com/search?key=c1b406b32dbbbbeee5f2a36ddc14067f&display=10&start=1&target=movie&query=" + URLEncoder.encode(keyword, "utf-8");
+					String urlString = "http://openapi.naver.com/search?key=55f1e342c5bce1cac340ebb6032c7d9a&display=10&start=1&target=movie&query=" + URLEncoder.encode(keyword, "utf-8");
 					URL url = new URL(urlString);
 					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
 					int responseCode = conn.getResponseCode();
