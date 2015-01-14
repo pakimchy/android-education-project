@@ -78,7 +78,7 @@ public class NetworkManager {
 	public void getNaverMovie(Context context, String keyword, int start, final OnResultListener<NaverMovie> listener) {
 		RequestParams params = new RequestParams();
 		params.put("key", "55f1e342c5bce1cac340ebb6032c7d9a");
-		params.put("display", "100");
+		params.put("display", "10");
 		params.put("start", ""+start);
 		params.put("target", "movie");
 		params.put("query", keyword);
