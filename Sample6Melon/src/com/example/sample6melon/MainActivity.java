@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sample6melon.NetworkManager.OnResultListener;
 import com.google.gson.Gson;
 
 public class MainActivity extends ActionBarActivity {
@@ -36,7 +37,22 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				new MelonTask().execute();
+//				new MelonTask().execute();
+				NetworkManager.getInstnace().getMelon(MainActivity.this, 1, 10, new OnResultListener<ResultMelon>() {
+					
+					@Override
+					public void onSuccess(ResultMelon movie) {
+						for (Song s : movie.melon.songlist.song) {
+							mAdapter.add(s);
+						}
+						Toast.makeText(MainActivity.this, "result : " + movie, Toast.LENGTH_SHORT).show();
+					}
+					
+					@Override
+					public void onFail(int code) {
+						Toast.makeText(MainActivity.this, "error", Toast.LENGTH_SHORT).show();
+					}
+				});
 			}
 		});
 	}
