@@ -8,8 +8,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import com.begentgroup.xmlparser.XMLParser;
-
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -20,6 +18,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
+
+import com.begentgroup.xmlparser.XMLParser;
+import com.example.sample6navermovie.NetworkManager.OnResultListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -39,51 +41,68 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				new NaverMovieTask().execute();
+//				new NaverMovieTask().execute();
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					NetworkManager.getInstnace().getNaverMovie(keyword, new OnResultListener<NaverMovie>() {
+						
+						@Override
+						public void onSuccess(NaverMovie movie) {
+							for (MovieItem item : movie.items) {
+								mAdapter.add(item);
+							}
+						}
+
+						@Override
+						public void onFail(int code) {
+							Toast.makeText(MainActivity.this, "fail...", Toast.LENGTH_SHORT).show();							
+						}
+					});
+				}
 			}
 		});		
 	}
 	
-	class NaverMovieTask extends AsyncTask<String, Integer, NaverMovie> {
-		@Override
-		protected NaverMovie doInBackground(String... params) {
-			String keyword = keywordView.getText().toString();
-			if (keyword != null && !keyword.equals("")) {
-				try {
-					String urlString = "http://openapi.naver.com/search?key=c1b406b32dbbbbeee5f2a36ddc14067f&display=10&start=1&target=movie&query=" + URLEncoder.encode(keyword, "utf-8");
-					URL url = new URL(urlString);
-					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-					int responseCode = conn.getResponseCode();
-					if (responseCode == HttpURLConnection.HTTP_OK) {
-						InputStream is = conn.getInputStream();
-						XMLParser parser = new XMLParser();
-						NaverMovie movie = parser.fromXml(is, "channel", NaverMovie.class);
-						return movie;
-					}
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(NaverMovie result) {
-			super.onPostExecute(result);
-			if (result != null) {
-				for (MovieItem item : result.items) {
-					mAdapter.add(item);
-				}
-			}
-		}
-	}
+//	class NaverMovieTask extends AsyncTask<String, Integer, NaverMovie> {
+//		@Override
+//		protected NaverMovie doInBackground(String... params) {
+//			String keyword = keywordView.getText().toString();
+//			if (keyword != null && !keyword.equals("")) {
+//				try {
+//					String urlString = "http://openapi.naver.com/search?key=c1b406b32dbbbbeee5f2a36ddc14067f&display=10&start=1&target=movie&query=" + URLEncoder.encode(keyword, "utf-8");
+//					URL url = new URL(urlString);
+//					HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+//					int responseCode = conn.getResponseCode();
+//					if (responseCode == HttpURLConnection.HTTP_OK) {
+//						InputStream is = conn.getInputStream();
+//						XMLParser parser = new XMLParser();
+//						NaverMovie movie = parser.fromXml(is, "channel", NaverMovie.class);
+//						return movie;
+//					}
+//				} catch (UnsupportedEncodingException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (MalformedURLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				} catch (IOException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}				
+//			}
+//			return null;
+//		}
+//		
+//		@Override
+//		protected void onPostExecute(NaverMovie result) {
+//			super.onPostExecute(result);
+//			if (result != null) {
+//				for (MovieItem item : result.items) {
+//					mAdapter.add(item);
+//				}
+//			}
+//		}
+//	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
