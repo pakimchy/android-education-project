@@ -10,8 +10,27 @@ import android.widget.BaseAdapter;
 public class MovieAdapter extends BaseAdapter {
 	ArrayList<MovieItem> items = new ArrayList<MovieItem>();
 	Context mContext;
+	int totalCount;
+	String keyword;
+	
 	public MovieAdapter(Context context) {
 		mContext = context;
+	}
+	
+	public void setTotalCount(int total) {
+		totalCount =total;
+	}
+	
+	public int getTotalCount() {
+		return totalCount;
+	}
+	
+	public void setKeyword(String keyword) {
+		this.keyword = keyword;
+	}
+	
+	public String getKeyword() {
+		return keyword;
 	}
 	
 	public void addAll(ArrayList<MovieItem> items) {

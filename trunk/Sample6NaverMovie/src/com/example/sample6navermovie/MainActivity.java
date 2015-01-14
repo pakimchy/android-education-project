@@ -3,6 +3,8 @@ package com.example.sample6navermovie;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,18 +17,71 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sample6navermovie.NetworkManager.OnResultListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class MainActivity extends ActionBarActivity {
 
+	PullToRefreshListView refreshView;
+	
 	ListView listView;
 //	ArrayAdapter<MovieItem> mAdapter;
 	MovieAdapter mAdapter;
 	EditText keywordView;
+	Handler mHandler = new Handler();
+	long startTime;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		listView = (ListView)findViewById(R.id.listView1);
+		refreshView = (PullToRefreshListView)findViewById(R.id.listView1);
+		refreshView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> rView) {
+				String keyword = mAdapter.getKeyword();
+				if (keyword != null && !keyword.equals("")) {
+					int start = mAdapter.getCount() + 1;
+					int total = mAdapter.getTotalCount();
+					if (start <= total) {
+						startTime = SystemClock.uptimeMillis();
+						NetworkManager.getInstnace().getNaverMovie(MainActivity.this, keyword, start, new OnResultListener<NaverMovie>(){
+							@Override
+							public void onSuccess(NaverMovie movie) {
+								mAdapter.addAll(movie.items);
+								long currentTime = SystemClock.uptimeMillis();
+								int delta = (int)(currentTime - startTime);
+								if (delta < 2000) {
+									mHandler.postDelayed(new Runnable() {
+										public void run() {
+											refreshView.onRefreshComplete();
+										}
+									}, 2000 - delta);
+								} else {
+									refreshView.onRefreshComplete();
+								}
+								
+							}
+							@Override
+							public void onFail(int code) {
+								
+							}
+						});
+					} else {
+						Toast.makeText(MainActivity.this, "no more item", Toast.LENGTH_SHORT).show();
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+//								refreshView.onRefreshComplete();
+							}
+						});
+					}
+				}
+			}
+		});
+		listView = refreshView.getRefreshableView();
 		mAdapter = new MovieAdapter(this);
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -47,7 +102,7 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onClick(View v) {
 //				new NaverMovieTask().execute();
-				String keyword = keywordView.getText().toString();
+				final String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
 					NetworkManager.getInstnace().getNaverMovie(MainActivity.this, keyword, 1, new OnResultListener<NaverMovie>() {
 						
@@ -55,6 +110,8 @@ public class MainActivity extends ActionBarActivity {
 						public void onSuccess(NaverMovie movie) {
 							mAdapter.clear();
 							mAdapter.addAll(movie.items);
+							mAdapter.setTotalCount(movie.total);
+							mAdapter.setKeyword(keyword);
 						}
 
 						@Override
