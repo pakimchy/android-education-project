@@ -3,6 +3,7 @@ package com.example.sample6navermovie;
 public class MovieItem {
 	public String title;
 	public String image;
+	public String link;
 	public String director;
 	public float userRating;
 	
