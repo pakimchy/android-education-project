@@ -1,9 +1,9 @@
 package com.example.sample6database;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,6 +16,7 @@ public class MainActivity extends ActionBarActivity {
 
 	ListView listView;
 	ArrayAdapter<Person> mAdapter;
+	SimpleCursorAdapter mCursorAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,11 @@ public class MainActivity extends ActionBarActivity {
 		setContentView(R.layout.activity_main);
 		listView = (ListView)findViewById(R.id.listView1);
 		mAdapter = new ArrayAdapter<Person>(this, android.R.layout.simple_list_item_1);
-		listView.setAdapter(mAdapter);
+		String[] from = {DBConstant.PersonTable.FIELD_NAME, DBConstant.PersonTable.FIELD_AGE};
+		int[] to = {R.id.text_name, R.id.text_age};
+		mCursorAdapter = new SimpleCursorAdapter(this, R.layout.item_layout, null, from, to, 0);
+//		listView.setAdapter(mAdapter);
+		listView.setAdapter(mCursorAdapter);
 		
 		Button btn = (Button)findViewById(R.id.btn_add);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -38,13 +43,20 @@ public class MainActivity extends ActionBarActivity {
 	}
 	
 	private void initData() {
-		ArrayList<Person> list = DBManager.getInstance().getPersonList();
-		mAdapter.clear();
-		for (Person p : list) {
-			mAdapter.add(p);
-		}
+//		ArrayList<Person> list = DBManager.getInstance().getPersonList();
+//		mAdapter.clear();
+//		for (Person p : list) {
+//			mAdapter.add(p);
+//		}
+		Cursor c = DBManager.getInstance().getPersonCursor();
+		mCursorAdapter.changeCursor(c);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		mCursorAdapter.changeCursor(null);
+	}
 	@Override
 	protected void onResume() {
 		super.onResume();

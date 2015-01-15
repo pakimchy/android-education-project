@@ -57,4 +57,11 @@ public class DBManager implements PersonTable {
 		db.close();
 	}
 
+	public Cursor getPersonCursor() {
+		String[] columns = {_ID, FIELD_NAME, FIELD_AGE};		
+		SQLiteDatabase db = mHelper.getReadableDatabase();
+		Cursor c = db.query(TABLE, columns, null,null, null, null, null);
+		return c;
+	}
+
 }
