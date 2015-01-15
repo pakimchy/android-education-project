@@ -60,7 +60,9 @@ public class DBManager implements PersonTable {
 	public Cursor getPersonCursor() {
 		String[] columns = {_ID, FIELD_NAME, FIELD_AGE};		
 		SQLiteDatabase db = mHelper.getReadableDatabase();
-		Cursor c = db.query(TABLE, columns, null,null, null, null, null);
+		String selection = FIELD_AGE + " > ? AND " + FIELD_AGE + " < ?";
+		String[] args = {"20","40"};
+		Cursor c = db.query(TABLE, columns, selection,args, null, null, null);
 		return c;
 	}
 
