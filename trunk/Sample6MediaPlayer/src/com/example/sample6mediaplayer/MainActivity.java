@@ -2,14 +2,19 @@ package com.example.sample6mediaplayer;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -23,16 +28,19 @@ public class MainActivity extends ActionBarActivity {
 	private static final int STATE_PAUSED = 4;
 	private static final int STATE_STOPPED = 5;
 	private static final int STATE_ERROR = 6;
-	
+
 	SeekBar progressView;
-	
+	SeekBar volumeView;
+	AudioManager mAudioManager;
+	CheckBox muteView;
+
 	int mState;
-	
+
 	Handler mHandler = new Handler();
 	private static final int INTERVAL_PROGRESS = 100;
 	boolean bSeekStart = false;
 	Runnable updateRunnable = new Runnable() {
-		
+
 		@Override
 		public void run() {
 			if (mState == STATE_STARTED) {
@@ -43,17 +51,52 @@ public class MainActivity extends ActionBarActivity {
 			}
 		}
 	};
+
+	float volume = 1.0f;
+	Runnable muteRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			if (volume < 0) {
+				volume = 0;
+			}
+			mPlayer.setVolume(volume, volume);
+			Log.i("MainActivity", "volume : " + volume);
+			if (volume > 0) {
+				volume -= 0.1f;
+				mHandler.postDelayed(this, INTERVAL_PROGRESS);
+			}
+		}
+	};
+	
+	Runnable immuteRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (volume > 1) {
+				volume = 1.0f;
+			}
+			Log.i("MainActivity","volume : " + volume);
+			mPlayer.setVolume(volume, volume);
+			if (volume < 1) {
+				volume+=0.1;
+				mHandler.postDelayed(this, INTERVAL_PROGRESS);
+			}
+			
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		progressView = (SeekBar)findViewById(R.id.seek_progress);
+		progressView = (SeekBar) findViewById(R.id.seek_progress);
 
 		progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 
 			private static final int NOT_CHAGNGED = -1;
 			int progress;
-			
+
 			@Override
 			public void onStopTrackingTouch(SeekBar seekBar) {
 				if (progress != NOT_CHAGNGED) {
@@ -63,29 +106,76 @@ public class MainActivity extends ActionBarActivity {
 				}
 				bSeekStart = false;
 			}
-			
+
 			@Override
 			public void onStartTrackingTouch(SeekBar seekBar) {
 				progress = NOT_CHAGNGED;
 				bSeekStart = true;
 			}
-			
+
 			@Override
 			public void onProgressChanged(SeekBar seekBar, int progress,
 					boolean fromUser) {
 				if (fromUser) {
 					this.progress = progress;
 				}
-				
+
 			}
 		});
+
+		volumeView = (SeekBar) findViewById(R.id.seek_volume);
+		mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+		int maxVolume = mAudioManager
+				.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setMax(maxVolume);
+		int currentVolume = mAudioManager
+				.getStreamVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setProgress(currentVolume);
+		volumeView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+			
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC,
+							progress, 0);
+				}
+			}
+		});
+
+		muteView = (CheckBox) findViewById(R.id.check_mute);
+		muteView.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				if (isChecked) {
+					mHandler.removeCallbacks(immuteRunnable);
+					mHandler.post(muteRunnable);
+				} else {
+					mHandler.removeCallbacks(muteRunnable);
+					mHandler.post(immuteRunnable);
+				}
+			}
+		});
+
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
 		mState = STATE_PREPARED;
 		int duration = mPlayer.getDuration();
 		progressView.setMax(duration);
-		Button btn = (Button)findViewById(R.id.btn_play);
+		Button btn = (Button) findViewById(R.id.btn_play);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mState == STATE_INITIALED || mState == STATE_STOPPED) {
@@ -97,7 +187,7 @@ public class MainActivity extends ActionBarActivity {
 						e.printStackTrace();
 					}
 				}
-				
+
 				if (mState == STATE_PREPARED || mState == STATE_PAUSED) {
 					mPlayer.start();
 					mState = STATE_STARTED;
@@ -106,10 +196,10 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.btn_pause);
+
+		btn = (Button) findViewById(R.id.btn_pause);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mState == STATE_STARTED) {
@@ -118,10 +208,10 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.btn_stop);
+
+		btn = (Button) findViewById(R.id.btn_stop);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mState == STATE_STARTED || mState == STATE_PAUSED) {
@@ -131,17 +221,17 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
-		
+
 		mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-			
+
 			@Override
 			public void onCompletion(MediaPlayer mp) {
 				mState = STATE_PAUSED;
 			}
 		});
-		
+
 		mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
-			
+
 			@Override
 			public boolean onError(MediaPlayer mp, int what, int extra) {
 				mState = STATE_IDLE;
@@ -159,6 +249,7 @@ public class MainActivity extends ActionBarActivity {
 			mPlayer = null;
 		}
 	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
