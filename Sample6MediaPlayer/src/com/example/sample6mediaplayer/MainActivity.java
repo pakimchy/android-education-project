@@ -4,11 +4,14 @@ import java.io.IOException;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -21,14 +24,65 @@ public class MainActivity extends ActionBarActivity {
 	private static final int STATE_STOPPED = 5;
 	private static final int STATE_ERROR = 6;
 	
+	SeekBar progressView;
+	
 	int mState;
+	
+	Handler mHandler = new Handler();
+	private static final int INTERVAL_PROGRESS = 100;
+	boolean bSeekStart = false;
+	Runnable updateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (mState == STATE_STARTED) {
+				if (!bSeekStart) {
+					progressView.setProgress(mPlayer.getCurrentPosition());
+				}
+				mHandler.postDelayed(this, INTERVAL_PROGRESS);
+			}
+		}
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		progressView = (SeekBar)findViewById(R.id.seek_progress);
+
+		progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+
+			private static final int NOT_CHAGNGED = -1;
+			int progress;
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				if (progress != NOT_CHAGNGED) {
+					if (mState == STATE_STARTED) {
+						mPlayer.seekTo(progress);
+					}
+				}
+				bSeekStart = false;
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				progress = NOT_CHAGNGED;
+				bSeekStart = true;
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					this.progress = progress;
+				}
+				
+			}
+		});
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
 		mState = STATE_PREPARED;
-		
+		int duration = mPlayer.getDuration();
+		progressView.setMax(duration);
 		Button btn = (Button)findViewById(R.id.btn_play);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -47,6 +101,8 @@ public class MainActivity extends ActionBarActivity {
 				if (mState == STATE_PREPARED || mState == STATE_PAUSED) {
 					mPlayer.start();
 					mState = STATE_STARTED;
+					mPlayer.seekTo(progressView.getProgress());
+					mHandler.post(updateRunnable);
 				}
 			}
 		});
@@ -71,6 +127,7 @@ public class MainActivity extends ActionBarActivity {
 				if (mState == STATE_STARTED || mState == STATE_PAUSED) {
 					mPlayer.stop();
 					mState = STATE_STOPPED;
+					progressView.setProgress(0);
 				}
 			}
 		});
