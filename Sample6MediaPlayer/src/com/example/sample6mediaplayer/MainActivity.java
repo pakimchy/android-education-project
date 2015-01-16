@@ -2,9 +2,12 @@ package com.example.sample6mediaplayer;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -189,9 +192,9 @@ public class MainActivity extends ActionBarActivity {
 				}
 
 				if (mState == STATE_PREPARED || mState == STATE_PAUSED) {
+					mPlayer.seekTo(progressView.getProgress());
 					mPlayer.start();
 					mState = STATE_STARTED;
-					mPlayer.seekTo(progressView.getProgress());
 					mHandler.post(updateRunnable);
 				}
 			}
@@ -221,6 +224,16 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_music);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, MusicListActivity.class);
+				startActivityForResult(intent, 0);
+			}
+		});
 
 		mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
 
@@ -241,6 +254,37 @@ public class MainActivity extends ActionBarActivity {
 		});
 	}
 
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		super.onActivityResult(arg0, arg1, arg2);
+		if (arg0 == 0 && arg1 == Activity.RESULT_OK) {
+			Uri uri = arg2.getData();
+			String title = arg2.getStringExtra("title");
+			mPlayer.reset();
+			mState = STATE_IDLE;
+			try {
+				mPlayer.setDataSource(this, uri);
+				mState = STATE_INITIALED;
+				mPlayer.prepare();
+				mState = STATE_PREPARED;
+				progressView.setMax(mPlayer.getDuration());
+				progressView.setProgress(0);
+			} catch (IllegalArgumentException | SecurityException
+					| IllegalStateException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (mState == STATE_STARTED) {
+			mPlayer.pause();
+			mState = STATE_PAUSED;
+		}
+	}
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
