@@ -43,7 +43,7 @@ public class MainActivity extends ActionBarActivity {
 
 		@Override
 		public void run() {
-			if (mState == STATE_STARTED) {
+			if (mState == STATE_STARTED && mPlayer != null) {
 				if (!bSeekStart) {
 					progressView.setProgress(mPlayer.getCurrentPosition());
 				}
