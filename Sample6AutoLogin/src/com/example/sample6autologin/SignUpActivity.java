@@ -35,8 +35,8 @@ public class SignUpActivity extends ActionBarActivity {
 					public void onSuccess(String message) {
 						PropertyManager.getInstnace().setUserName(id);
 						PropertyManager.getInstnace().setPassword(password);
-						Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+						Intent intent = new Intent(SignUpActivity.this, MainActivity.class);						
+						intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK| Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);
 						finish();
 					}
