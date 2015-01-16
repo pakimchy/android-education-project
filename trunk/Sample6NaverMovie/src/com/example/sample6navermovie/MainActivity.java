@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
+import android.text.format.DateUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -40,6 +41,10 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onRefresh(PullToRefreshBase<ListView> rView) {
+//				String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+//						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+//				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				
 				String keyword = mAdapter.getKeyword();
 				if (keyword != null && !keyword.equals("")) {
 					int start = mAdapter.getCount() + 1;
@@ -48,17 +53,18 @@ public class MainActivity extends ActionBarActivity {
 						startTime = SystemClock.uptimeMillis();
 						NetworkManager.getInstnace().getNaverMovie(MainActivity.this, keyword, start, new OnResultListener<NaverMovie>(){
 							@Override
-							public void onSuccess(NaverMovie movie) {
-								mAdapter.addAll(movie.items);
+							public void onSuccess(final NaverMovie movie) {
 								long currentTime = SystemClock.uptimeMillis();
 								int delta = (int)(currentTime - startTime);
 								if (delta < 2000) {
 									mHandler.postDelayed(new Runnable() {
 										public void run() {
+											mAdapter.addAll(movie.items);
 											refreshView.onRefreshComplete();
 										}
 									}, 2000 - delta);
 								} else {
+									mAdapter.addAll(movie.items);
 									refreshView.onRefreshComplete();
 								}
 								
@@ -74,11 +80,19 @@ public class MainActivity extends ActionBarActivity {
 							
 							@Override
 							public void run() {
-//								refreshView.onRefreshComplete();
+								refreshView.onRefreshComplete();
 							}
 						});
 					}
 				}
+				
+//				mHandler.postDelayed(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						refreshView.onRefreshComplete();
+//					}
+//				}, 2000);
 			}
 		});
 		listView = refreshView.getRefreshableView();
