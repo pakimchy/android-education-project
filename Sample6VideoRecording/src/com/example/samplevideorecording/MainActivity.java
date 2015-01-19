@@ -6,6 +6,8 @@ import java.io.IOException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.AudioEncoder;
 import android.media.MediaRecorder.AudioSource;
@@ -33,6 +35,7 @@ public class MainActivity extends ActionBarActivity implements
 	MediaRecorder mRecorder;
 	SurfaceView displayView;
 	SurfaceHolder mSurfaceHolder;
+	Camera mCamera;
 
 	public static final int STATE_NOT_RECORDING = 0;
 	public static final int STATE_RECORDING = 1;
@@ -53,6 +56,9 @@ public class MainActivity extends ActionBarActivity implements
 		gallery.setAdapter(mAdapter);
 		
 		mRecorder = new MediaRecorder();
+		mCamera = Camera.open();
+		mCamera.setDisplayOrientation(90);
+		mCamera.unlock();
 
 		Button btn = (Button) findViewById(R.id.btn_recording);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -91,6 +97,15 @@ public class MainActivity extends ActionBarActivity implements
 		if (mState == STATE_RECORDING) {
 			stopRecording();
 		}
+		
+		if (mCamera != null) {
+			try {
+				mCamera.release();
+				mCamera = null;
+			} catch(Exception e) {
+				
+			}
+		}
 	}
 	
 	private void startRecording() {
@@ -107,6 +122,11 @@ public class MainActivity extends ActionBarActivity implements
 
 			mRecorder.setAudioEncoder(AudioEncoder.AMR_NB);
 			mRecorder.setVideoEncoder(VideoEncoder.MPEG_4_SP);
+			mRecorder.setMaxDuration(10 * 1000);
+			mRecorder.setMaxFileSize(20 * 1024 * 1024);
+//			mRecorder.setVideoSize(320, 240);
+			CamcorderProfile profile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+			mRecorder.setProfile(profile);
 
 			File dir = Environment
 					.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
@@ -121,6 +141,7 @@ public class MainActivity extends ActionBarActivity implements
 			if (mSurfaceHolder != null) {
 				mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 			}
+			mRecorder.setCamera(mCamera);
 
 			try {
 				mRecorder.prepare();
