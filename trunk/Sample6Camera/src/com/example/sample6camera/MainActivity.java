@@ -89,6 +89,15 @@ implements SurfaceHolder.Callback {
 					@Override
 					public void onShutter() {
 						mCamera.stopPreview();
+						mHandler.postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								if (mCamera != null) {
+									mCamera.startPreview();
+								}
+							}
+						}, 1000);
 					}
 				}, null, new PictureCallback() {
 					
@@ -140,15 +149,6 @@ implements SurfaceHolder.Callback {
 							sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
 						}
 						
-						mHandler.postDelayed(new Runnable() {
-							
-							@Override
-							public void run() {
-								if (mCamera != null) {
-									mCamera.startPreview();
-								}
-							}
-						}, 1000);
 					}
 				});
 			}
