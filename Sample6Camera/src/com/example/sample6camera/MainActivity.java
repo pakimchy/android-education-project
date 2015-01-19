@@ -1,7 +1,10 @@
 package com.example.sample6camera;
 
 import java.io.IOException;
+import java.util.List;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -9,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity 
 implements SurfaceHolder.Callback {
@@ -25,6 +30,30 @@ implements SurfaceHolder.Callback {
 		displayView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
 		mCamera.setDisplayOrientation(90);
+		
+		Button btn = (Button)findViewById(R.id.btn_effect);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Camera.Parameters params = mCamera.getParameters();
+				final List<String> effects = params.getSupportedColorEffects();
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setIcon(R.drawable.ic_launcher);
+				builder.setTitle("select color effect");
+				String[] items = effects.toArray(new String[effects.size()]);
+				builder.setItems(items, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Camera.Parameters params = mCamera.getParameters();
+						params.setColorEffect(effects.get(which));
+						mCamera.setParameters(params);
+					}
+				});
+				builder.create().show();
+			}
+		});
 	}
 	
 	@Override
