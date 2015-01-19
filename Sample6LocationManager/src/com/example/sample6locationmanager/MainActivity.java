@@ -130,7 +130,8 @@ public class MainActivity extends ActionBarActivity {
 		
 		mProvider = LocationManager.GPS_PROVIDER;
 
-		if (mProvider == null || !mLM.isProviderEnabled(mProvider)) {
+		if (mProvider == null
+				|| mProvider.equals(LocationManager.PASSIVE_PROVIDER) || !mLM.isProviderEnabled(mProvider)) {
 			if (isFirst) {
 				Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
 				startActivity(intent);
