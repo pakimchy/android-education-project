@@ -36,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements
 
 	public static final int STATE_NOT_RECORDING = 0;
 	public static final int STATE_RECORDING = 1;
+	public static final int STATE_RELEASED = 2;
 	int mState = STATE_NOT_RECORDING;
 	
 	Gallery gallery;
@@ -78,6 +79,7 @@ public class MainActivity extends ActionBarActivity implements
 		if (mRecorder != null) {
 			mRecorder.release();
 			mRecorder = null;
+			mState = STATE_RELEASED;
 		}
 	}
 
