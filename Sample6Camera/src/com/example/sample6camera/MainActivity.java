@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -28,9 +29,9 @@ implements SurfaceHolder.Callback {
 		displayView = (SurfaceView)findViewById(R.id.surfaceView1);
 		displayView.getHolder().addCallback(this);
 		displayView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-		mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
-		mCamera.setDisplayOrientation(90);
-		
+//		mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_BACK);
+//		mCamera.setDisplayOrientation(90);
+		openCamera();
 		Button btn = (Button)findViewById(R.id.btn_effect);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -54,7 +55,36 @@ implements SurfaceHolder.Callback {
 				builder.create().show();
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_change);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				openCamera();
+				try {
+					mCamera.setPreviewDisplay(displayView.getHolder());
+					mCamera.startPreview();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}				
+			}
+		});
 	}
+	
+	int type = Camera.CameraInfo.CAMERA_FACING_FRONT;
+	
+	public void openCamera() {
+		if (mCamera != null) {
+			mCamera.release();
+			mCamera = null;
+		}
+		
+		type = (type==CameraInfo.CAMERA_FACING_FRONT)?CameraInfo.CAMERA_FACING_BACK:CameraInfo.CAMERA_FACING_FRONT;
+		mCamera = Camera.open(type);
+		mCamera.setDisplayOrientation(90);
+	}
+	
 	
 	@Override
 	protected void onDestroy() {
