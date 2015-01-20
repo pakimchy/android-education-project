@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
 			} else {
 				cacheLocation = location;
 			}
+			mLM.removeUpdates(this);
 		}
 	};
 	
