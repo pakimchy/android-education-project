@@ -1,5 +1,7 @@
 package com.example.sample6googlemap;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,20 +13,30 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity implements
-	GoogleMap.OnCameraChangeListener {
+	GoogleMap.OnCameraChangeListener,
+	GoogleMap.OnMarkerClickListener,
+	GoogleMap.OnInfoWindowClickListener {
 
 	GoogleMap mMap;
 
 	LocationManager mLM;
+	
+	HashMap<POI, Marker> markerResolver = new HashMap<POI, Marker>();
+	HashMap<Marker, POI> poiResolver = new HashMap<Marker, POI>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +65,35 @@ public class MainActivity extends ActionBarActivity implements
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_marker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CameraPosition position = mMap.getCameraPosition();
+				POI poi = new POI();
+				poi.name = "poi name" + count++;
+				addMarker(position.target, poi);
+			}
+		});
+		
 	}
+
+	int count = 0;
 	
+	private void addMarker(LatLng target, POI poi) {
+		MarkerOptions options = new MarkerOptions();
+		options.position(target);
+		options.title("My Marker");
+		options.snippet("marker test....");
+		options.icon(BitmapDescriptorFactory.defaultMarker());
+		options.anchor(0.5f, 1.0f);
+		options.draggable(true);
+		Marker marker = mMap.addMarker(options);
+		markerResolver.put(poi, marker);
+		poiResolver.put(marker, poi);
+	}
+
 	LocationListener mListener = new LocationListener() {
 		
 		@Override
@@ -135,6 +174,8 @@ public class MainActivity extends ActionBarActivity implements
 		mMap.getUiSettings().setZoomControlsEnabled(true);
 		mMap.getUiSettings().setCompassEnabled(true);
 		mMap.setOnCameraChangeListener(this);
+		mMap.setOnMarkerClickListener(this);
+		mMap.setOnInfoWindowClickListener(this);
 	}
 	
 	@Override
@@ -160,5 +201,18 @@ public class MainActivity extends ActionBarActivity implements
 	public void onCameraChange(CameraPosition position) {
 		LatLng latlng = position.target;
 		Log.i("MainActivity","lat : " + latlng.latitude + ", lng : " + latlng.longitude);
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		POI poi = poiResolver.get(marker);
+		Toast.makeText(this, "marker click : " + poi.name , Toast.LENGTH_SHORT).show();
+		marker.showInfoWindow();
+		return true;
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		marker.hideInfoWindow();
 	}
 }
