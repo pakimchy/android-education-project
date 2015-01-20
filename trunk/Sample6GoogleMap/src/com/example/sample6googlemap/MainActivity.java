@@ -3,6 +3,7 @@ package com.example.sample6googlemap;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,12 +13,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView.OnItemClickListener;
+import android.view.View.MeasureSpec;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sample6googlemap.NetworkManager.OnResultListener;
@@ -45,6 +48,9 @@ public class MainActivity extends ActionBarActivity implements
 	EditText keywordView;
 	ListView listView;
 	ArrayAdapter<POI> mAdapter;
+
+	View markerText;
+	TextView textView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,8 @@ public class MainActivity extends ActionBarActivity implements
 		mAdapter = new ArrayAdapter<POI>(this, android.R.layout.simple_list_item_1);
 		listView.setAdapter(mAdapter);
 		
+		markerText = getLayoutInflater().inflate(R.layout.marker_layout, null);
+		textView = (TextView)markerText.findViewById(R.id.text_name);
 		Button btn = (Button)findViewById(R.id.btn_zoom_in);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -144,7 +152,12 @@ public class MainActivity extends ActionBarActivity implements
 		options.position(target);
 		options.title(poi.name);
 		options.snippet(poi.telNo);
-		options.icon(BitmapDescriptorFactory.defaultMarker());
+		textView.setText(poi.name);
+		int measureSpec = MeasureSpec.makeMeasureSpec(100, MeasureSpec.UNSPECIFIED);
+		markerText.measure(measureSpec, measureSpec);
+		markerText.layout(0, 0, markerText.getMeasuredWidth(), markerText.getMeasuredHeight());
+		Bitmap bm = getViewBitmap(markerText);
+		options.icon(BitmapDescriptorFactory.fromBitmap(bm));
 		options.anchor(0.5f, 1.0f);
 		options.draggable(true);
 		Marker marker = mMap.addMarker(options);
@@ -234,7 +247,36 @@ public class MainActivity extends ActionBarActivity implements
 		mMap.setOnCameraChangeListener(this);
 		mMap.setOnMarkerClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
+		mMap.setInfoWindowAdapter(new MyInfoWindow(this, poiResolver));
 	}
+
+    private Bitmap getViewBitmap(View v) {
+        v.clearFocus();
+        v.setPressed(false);
+
+        boolean willNotCache = v.willNotCacheDrawing();
+        v.setWillNotCacheDrawing(false);
+
+        // Reset the drawing cache background color to fully transparent
+        // for the duration of this operation
+        int color = v.getDrawingCacheBackgroundColor();
+        v.setDrawingCacheBackgroundColor(0);
+
+        if (color != 0) {
+            v.destroyDrawingCache();
+        }
+        v.buildDrawingCache();
+        Bitmap cacheBitmap = v.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+
+        // Restore the view
+        v.destroyDrawingCache();
+        v.setWillNotCacheDrawing(willNotCache);
+        v.setDrawingCacheBackgroundColor(color);
+
+        return bitmap;
+    }
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
