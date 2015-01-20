@@ -12,9 +12,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sample6googlemap.NetworkManager.OnResultListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -36,7 +42,9 @@ public class MainActivity extends ActionBarActivity implements
 	
 	HashMap<POI, Marker> markerResolver = new HashMap<POI, Marker>();
 	HashMap<Marker, POI> poiResolver = new HashMap<Marker, POI>();
-	
+	EditText keywordView;
+	ListView listView;
+	ArrayAdapter<POI> mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +52,11 @@ public class MainActivity extends ActionBarActivity implements
 		setContentView(R.layout.activity_main);
 		setupMapIfNeeded();
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		keywordView = (EditText)findViewById(R.id.edit_keyword);
+		listView = (ListView)findViewById(R.id.listView1);
+		mAdapter = new ArrayAdapter<POI>(this, android.R.layout.simple_list_item_1);
+		listView.setAdapter(mAdapter);
 		
 		Button btn = (Button)findViewById(R.id.btn_zoom_in);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -77,6 +90,51 @@ public class MainActivity extends ActionBarActivity implements
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					NetworkManager.getInstnace().getPoiSearch(MainActivity.this, keyword, new OnResultListener<SearchPOIResult>() {
+						
+						@Override
+						public void onSuccess(SearchPOIResult result) {
+							for (int i = 0; i < mAdapter.getCount(); i++) {
+								POI poi = mAdapter.getItem(i);
+								Marker m = markerResolver.get(poi);
+								m.remove();
+							}
+							mAdapter.clear();
+							
+							for (POI poi : result.searchPoiInfo.pois.poi) {
+								mAdapter.add(poi);
+								LatLng target = new LatLng(poi.getLatitude(), poi.getLongitude());
+								addMarker(target, poi);
+							}
+						}
+						
+						@Override
+						public void onFail(int code) {
+							
+						}
+					});
+				}
+			}
+		});
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				POI poi = (POI)listView.getItemAtPosition(position);
+				Marker marker = markerResolver.get(poi);
+				CameraUpdate update = CameraUpdateFactory.newLatLng(marker.getPosition());
+				mMap.animateCamera(update);
+				marker.showInfoWindow();
+			}
+		});
 	}
 
 	int count = 0;
@@ -84,8 +142,8 @@ public class MainActivity extends ActionBarActivity implements
 	private void addMarker(LatLng target, POI poi) {
 		MarkerOptions options = new MarkerOptions();
 		options.position(target);
-		options.title("My Marker");
-		options.snippet("marker test....");
+		options.title(poi.name);
+		options.snippet(poi.telNo);
 		options.icon(BitmapDescriptorFactory.defaultMarker());
 		options.anchor(0.5f, 1.0f);
 		options.draggable(true);
