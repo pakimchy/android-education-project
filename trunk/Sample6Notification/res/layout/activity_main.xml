@@ -21,4 +21,18 @@
         android:layout_height="wrap_content"
         android:text="Notify" />
 
+    <Button
+        android:id="@+id/btn_progress"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="progress" />
+
+    <Button
+        android:id="@+id/btn_custom"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Custom" />
+
 </LinearLayout>

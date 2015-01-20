@@ -1,7 +1,9 @@
 package com.example.sample6notification;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -11,6 +13,11 @@ public class NotifyActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_notify);
+		int id = getIntent().getIntExtra("id", -1);
+		if (id != -1) {
+			NotificationManager nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+			nm.cancel(id);
+		}
 	}
 
 	@Override
