@@ -122,4 +122,10 @@ public class MainActivity extends SlidingFragmentActivity implements
 		}
 		showContent();
 	}
+	
+	@Override
+	public void onBackPressed() {
+		currentTag = TAG_MAIN;
+		super.onBackPressed();
+	}
 }
