@@ -1,5 +1,7 @@
 package com.example.sample6googlemap;
 
+import android.graphics.Bitmap;
+
 public class POI {
 	public String id;
 	public String name;
@@ -9,6 +11,7 @@ public class POI {
 	public String frontLon;
 	public String noorLat;
 	public String noorLon;
+	public Bitmap bm;
 	
 	public double getLatitude() {
 		return (Double.parseDouble(frontLat) + Double.parseDouble(noorLat)) / 2;
