@@ -38,6 +38,38 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Marker" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="S" />
+
+            <RadioButton
+                android:id="@+id/radio_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_route"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="route" />
 
     </LinearLayout>
 
@@ -62,25 +94,23 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Search" />
-
     </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-    <fragment
-        android:id="@+id/fragment1"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <fragment
+            android:id="@+id/fragment1"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-    <ListView
-        android:id="@+id/listView1"
-        android:layout_width="100dp"
-        android:layout_height="match_parent" >
-    </ListView>
-
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="100dp"
+            android:layout_height="match_parent" >
+        </ListView>
     </FrameLayout>
-    
+
 </LinearLayout>
