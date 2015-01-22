@@ -52,6 +52,21 @@ public class PropertyManager {
 		mEditor.putString(FIELD_PASSWORD, password);
 		mEditor.commit();
 	}
+
+	private static final String FIELD_FACEBOOK = "facebookId";
+	private String facebookId;
+	public void setFacebookId(String userId) {
+		this.facebookId = userId;
+		mEditor.putString(FIELD_FACEBOOK, userId);
+		mEditor.commit();
+	}
+	
+	public String getFacebookId() {
+		if (facebookId == null) {
+			facebookId = mPrefs.getString(FIELD_FACEBOOK, "");
+		}
+		return facebookId;
+	}
 	
 	
 }

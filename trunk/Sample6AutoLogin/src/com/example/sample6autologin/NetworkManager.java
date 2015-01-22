@@ -1,5 +1,6 @@
 package com.example.sample6autologin;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -22,6 +23,28 @@ public class NetworkManager {
 		public void onSuccess(String message);
 	}
 	public void login(String id, String password, final OnResultListener listener) {
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				listener.onSuccess("success");
+			}
+		}, 1000);
+	}
+
+	public void loginFacebook(Context loginActivity, String accessToken,
+			final OnResultListener listener) {
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				listener.onSuccess("success");
+			}
+		}, 1000);
+		
+	}
+	
+	public void signupFacebook(final OnResultListener listener) {
 		mHandler.postDelayed(new Runnable() {
 			
 			@Override
