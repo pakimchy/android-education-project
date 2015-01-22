@@ -65,4 +65,11 @@
         android:layout_height="wrap_content"
         android:text="signup" />
 
+    <Button
+        android:id="@+id/btn_facebook"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="facebook login" />
+
 </LinearLayout>

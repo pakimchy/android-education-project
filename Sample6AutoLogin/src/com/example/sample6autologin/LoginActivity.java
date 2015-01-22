@@ -10,6 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.sample6autologin.NetworkManager.OnResultListener;
+import com.facebook.Request;
+import com.facebook.Request.GraphUserCallback;
+import com.facebook.Response;
+import com.facebook.Session;
+import com.facebook.Session.StatusCallback;
+import com.facebook.SessionState;
+import com.facebook.model.GraphUser;
 
 public class LoginActivity extends ActionBarActivity {
 
@@ -52,8 +59,61 @@ public class LoginActivity extends ActionBarActivity {
 				startActivity(intent);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_facebook);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Session.openActiveSession(LoginActivity.this, true, new StatusCallback() {
+					
+					@Override
+					public void call(Session session, SessionState state, Exception exception) {
+						if (session.isOpened()) {
+							Request.newMeRequest(session, new GraphUserCallback() {
+								
+								@Override
+								public void onCompleted(GraphUser user, Response response) {
+									if (user.getId() != null) {
+										final String userId = user.getId();
+										String accessToken = Session.getActiveSession().getAccessToken();
+										NetworkManager.getInstance().loginFacebook(LoginActivity.this, accessToken, new NetworkManager.OnResultListener() {
+											
+											@Override
+											public void onSuccess(String message) {
+												if (message.equals("success")) {
+													PropertyManager.getInstnace().setFacebookId(userId);
+													Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+													startActivity(intent);
+													finish();
+												} else if (message.equals("notregistered")) {
+													Intent intent = new Intent(LoginActivity.this, FacebookSignUpActivity.class);
+													intent.putExtra("userId", userId);
+													startActivity(intent);
+												}
+												
+											}
+											
+											
+										});
+									}
+								}
+							}).executeAsync();
+						}
+					}
+				});
+			}
+		});
 	}
 
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(arg0, arg1, arg2);
+		if (Session.getActiveSession() != null) {
+			Session.getActiveSession().onActivityResult(this, arg0, arg1, arg2);
+		}
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

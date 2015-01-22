@@ -7,5 +7,7 @@
     <string name="title_activity_splash">SplashActivity</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="app_id">343531285839492</string>
+    <string name="title_activity_facebook_sign_up">FacebookSignUpActivity</string>
 
 </resources>
