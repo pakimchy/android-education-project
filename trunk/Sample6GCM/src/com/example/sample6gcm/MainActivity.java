@@ -72,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
 					PropertyManager.getInstance().setRegistrationId(regid);
 
+					ServerUtilities.register(MainActivity.this, regid);
 				} catch (IOException ex) {
 				}
 				return msg;
