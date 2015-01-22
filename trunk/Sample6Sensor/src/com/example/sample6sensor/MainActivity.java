@@ -51,10 +51,19 @@ public class MainActivity extends ActionBarActivity {
 			}
 		};
 		
+		float[] accValue = new float[3];
+		float[] magValue = new float[3];
+		float[] mR = new float[9];
+		float[] mI = new float[9];
+		float[] mO = new float[3];
+		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			switch(event.sensor.getType()) {
 			case Sensor.TYPE_ACCELEROMETER :
+				accValue[0] = event.values[0];
+				accValue[1] = event.values[1];
+				accValue[2] = event.values[2];
 				double x = event.values[0];
 				double y = event.values[1];
 				double z = event.values[2];
@@ -72,8 +81,16 @@ public class MainActivity extends ActionBarActivity {
 				oldAcc = acc;
 				break;
 			case Sensor.TYPE_MAGNETIC_FIELD :
-				
+				magValue[0] = event.values[0];
+				magValue[1] = event.values[1];
+				magValue[2] = event.values[2];
+				break;
 			}
+			
+			SensorManager.getRotationMatrix(mR, mI, accValue, magValue);
+			SensorManager.getOrientation(mR, mO);
+			float bearing = mO[0];
+			
 		}
 		
 		@Override
