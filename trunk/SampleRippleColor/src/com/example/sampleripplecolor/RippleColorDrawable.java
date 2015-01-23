@@ -76,13 +76,14 @@ public class RippleColorDrawable extends Drawable {
     	duration = a.getInt(R.styleable.RippleColorDrawable_duration, 1000);
     	a.recycle();
     }
-    Runnable resetRunnable = new Runnable() {
-		
-		@Override
-		public void run() {
+
+	@Override
+	public boolean setVisible(boolean visible, boolean restart) {
+		if (visible) {
 			startTime = -1;
 		}
-	};
+		return true;
+	}
 	@Override
 	public void draw(Canvas canvas) {
 		Rect rect = getBounds();
@@ -90,8 +91,6 @@ public class RippleColorDrawable extends Drawable {
 		long currentTime = SystemClock.uptimeMillis();
 		if (startTime == -1) {
 			startTime = currentTime;
-			long time = currentTime + duration + interval;
-			scheduleSelf(resetRunnable, time);
 		}
 		int delay = (int) (currentTime - startTime);
 
