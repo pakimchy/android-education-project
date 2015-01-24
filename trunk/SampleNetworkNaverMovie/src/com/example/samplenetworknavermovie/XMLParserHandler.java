@@ -41,7 +41,9 @@ public class XMLParserHandler extends DefaultHandler {
 
 		if (!mStack.empty()) {
 			StackItem item = mStack.peek();
-			item.handler.startElement(this, localName);
+			if (item.level + 1 == level) {
+				item.handler.startElement(this, localName);
+			}
 		}
 
 		if (localName.equals(startName)) {
