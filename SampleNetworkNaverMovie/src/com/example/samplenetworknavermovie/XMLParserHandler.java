@@ -65,10 +65,8 @@ public class XMLParserHandler extends DefaultHandler {
 		}
 		if (!mStack.empty()) {
 			StackItem item = mStack.peek();
-			if (item != null) {
-				if (item.level == level) {
-					value = mStack.pop().handler;
-				}
+			if (item.level == level) {
+				value = mStack.pop().handler;
 			}
 			if (!mStack.empty()) {
 				item = mStack.peek();
