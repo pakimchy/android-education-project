@@ -2,6 +2,8 @@ package com.example.samplenetworknavermovie;
 
 import java.util.ArrayList;
 
+import com.begentgroup.xmlparser.SerializedName;
+
 public class NaverMovies implements XMLObjectHandler {
 	public String title;
 	public String link;
@@ -10,6 +12,7 @@ public class NaverMovies implements XMLObjectHandler {
 	public int total;
 	public int start;
 	public int display;
+	@SerializedName("item")
 	public ArrayList<MovieItem> items = new ArrayList<MovieItem>();
 	
 	@Override
