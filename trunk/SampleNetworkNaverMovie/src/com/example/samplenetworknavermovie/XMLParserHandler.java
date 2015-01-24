@@ -71,7 +71,10 @@ public class XMLParserHandler extends DefaultHandler {
 				}
 			}
 			if (!mStack.empty()) {
-				mStack.peek().handler.setData(localName, value);
+				item = mStack.peek();
+				if (item.level + 1 == level) {
+					item.handler.setData(localName, value);
+				}
 			}
 		}
 		level--;
