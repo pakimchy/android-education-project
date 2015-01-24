@@ -1,9 +1,7 @@
 package com.example.samplenetworknavermovie;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -11,13 +9,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.transform.sax.SAXResult;
 
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -29,7 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import com.begentgroup.xmlparser.XMLParser;
 
 public class MainActivity extends Activity {
 
@@ -68,13 +62,15 @@ public class MainActivity extends Activity {
 								int responseCode = conn.getResponseCode();
 								if (responseCode == HttpURLConnection.HTTP_OK) {
 									InputStream is = conn.getInputStream();
-									SAXParserFactory spf = SAXParserFactory.newInstance();
-									SAXParser parser = spf.newSAXParser();
-									XMLReader reader = parser.getXMLReader();
-									final NaverMovies movies = new NaverMovies();
-									reader.setContentHandler(new XMLParserHandler("channel", movies));
-									InputSource inputSource = new InputSource(is);
-									reader.parse(inputSource);
+									XMLParser parser = new XMLParser();
+									final NaverMovies movies = parser.fromXml(is, "channel", NaverMovies.class);
+//									SAXParserFactory spf = SAXParserFactory.newInstance();
+//									SAXParser parser = spf.newSAXParser();
+//									XMLReader reader = parser.getXMLReader();
+//									final NaverMovies movies = new NaverMovies();
+//									reader.setContentHandler(new XMLParserHandler("channel", movies));
+//									InputSource inputSource = new InputSource(is);
+//									reader.parse(inputSource);
 									mHandler.post(new Runnable() {
 										
 										@Override
@@ -112,13 +108,7 @@ public class MainActivity extends Activity {
 							} catch (IOException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
-							} catch (ParserConfigurationException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (SAXException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							}
+							} 
 						}
 					}
 				}).start();
