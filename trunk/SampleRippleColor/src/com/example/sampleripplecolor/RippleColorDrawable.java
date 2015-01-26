@@ -26,15 +26,10 @@ import android.view.animation.ScaleAnimation;
 public class RippleColorDrawable extends Drawable implements Drawable.Callback {
 
 	long startTime = -1;
-	int interval = 100;
-	int duration = 1000;
-	int centerColor = Color.BLUE;
-	int outsideColor = Color.WHITE;
-	
 	Drawable mDrawable;
     private int WIDTH;
     private int HEIGHT;
-    private int FRAME_RATE = 10;
+    private int FRAME_RATE = 20;
     private int DURATION = 400;
     private int PAINT_ALPHA = 90;
     private Handler canvasHandler;
@@ -107,12 +102,6 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
     @Override
     public void inflate(Resources r, XmlPullParser parser, AttributeSet attrs)
     		throws XmlPullParserException, IOException {
-//    	TypedArray a = r.obtainAttributes(attrs, R.styleable.RippleColorDrawable);
-//    	centerColor = a.getColor(R.styleable.RippleColorDrawable_centerColor, Color.BLUE);
-//    	outsideColor = a.getColor(R.styleable.RippleColorDrawable_outsideColor, Color.WHITE);
-//    	interval = a.getInt(R.styleable.RippleColorDrawable_interval, 100);
-//    	duration = a.getInt(R.styleable.RippleColorDrawable_duration, 1000);
-//    	a.recycle();
     	
         final TypedArray typedArray = r.obtainAttributes(attrs, R.styleable.RippleView);
         rippleColor = typedArray.getColor(R.styleable.RippleView_rv_color, r.getColor(R.color.rippelColor));
@@ -143,9 +132,6 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
     
 	@Override
 	public boolean setVisible(boolean visible, boolean restart) {
-//		if (visible) {
-//			startTime = -1;
-//		}
 		if (visible) {
 			animationRunning = false;
 	        if (!animationRunning)
@@ -154,6 +140,8 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
 	        	
 	            animationRunning = true;
 
+	            startTime = -1;
+	            
 	            timer = 0;
                 durationEmpty = -1;
                 timerEmpty = 0;
@@ -184,38 +172,19 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
 	}
 	@Override
 	public void draw(Canvas canvas) {
-//		Rect rect = getBounds();
-//		int centerX = (rect.left + rect.right) / 2;
-//		long currentTime = SystemClock.uptimeMillis();
-//		if (startTime == -1) {
-//			startTime = currentTime;
-//		}
-//		int delay = (int) (currentTime - startTime);
-//
-//		if (delay > duration) {
-//			startTime = -1;
-//			mPaint.setShader(null);
-//			mPaint.setColor(centerColor);
-//			canvas.drawRect(rect, mPaint);
-//		} else {
-//			int rest = interval - delay % interval;
-//			float fraction = (float) delay / (float) duration;
-//			int[] colors = { outsideColor, centerColor, outsideColor };
-//			int length = (int) ((rect.right - rect.left) * fraction);
-//			LinearGradient shader = new LinearGradient(centerX - length, 0,
-//					centerX + length, 0, colors, null, Shader.TileMode.CLAMP);
-//			mPaint.setShader(shader);
-//			canvas.drawRect(rect, mPaint);
-//			long time = currentTime + rest;
-//			scheduleSelf(what, time);
-//		}
 		mDrawable.draw(canvas);
 		
         if (animationRunning)
         {
-            if (DURATION <= timer * FRAME_RATE)
+        	long currentTime = SystemClock.uptimeMillis();
+        	if (startTime == -1) {
+        		startTime = currentTime;
+        	}
+        	int delta = (int)(currentTime - startTime);
+            if (DURATION <= delta)
             {
                 animationRunning = false;
+                startTime = -1;
                 timer = 0;
                 durationEmpty = -1;
                 timerEmpty = 0;
@@ -249,7 +218,7 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
 	            isFirst = false;
             }
 
-            canvas.drawCircle(x, y, (radiusMax * (((float) timer * FRAME_RATE) / DURATION)), paint);
+            canvas.drawCircle(x, y, (radiusMax * (((float) delta) / DURATION)), paint);
 
             paint.setColor(holo_red_light);
 
@@ -273,8 +242,9 @@ public class RippleColorDrawable extends Drawable implements Drawable.Callback {
                 else
                     paint.setAlpha(PAINT_ALPHA);
             }
-            else
-                paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) timer * FRAME_RATE) / DURATION))));
+            else {
+                paint.setAlpha((int) (PAINT_ALPHA - ((PAINT_ALPHA) * (((float) delta) / DURATION))));
+            }
 
             timer++;
         }
