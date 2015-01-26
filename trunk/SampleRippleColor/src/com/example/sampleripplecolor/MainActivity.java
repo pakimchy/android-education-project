@@ -23,8 +23,8 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				RippleColorDrawable d = new RippleColorDrawable();
-				messageView.setBackgroundDrawable(d);
+//				RippleColorDrawable d = new RippleColorDrawable(getResources().getDrawable(R.drawable.ripple_defaults));
+//				messageView.setBackgroundDrawable(d);
 			}
 		});
 	}
