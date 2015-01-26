@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <drawable name="btn_color">#e0e0e0</drawable>
+    <drawable name="ripple_defaults">#00ff00</drawable>
     
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rippledrawable xmlns:android="http://schemas.android.com/apk/res/android" 
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:centerColor="#FF0000"
-    app:outsideColor="#00FF00" />
+    android:drawable="@drawable/ripple_defaults"
+    app:rv_centered="true" />
