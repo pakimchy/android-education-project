@@ -106,34 +106,43 @@ public class VerticalSeekBar extends SeekBar {
     
     boolean mIsDragging = false;
     
+    Method methodOnStartTrackingTouch;
     protected void callOnStartTrackingTouch() {
     	mIsDragging = true;
     	try {
-			Method m = AbsSeekBar.class.getDeclaredMethod("onStartTrackingTouch");
-			m.setAccessible(true);
-			m.invoke(this);
+    		if (methodOnStartTrackingTouch == null) {
+    			methodOnStartTrackingTouch = AbsSeekBar.class.getDeclaredMethod("onStartTrackingTouch");
+    			methodOnStartTrackingTouch.setAccessible(true);
+    		}
+    		methodOnStartTrackingTouch.invoke(this);
+		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+    }
+
+    Method methodOnStopTrackingTouch;
+    protected void callOnStopTrackingTouch() {
+    	mIsDragging = false;
+    	try {
+    		if (methodOnStopTrackingTouch == null) {
+    			methodOnStopTrackingTouch = AbsSeekBar.class.getDeclaredMethod("onStopTrackingTouch");
+    			methodOnStopTrackingTouch.setAccessible(true);
+    		}
+    		methodOnStopTrackingTouch.invoke(this);
 		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     }
     
-    protected void callOnStopTrackingTouch() {
-    	mIsDragging = false;
-    	try {
-			Method m = AbsSeekBar.class.getDeclaredMethod("onStopTrackingTouch");
-			m.setAccessible(true);
-			m.invoke(this);
-		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-    }
+    Method methodSetProgress;
     protected void callSetProgress(int progress, boolean fromUser) {
     	try {
-			Method m = ProgressBar.class.getDeclaredMethod("setProgress", int.class, boolean.class);
-			m.setAccessible(true);
-			m.invoke(this, progress, fromUser);
+    		if (methodSetProgress == null) {
+    			methodSetProgress = ProgressBar.class.getDeclaredMethod("setProgress", int.class, boolean.class);
+    			methodSetProgress.setAccessible(true);
+    		}
+    		methodSetProgress.invoke(this, progress, fromUser);
 		} catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
