@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
 
 	EditText keywordView;
 	ListView listView;
-	ArrayAdapter<MovieItem> mAdapter;
+	MyAdapter mAdapter;
 	private static final String KEY = "55f1e342c5bce1cac340ebb6032c7d9a";
 	Handler mHandler = new Handler();
 	NaverMovieRequest mRequest;
@@ -81,8 +81,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		listView = (ListView) findViewById(R.id.listView1);
-		mAdapter = new ArrayAdapter<MovieItem>(this,
-				android.R.layout.simple_list_item_1);
+		mAdapter = new MyAdapter(this);
 		listView.setAdapter(mAdapter);
 
 		Button btn = (Button) findViewById(R.id.btn_search);

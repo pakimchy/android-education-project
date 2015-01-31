@@ -13,7 +13,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import com.example.samplenetworknavermovie.NetworkManager.OnResultListener;
+
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -29,6 +32,7 @@ public class NetworkManager {
 	}
 
 	ThreadPoolExecutor mExecutor;
+	ThreadPoolExecutor mImageExecutor;
 	
 	public static final int MESSAGE_SUCCESS = 1;
 	public static final int MESSAGE_FAIL = 2;
@@ -53,6 +57,7 @@ public class NetworkManager {
 
 	private NetworkManager() {
 		mExecutor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		mImageExecutor = new ThreadPoolExecutor(5, 10, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
 	public interface OnResultListener<T> {
@@ -77,6 +82,21 @@ public class NetworkManager {
 		mExecutor.execute(request);
 	}
 
+	public void getImage(Context context, ImageRequest request,
+			OnResultListener<Bitmap> listener) {
+		List<NetworkRequest> list = mRequestMap.get(context);
+		if (list == null) {
+			list = new ArrayList<NetworkRequest>();
+			mRequestMap.put(context, list);
+		}
+		list.add(request);
+
+		request.setContext(context);
+		request.setOnResultListener(listener);
+		request.setNetworkManager(this);
+		mImageExecutor.execute(request);
+	}
+	
 	public void cancel(Context context) {
 		List<NetworkRequest> list = mRequestMap.get(context);
 		if (list != null) {
@@ -192,5 +212,6 @@ public class NetworkManager {
 
 		}
 	}
+
 
 }
