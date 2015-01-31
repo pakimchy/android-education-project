@@ -128,6 +128,11 @@ public class NetworkManager {
 	}
 	public void getImage(Context context, ImageRequest request,
 			OnResultListener<Bitmap> listener) {
+		
+		request.setContext(context);
+		request.setOnResultListener(listener);
+		request.setNetworkManager(this);
+		
 		Bitmap bm = CacheManager.getInstance().getCache(request.getKey());
 		if (bm != null) {
 			request.setAndSendResult(bm);
@@ -140,9 +145,6 @@ public class NetworkManager {
 		}
 		list.add(request);
 
-		request.setContext(context);
-		request.setOnResultListener(listener);
-		request.setNetworkManager(this);
 		mImageExecutor.execute(request);
 	}
 	
