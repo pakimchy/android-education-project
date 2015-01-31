@@ -58,6 +58,17 @@ public class NetworkManager {
 			}
 		}
 	}
+	
+	public void removeRequest(Context context, NetworkRequest request) {
+		List<NetworkRequest> list = mRequestMap
+				.get(context);
+		if (list != null) {
+			list.remove(request);
+			if (list.size() == 0) {
+				mRequestMap.remove(context);
+			}
+		}
+	}
 
 	private static final String KEY = "55f1e342c5bce1cac340ebb6032c7d9a";
 
@@ -85,11 +96,10 @@ public class NetworkManager {
 					conn.setRequestMethod(mRequest.getRequestMethod());
 					mRequest.writeOutput(conn);
 
-					if (mRequest.isCanceled())
-						return;
+					if (mRequest.isCanceled()) continue;
 					int responseCode = conn.getResponseCode();
-					if (mRequest.isCanceled())
-						return;
+					if (mRequest.isCanceled()) continue;
+					
 					mRequest.setConnection(conn);
 
 					if (responseCode == HttpURLConnection.HTTP_OK) {
@@ -104,14 +114,7 @@ public class NetworkManager {
 								if (mListener != null && !mRequest.isCanceled()) {
 									mListener.onSuccess(mRequest, result);
 								}
-								List<NetworkRequest> list = mRequestMap
-										.get(mContext);
-								if (list != null) {
-									list.remove(mRequest);
-									if (list.size() == 0) {
-										mRequestMap.remove(mContext);
-									}
-								}
+								removeRequest(mContext, mRequest);
 							}
 						});
 					} else {
@@ -122,14 +125,7 @@ public class NetworkManager {
 								if (mListener != null && !mRequest.isCanceled()) {
 									mListener.onFail(mRequest, -1);
 								}
-								List<NetworkRequest> list = mRequestMap
-										.get(mContext);
-								if (list != null) {
-									list.remove(mRequest);
-									if (list.size() == 0) {
-										mRequestMap.remove(mContext);
-									}
-								}
+								removeRequest(mContext, mRequest);
 							}
 						});
 					}
@@ -153,14 +149,7 @@ public class NetworkManager {
 					if (mListener != null && !mRequest.isCanceled()) {
 						mListener.onFail(mRequest, -2);
 					}
-					List<NetworkRequest> list = mRequestMap
-							.get(mContext);
-					if (list != null) {
-						list.remove(mRequest);
-						if (list.size() == 0) {
-							mRequestMap.remove(mContext);
-						}
-					}
+					removeRequest(mContext, mRequest);
 				}
 			});
 
