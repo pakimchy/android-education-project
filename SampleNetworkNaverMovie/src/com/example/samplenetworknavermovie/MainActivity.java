@@ -1,17 +1,5 @@
 package com.example.samplenetworknavermovie;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.begentgroup.xmlparser.XMLParser;
+import com.example.samplenetworknavermovie.NetworkManager.OnResultListener;
 
 public class MainActivity extends Activity {
 
@@ -32,6 +20,7 @@ public class MainActivity extends Activity {
 	ArrayAdapter<MovieItem> mAdapter;
 	private static final String KEY = "55f1e342c5bce1cac340ebb6032c7d9a";
 	Handler mHandler = new Handler();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,72 +35,24 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						String keyword = keywordView.getText().toString();
-						if (keyword != null && !keyword.equals("")) {
-							try {
-								String urlText = String.format("http://openapi.naver.com/search?key=%s&query=%s&display=10&start=1&target=movie",KEY,URLEncoder.encode(keyword, "utf-8"));
-								URL url = new URL(urlText);
-								HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-								conn.setRequestProperty("User-Agent", "Android...");
-								conn.setConnectTimeout(30000);
-								conn.setReadTimeout(30000);
-								int responseCode = conn.getResponseCode();
-								if (responseCode == HttpURLConnection.HTTP_OK) {
-									InputStream is = conn.getInputStream();
-									XMLParser parser = new XMLParser();
-									final NaverMovies movies = parser.fromXml(is, "channel", NaverMovies.class);
-//									SAXParserFactory spf = SAXParserFactory.newInstance();
-//									SAXParser parser = spf.newSAXParser();
-//									XMLReader reader = parser.getXMLReader();
-//									final NaverMovies movies = new NaverMovies();
-//									reader.setContentHandler(new XMLParserHandler("channel", movies));
-//									InputSource inputSource = new InputSource(is);
-//									reader.parse(inputSource);
-									mHandler.post(new Runnable() {
-										
-										@Override
-										public void run() {
-											for (MovieItem item : movies.items) {
-												mAdapter.add(item);
-											}
-										}
-									});
-									
-//									BufferedReader br = new BufferedReader(new InputStreamReader(is));
-//									StringBuilder sb = new StringBuilder();
-//									String line;
-//									while((line = br.readLine()) != null) {
-//										sb.append(line);
-//										sb.append("\n\r");
-//									}
-//									final String message = sb.toString();
-//									mHandler.post(new Runnable() {
-//										
-//										@Override
-//										public void run() {
-//											Toast.makeText(MainActivity.this, "message : " + message, Toast.LENGTH_SHORT).show();
-//										}
-//									});
-									
-								}
-								
-							} catch (UnsupportedEncodingException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (MalformedURLException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} catch (IOException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
-							} 
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					NaverMovieRequest request = new NaverMovieRequest(keyword);
+					NetworkManager.getInstance().getNaverMovie(request, new OnResultListener<NaverMovies>() {
+						
+						@Override
+						public void onSuccess(NetworkRequest request, NaverMovies result) {
+							for (MovieItem item : result.items) {
+								mAdapter.add(item);
+							}
 						}
-					}
-				}).start();
+						
+						@Override
+						public void onFail(NetworkRequest request, int code) {
+							
+						}
+					});
+				}
 			}
 		});
 	}
