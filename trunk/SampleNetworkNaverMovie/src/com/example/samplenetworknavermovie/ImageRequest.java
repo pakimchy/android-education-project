@@ -17,7 +17,11 @@ public class ImageRequest extends NetworkRequest<Bitmap> {
 	}
 	
 	public String getKey() {
-		return "key_"+url.hashCode();
+		int key = url.hashCode();
+		if (key < 0) {
+			key *= -1;
+		}
+		return "key_"+key;
 	}
 
 	public void setImageView(ImageView iv) {
