@@ -9,10 +9,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 
 public class NetworkManager {
 	private static NetworkManager instance;
@@ -24,12 +28,31 @@ public class NetworkManager {
 		return instance;
 	}
 
-	Handler mainHandler = new Handler(Looper.getMainLooper());
+	ThreadPoolExecutor mExecutor;
+	
+	public static final int MESSAGE_SUCCESS = 1;
+	public static final int MESSAGE_FAIL = 2;
+	
+	Handler mainHandler = new Handler(Looper.getMainLooper()) {
+		@Override
+		public void handleMessage(Message msg) {
+			NetworkRequest request = (NetworkRequest)msg.obj;
+			switch(msg.what) {
+			case MESSAGE_SUCCESS :
+				request.sendSuccess();
+				break;
+			case MESSAGE_FAIL :
+				request.sendFail();
+				break;
+			}
+			removeRequest(request.getContext(), request);
+		}
+	};
 
 	HashMap<Context, List<NetworkRequest>> mRequestMap = new HashMap<Context, List<NetworkRequest>>();
 
 	private NetworkManager() {
-
+		mExecutor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
 	}
 
 	public interface OnResultListener<T> {
@@ -47,7 +70,11 @@ public class NetworkManager {
 		}
 		list.add(request);
 
-		new Thread(new NetworkTask(context, request, listener)).start();
+		request.setContext(context);
+		request.setOnResultListener(listener);
+		request.setNetworkManager(this);
+//		new Thread(request).start();
+		mExecutor.execute(request);
 	}
 
 	public void cancel(Context context) {
@@ -70,6 +97,16 @@ public class NetworkManager {
 		}
 	}
 
+	public void sendSuccessMessage(NetworkRequest request) {
+		Message msg = mainHandler.obtainMessage(MESSAGE_SUCCESS, request);
+		mainHandler.sendMessage(msg);
+	}
+	
+	public void sendFailMessage(NetworkRequest request) {
+		Message msg = mainHandler.obtainMessage(MESSAGE_FAIL, request);
+		mainHandler.sendMessage(msg);
+	}
+	
 	private static final String KEY = "55f1e342c5bce1cac340ebb6032c7d9a";
 
 	class NetworkTask<T> implements Runnable {
