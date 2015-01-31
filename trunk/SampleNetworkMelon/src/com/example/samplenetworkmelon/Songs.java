@@ -6,8 +6,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Songs implements JSONParser {
-	public ArrayList<Song> song = new ArrayList<Song>();
+	
+	@SerializedName("song")
+	public ArrayList<Song> songlist = new ArrayList<Song>();
 
 	@Override
 	public void parseJSON(JSONObject object) {
@@ -17,7 +21,7 @@ public class Songs implements JSONParser {
 				JSONObject obj = array.getJSONObject(i);
 				Song s = new Song();
 				s.parseJSON(obj);
-				song.add(s);
+				songlist.add(s);
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
