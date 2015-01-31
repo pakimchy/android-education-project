@@ -8,26 +8,33 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.gson.Gson;
 
 public class MainActivity extends ActionBarActivity {
 
 	Handler mHandler = new Handler();
+	ListView listView;
+	ArrayAdapter<Song> mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		listView = (ListView)findViewById(R.id.listView1);
+		mAdapter = new ArrayAdapter<Song>(this, android.R.layout.simple_list_item_1);
+		listView.setAdapter(mAdapter);
+		
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -57,16 +64,21 @@ public class MainActivity extends ActionBarActivity {
 									sb.append("\n\r");
 								}
 								final String message = sb.toString();
-								JSONObject obj = new JSONObject(message);
-								JSONObject melon = obj.getJSONObject("melon");
-								final Melon melonObject = new Melon();
-								melonObject.parseJSON(melon);
+								Gson gson = new Gson();
+								final MelonResult result = gson.fromJson(message, MelonResult.class);
+//								JSONObject obj = new JSONObject(message);
+//								JSONObject melon = obj.getJSONObject("melon");
+//								final Melon melonObject = new Melon();
+//								melonObject.parseJSON(melon);
 								
 								mHandler.post(new Runnable() {
 									
 									@Override
 									public void run() {
-										Toast.makeText(MainActivity.this, "message : " + message, Toast.LENGTH_SHORT).show();
+//										Toast.makeText(MainActivity.this, "message : " + message, Toast.LENGTH_SHORT).show();
+										for (Song s : result.melon.songs.songlist) {
+											mAdapter.add(s);
+										}
 									}
 								});
 							}
@@ -76,10 +88,7 @@ public class MainActivity extends ActionBarActivity {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+						} 
 						
 					}
 				}).start();

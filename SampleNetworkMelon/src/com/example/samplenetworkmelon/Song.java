@@ -6,6 +6,7 @@ import org.json.JSONObject;
 public class Song implements JSONParser {
 	public int songId;
 	public String songName;
+	public String currentRank;
 	@Override
 	public void parseJSON(JSONObject object) {
 		try {
@@ -16,5 +17,10 @@ public class Song implements JSONParser {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	@Override
+	public String toString() {
+		return "("+currentRank+")"+songName;
 	}
 }
