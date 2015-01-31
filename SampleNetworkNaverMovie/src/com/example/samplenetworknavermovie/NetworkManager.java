@@ -13,13 +13,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.example.samplenetworknavermovie.NetworkManager.OnResultListener;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.widget.ImageView;
 
 public class NetworkManager {
 	private static NetworkManager instance;
@@ -55,9 +54,10 @@ public class NetworkManager {
 
 	HashMap<Context, List<NetworkRequest>> mRequestMap = new HashMap<Context, List<NetworkRequest>>();
 
+	LinkedBlockingQueue<Runnable> mImageRequestQueue = new LinkedBlockingQueue<Runnable>();
 	private NetworkManager() {
 		mExecutor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
-		mImageExecutor = new ThreadPoolExecutor(5, 10, 0, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<Runnable>());
+		mImageExecutor = new ThreadPoolExecutor(5, 10, 0, TimeUnit.MILLISECONDS, mImageRequestQueue);
 	}
 
 	public interface OnResultListener<T> {
@@ -82,8 +82,57 @@ public class NetworkManager {
 		mExecutor.execute(request);
 	}
 
+	HashMap<ImageView, ImageRequest> mImageMap = new HashMap<ImageView, ImageRequest>();
+	
+	public void displayImage(String url, ImageView imageView) {
+		ImageRequest oldRequest = mImageMap.get(imageView);
+		if (oldRequest != null) {
+			oldRequest.setCancel(true);
+			mImageRequestQueue.remove(oldRequest);
+			mImageMap.remove(imageView);
+		}
+		if (url != null && !url.equals("")) {
+			ImageRequest request = new ImageRequest(url);
+			request.setImageView(imageView);
+			mImageMap.put(imageView, request);
+			imageView.setImageResource(R.drawable.ic_stub);
+			getImage(imageView.getContext(), request, new OnResultListener<Bitmap>() {
+
+				@Override
+				public void onSuccess(NetworkRequest request, Bitmap result) {
+					ImageRequest ir = (ImageRequest)request;
+					ImageView iv = ir.getImageView();
+					ImageRequest mr = mImageMap.get(iv);
+					if (ir == mr) {
+						iv.setImageBitmap(result);
+						mImageMap.remove(iv);
+					}
+					
+				}
+
+				@Override
+				public void onFail(NetworkRequest request, int code) {
+					ImageRequest ir = (ImageRequest)request;
+					ImageView iv = ir.getImageView();
+					ImageRequest mr = mImageMap.get(iv);
+					if (ir == mr) {
+						iv.setImageResource(R.drawable.ic_error);
+						mImageMap.remove(iv);
+					}
+				}
+			});
+		} else {
+			imageView.setImageResource(R.drawable.ic_empty);
+		}
+		
+	}
 	public void getImage(Context context, ImageRequest request,
 			OnResultListener<Bitmap> listener) {
+		Bitmap bm = CacheManager.getInstance().getCache(request.getKey());
+		if (bm != null) {
+			request.setAndSendResult(bm);
+			return;
+		}
 		List<NetworkRequest> list = mRequestMap.get(context);
 		if (list == null) {
 			list = new ArrayList<NetworkRequest>();

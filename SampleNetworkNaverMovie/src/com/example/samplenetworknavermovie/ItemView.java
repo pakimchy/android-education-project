@@ -32,34 +32,35 @@ public class ItemView extends FrameLayout {
 		mItem = item;
 		titleView.setText(Html.fromHtml(item.title));
 		directorView.setText(item.director);
-		if (mRequest != null) {
-			mRequest.setCancel(true);
-		}
-		if (item.image != null && !item.image.equals("")) {
-			mRequest = new ImageRequest(item.image);
-			iconView.setImageResource(R.drawable.ic_stub);
-			NetworkManager.getInstance().getImage(getContext(), mRequest, new NetworkManager.OnResultListener<Bitmap>() {
-
-				@Override
-				public void onSuccess(NetworkRequest request, Bitmap result) {
-					if (mRequest == request) {
-						iconView.setImageBitmap(result);
-						mRequest = null;
-					}
-				}
-
-				@Override
-				public void onFail(NetworkRequest request, int code) {
-					if (mRequest == request) {
-						iconView.setImageResource(R.drawable.ic_error);
-						mRequest = null;
-					}
-				}
-				
-			});
-		} else {
-			iconView.setImageResource(R.drawable.ic_empty);
-		}
+		NetworkManager.getInstance().displayImage(item.image, iconView);
+//		if (mRequest != null) {
+//			mRequest.setCancel(true);
+//		}
+//		if (item.image != null && !item.image.equals("")) {
+//			mRequest = new ImageRequest(item.image);
+//			iconView.setImageResource(R.drawable.ic_stub);
+//			NetworkManager.getInstance().getImage(getContext(), mRequest, new NetworkManager.OnResultListener<Bitmap>() {
+//
+//				@Override
+//				public void onSuccess(NetworkRequest request, Bitmap result) {
+//					if (mRequest == request) {
+//						iconView.setImageBitmap(result);
+//						mRequest = null;
+//					}
+//				}
+//
+//				@Override
+//				public void onFail(NetworkRequest request, int code) {
+//					if (mRequest == request) {
+//						iconView.setImageResource(R.drawable.ic_error);
+//						mRequest = null;
+//					}
+//				}
+//				
+//			});
+//		} else {
+//			iconView.setImageResource(R.drawable.ic_empty);
+//		}
 		
 	}
 }
