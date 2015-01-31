@@ -20,7 +20,7 @@ public class NaverMovieRequest extends NetworkRequest<NaverMovies> {
 	public URL getURL() throws MalformedURLException  {
 		String urlText = null;
 		try {
-			urlText = String.format("http://openapi.naver.com/search?key=%s&query=%s&display=10&start=1&target=movie",KEY,URLEncoder.encode(keyword, "utf-8"));
+			urlText = String.format("http://openapi.naver.com/search?key=%s&query=%s&display=50&start=1&target=movie",KEY,URLEncoder.encode(keyword, "utf-8"));
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
