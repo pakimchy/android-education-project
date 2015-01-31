@@ -6,7 +6,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -22,6 +26,8 @@ public class NetworkManager {
 
 	Handler mainHandler = new Handler(Looper.getMainLooper());
 
+	HashMap<Context, List<NetworkRequest>> mRequestMap = new HashMap<Context, List<NetworkRequest>>();
+
 	private NetworkManager() {
 
 	}
@@ -32,9 +38,25 @@ public class NetworkManager {
 		public void onFail(NetworkRequest request, int code);
 	}
 
-	public void getNaverMovie(NaverMovieRequest request,
+	public void getNaverMovie(Context context, NaverMovieRequest request,
 			OnResultListener<NaverMovies> listener) {
-		new Thread(new NetworkTask(request, listener)).start();
+		List<NetworkRequest> list = mRequestMap.get(context);
+		if (list == null) {
+			list = new ArrayList<NetworkRequest>();
+			mRequestMap.put(context, list);
+		}
+		list.add(request);
+
+		new Thread(new NetworkTask(context, request, listener)).start();
+	}
+
+	public void cancel(Context context) {
+		List<NetworkRequest> list = mRequestMap.get(context);
+		if (list != null) {
+			for (NetworkRequest req : list) {
+				req.setCancel(true);
+			}
+		}
 	}
 
 	private static final String KEY = "55f1e342c5bce1cac340ebb6032c7d9a";
@@ -42,45 +64,105 @@ public class NetworkManager {
 	class NetworkTask<T> implements Runnable {
 		NetworkRequest<T> mRequest;
 		OnResultListener<T> mListener;
+		Context mContext;
 
-		public NetworkTask(NetworkRequest<T> request,
+		public NetworkTask(Context context, NetworkRequest<T> request,
 				OnResultListener<T> listener) {
+			mContext = context;
 			mRequest = request;
 			mListener = listener;
 		}
 
 		@Override
 		public void run() {
-			try {
-				URL url = mRequest.getURL();
-				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
-				mRequest.setConfiguration(conn);
-				conn.setRequestMethod(mRequest.getRequestMethod());
-				mRequest.writeOutput(conn);
+			int retryCount = 3;
+			while (retryCount > 0 && !mRequest.isCanceled()) {
+				try {
+					URL url = mRequest.getURL();
+					HttpURLConnection conn = (HttpURLConnection) url
+							.openConnection();
+					mRequest.setConfiguration(conn);
+					conn.setRequestMethod(mRequest.getRequestMethod());
+					mRequest.writeOutput(conn);
 
-				int responseCode = conn.getResponseCode();
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream is = conn.getInputStream();
-					final T result = mRequest.doParsing(is);
-					mainHandler.post(new Runnable() {
+					if (mRequest.isCanceled())
+						return;
+					int responseCode = conn.getResponseCode();
+					if (mRequest.isCanceled())
+						return;
+					mRequest.setConnection(conn);
 
-						@Override
-						public void run() {
-							if (mListener != null) {
-								mListener.onSuccess(mRequest, result);
+					if (responseCode == HttpURLConnection.HTTP_OK) {
+						InputStream is = conn.getInputStream();
+						if (mRequest.isCanceled())
+							return;
+						final T result = mRequest.doParsing(is);
+						mainHandler.post(new Runnable() {
+
+							@Override
+							public void run() {
+								if (mListener != null && !mRequest.isCanceled()) {
+									mListener.onSuccess(mRequest, result);
+								}
+								List<NetworkRequest> list = mRequestMap
+										.get(mContext);
+								if (list != null) {
+									list.remove(mRequest);
+									if (list.size() == 0) {
+										mRequestMap.remove(mContext);
+									}
+								}
 							}
-						}
-					});
-				}
+						});
+					} else {
+						mainHandler.post(new Runnable() {
+							
+							@Override
+							public void run() {
+								if (mListener != null && !mRequest.isCanceled()) {
+									mListener.onFail(mRequest, -1);
+								}
+								List<NetworkRequest> list = mRequestMap
+										.get(mContext);
+								if (list != null) {
+									list.remove(mRequest);
+									if (list.size() == 0) {
+										mRequestMap.remove(mContext);
+									}
+								}
+							}
+						});
+					}
+					return;
 
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			} catch (MalformedURLException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+					retryCount = 0;
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+					retryCount = 0;
+				} catch (IOException e) {
+					e.printStackTrace();
+					retryCount--;
+				}
 			}
+			mainHandler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					if (mListener != null && !mRequest.isCanceled()) {
+						mListener.onFail(mRequest, -2);
+					}
+					List<NetworkRequest> list = mRequestMap
+							.get(mContext);
+					if (list != null) {
+						list.remove(mRequest);
+						if (list.size() == 0) {
+							mRequestMap.remove(mContext);
+						}
+					}
+				}
+			});
 
 		}
 	}

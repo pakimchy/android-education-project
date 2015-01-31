@@ -13,8 +13,25 @@ public abstract class NetworkRequest<T> {
 		conn.setConnectTimeout(30000);
 		conn.setReadTimeout(30000);
 	}
+	
+	private HttpURLConnection mConnection;
+	public void setConnection(HttpURLConnection conn) {
+		mConnection = conn;
+	}
+	
 	public void writeOutput(HttpURLConnection out) {
 		
+	}
+	private boolean isCanceled;
+	public boolean isCanceled() {
+		return isCanceled;
+	}
+	
+	public void setCancel(boolean cancel) {
+		isCanceled = cancel;
+		if (mConnection != null) {
+			mConnection.disconnect();
+		}
 	}
 	
 	public String getRequestMethod() {
