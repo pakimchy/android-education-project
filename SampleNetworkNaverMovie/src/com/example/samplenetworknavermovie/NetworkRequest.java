@@ -90,6 +90,7 @@ public abstract class NetworkRequest<T> implements Runnable {
 					if (isCanceled())
 						return;
 					result = doParsing(is);
+					is.close();
 					mNM.sendSuccessMessage(this);
 				} else {
 					mNM.sendFailMessage(this);
