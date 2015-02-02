@@ -1,60 +1,74 @@
 package com.example.sampleyoutube;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sampleyoutube.NetworkManager.OnResultListener;
 
 public class MainActivity extends ActionBarActivity {
 
-	EditText keywordView;
-	ListView listView;
-	ArrayAdapter<YouTubeItem> mAdapter;
+	private final static int REQUEST_CODE_OAUTH_LOGIN = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		keywordView = (EditText)findViewById(R.id.edit_keyword);
-		listView = (ListView)findViewById(R.id.listView1);
-		mAdapter = new ArrayAdapter<YouTubeItem>(this, android.R.layout.simple_list_item_1);
-		listView.setAdapter(mAdapter);
-		Button btn = (Button)findViewById(R.id.btn_search);
+		Button btn = (Button)findViewById(R.id.btn_login);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
-				String keyword = keywordView.getText().toString();
-				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getYoutubeSearch(MainActivity.this, keyword, new OnResultListener<YouTubeData>() {
-						
-						@Override
-						public void onSuccess(YouTubeData result) {
-							if (result != null && result.items != null) {
-								for (YouTubeItem item : result.items) {
-									mAdapter.add(item);
-								}
-							}
-						}
-						
-						@Override
-						public void onFail(int code) {
-							Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
-						}
-					});
-				}
+				String url = NetworkManager.getInstnace().getOAuthLoginURL();
+				Intent intent = new Intent(MainActivity.this, BrowserActivity.class);
+				intent.setData(Uri.parse(url));
+				startActivityForResult(intent, REQUEST_CODE_OAUTH_LOGIN);
 			}
 		});
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_OAUTH_LOGIN && resultCode == Activity.RESULT_OK) {
+			String code = data.getStringExtra(BrowserActivity.PARAM_CODE);
+			NetworkManager.getInstnace().getAccessToken(this, code, new OnResultListener<AccessToken>() {
+				
+				@Override
+				public void onSuccess(AccessToken result) {
+					getYoutubePlayList();
+				}
+				
+				@Override
+				public void onFail(int code) {
+					Toast.makeText(MainActivity.this, "retrive accessToken fail", Toast.LENGTH_SHORT).show();
+				}
+			});
+		}
+	}
 
+	private void getYoutubePlayList() {
+		NetworkManager.getInstnace().getYoutubePlayList(this, new OnResultListener<String>() {
+
+			@Override
+			public void onSuccess(String result) {
+				Toast.makeText(MainActivity.this, "result : " + result, Toast.LENGTH_SHORT).show();
+			}
+
+			@Override
+			public void onFail(int code) {
+				Toast.makeText(MainActivity.this, "fail....", Toast.LENGTH_SHORT).show();
+			}
+			
+		});
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

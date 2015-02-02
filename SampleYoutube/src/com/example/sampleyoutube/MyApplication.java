@@ -12,6 +12,7 @@ import com.nostra13.universalimageloader.core.download.HttpClientImageDownloader
 
 public class MyApplication extends Application {
 	private static Context mContext;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -22,7 +23,7 @@ public class MyApplication extends Application {
 	public static Context getContext() {
 		return mContext;
 	}
-
+	
 	public static void initImageLoader(Context context) {
 		// This configuration tuning is custom. You can tune every option, you may tune some of them,
 		// or you can create default configuration by
@@ -44,10 +45,9 @@ public class MyApplication extends Application {
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				.writeDebugLogs() // Remove for release app
 				.defaultDisplayImageOptions(options)
-				.imageDownloader(new HttpClientImageDownloader(context, NetworkManager.getInstance().getHttpClient()))
+				.imageDownloader(new HttpClientImageDownloader(context, NetworkManager.getInstnace().getHttpClient()))
 				.build();
 		ImageLoader.getInstance().init(config);
 	}
-	
-	
+
 }
