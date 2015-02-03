@@ -279,7 +279,11 @@ public class RequestParams {
      */
     public void put(String key, Object value) {
         if (key != null && value != null) {
-            urlParamsWithObjects.put(key, value);
+        	if (value instanceof Map || value instanceof List || value instanceof Set || value instanceof Object[]) {
+        		urlParamsWithObjects.put(key, value);
+        	} else {
+        		put(key, value.toString());
+        	}
         }
     }
 
@@ -518,6 +522,8 @@ public class RequestParams {
             }
         } else if (value instanceof String) {
             params.add(new BasicNameValuePair(key, (String) value));
+        } else {
+        	params.add(new BasicNameValuePair(key, value.toString()));
         }
         return params;
     }
