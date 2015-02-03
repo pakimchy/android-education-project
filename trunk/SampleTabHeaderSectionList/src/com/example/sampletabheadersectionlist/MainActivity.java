@@ -1,6 +1,7 @@
 package com.example.sampletabheadersectionlist;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -17,9 +18,9 @@ public class MainActivity extends ActionBarActivity {
 		tabHost = (FragmentTabHost)findViewById(R.id.tabhost);
 		tabWidget = (TabWidget)findViewById(android.R.id.tabs);
 		tabHost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-		tabHost.addTab(tabHost.newTabSpec("tab1").setIndicator("TAB1"), FragmentOne.class, null);
-		tabHost.addTab(tabHost.newTabSpec("tab2").setIndicator("TAB2"), FragmentTwo.class, null);
-		tabHost.addTab(tabHost.newTabSpec("tab3").setIndicator("TAB3"), FragmentThree.class, null);
+		tabHost.addTab(tabHost.newTabSpec(Constants.TAB_IDS[0]).setIndicator("TAB1"), FragmentOne.class, null);
+		tabHost.addTab(tabHost.newTabSpec(Constants.TAB_IDS[1]).setIndicator("TAB2"), FragmentTwo.class, null);
+		tabHost.addTab(tabHost.newTabSpec(Constants.TAB_IDS[2]).setIndicator("TAB3"), FragmentThree.class, null);
 	}
 	
 	public void setTabCurrent(String tag) {
