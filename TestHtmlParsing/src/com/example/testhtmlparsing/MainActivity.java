@@ -1,6 +1,7 @@
 package com.example.testhtmlparsing;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
@@ -24,36 +25,45 @@ public class MainActivity extends ActionBarActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		Button btn = (Button)findViewById(R.id.button1);
+		Button btn = (Button) findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				new MyTask().execute();
 			}
 		});
 	}
-	
+
 	class MyTask extends AsyncTask<String, Integer, String> {
 		@Override
 		protected String doInBackground(String... params) {
 			MicrosoftConditionalCommentTagTypes.register();
 			MasonTagTypes.register();
 			try {
-				Source source = new Source(new URL("http://www.naver.com"));
-				List<Element> list = source.getAllElements(HTMLElementName.IMG);
-				for (Element e : list) {
-					String src = e.getAttributeValue("src");
-					if (src != null) {
-						Log.i("MainActivity", src);
+				URL url = new URL(
+						"http://m.media.daum.net/m/media/issue/946/newsview/20150204051705850");
+				HttpURLConnection conn = (HttpURLConnection) url
+						.openConnection();
+				conn.setRequestProperty("accept", "*/*");
+				int responseCode = conn.getResponseCode();
+				if (responseCode == HttpURLConnection.HTTP_OK) {
+					Source source = new Source(conn.getInputStream());
+					List<Element> list = source
+							.getAllElements(HTMLElementName.IMG);
+					for (Element e : list) {
+						String src = e.getAttributeValue("src");
+						if (src != null) {
+							Log.i("MainActivity", src);
+						}
+						// Log.i("MainActivity",e.getContent().toString());
 					}
-//					Log.i("MainActivity",e.getContent().toString());
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 			return null;
 		}
 	}
