@@ -74,11 +74,15 @@ public class MainActivity extends ActionBarActivity {
 			TypedArray ta = context.obtainStyledAttributes(attrs, ids);
 			String fontName = ta.getString(0);
 			ta.recycle();
+			int[] ids2 = {android.R.attr.textStyle};
+			TypedArray ta2 = context.obtainStyledAttributes(attrs, ids2);
+			int textType = ta2.getInt(0, 0);
+			ta2.recycle();
 			Typeface tf = FontManager.getInstance().getTypeface(context,
 					fontName);
 			if (tf != null) {
 				TextView tv = new TextView(context, attrs);
-				tv.setTypeface(tf);
+				tv.setTypeface(tf, textType);
 				return tv;
 			}
 		}
