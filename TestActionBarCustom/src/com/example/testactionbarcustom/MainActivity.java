@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		ActionBar actionBar = getSupportActionBar();
-		actionBar.setDisplayHomeAsUpEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(false);
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowCustomEnabled(true);
@@ -46,7 +46,7 @@ public class MainActivity extends ActionBarActivity {
 		try {
 			Field mActionMenuPresenterField = decorToolbar.getClass().getDeclaredField("mActionMenuPresenter");
 			mActionMenuPresenterField.setAccessible(true);
-			ActionMenuPresenter mActionMenuPresenter = new ActionMenuPresenter(toolbar.getContext());
+			ActionMenuPresenter mActionMenuPresenter = new MyActionMenuPresenter(toolbar.getContext());
 			mActionMenuPresenterField.set(decorToolbar, mActionMenuPresenter);
 		} catch (NoSuchFieldException | IllegalAccessException | IllegalArgumentException e) {
 			e.printStackTrace();
@@ -70,8 +70,15 @@ public class MainActivity extends ActionBarActivity {
 		View contextView = decorView.findViewById(R.id.action_context_bar);
 		ToolbarWidgetWrapper decorToolbar = (ToolbarWidgetWrapper)toolbar.getWrapper();
 		container.setBackgroundColor(Color.RED);
-		toolbar.setBackgroundColor(Color.BLACK);
+		toolbar.setBackgroundColor(Color.BLUE);
 		contextView.setBackgroundColor(Color.YELLOW);
+		
+		View itemView = findViewById(R.id.action_settings);
+		if (itemView != null) {
+			LayoutParams params = itemView.getLayoutParams();
+//			params.height = 128;
+//			itemView.setLayoutParams(params);
+		}
 		
 		View customView = actionBar.getCustomView();
 		Log.i("MainActivity" , "customView : " + customView.getLeft());
