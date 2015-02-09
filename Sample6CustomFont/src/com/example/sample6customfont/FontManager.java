@@ -21,6 +21,9 @@ public class FontManager {
 	Typeface roboto;
 	public static final String FONT_NAME_ROBOTO = "croboto";
 	
+	Typeface noto;
+	public static final String FONT_NAME_NOTO = "noto";
+	
 	public Typeface getTypeface(Context context, String fontName) {
 		if (FONT_NAME_NANUM.equals(fontName)) {
 			if (nanum == null) {
@@ -34,6 +37,13 @@ public class FontManager {
 			}
 			return roboto;
 		}
+		if (FONT_NAME_NOTO.equals(fontName)) {
+			if (noto == null) {
+				noto = Typeface.createFromAsset(context.getAssets(), "NotoSansKR-Regular.otf");
+			}
+			return noto;
+		}
+
 		return null;
 	}
 }
