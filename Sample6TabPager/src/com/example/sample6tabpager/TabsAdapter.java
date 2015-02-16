@@ -2,6 +2,8 @@ package com.example.sample6tabpager;
 
 import java.util.ArrayList;
 
+import com.viewpagerindicator.PageIndicator;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,6 +25,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final Context mContext;
 	private final TabHost mTabHost;
 	private final ViewPager mViewPager;
+	private final PageIndicator mIndicator;
 	private final FragmentManager mFragmentManager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private final static String FIELD_KEY_PREFIX = "tabinfo";
@@ -75,19 +78,22 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	}
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
-			ViewPager pager) {
-		this(activity,activity.getSupportFragmentManager(),tabHost,pager);
+			ViewPager pager, PageIndicator indicator) {
+		this(activity,activity.getSupportFragmentManager(),tabHost,pager, indicator);
 	}
 	
-	public TabsAdapter(Context context,FragmentManager fragmentManager, TabHost tabHost, ViewPager pager) {
+	public TabsAdapter(Context context,FragmentManager fragmentManager, TabHost tabHost, ViewPager pager, PageIndicator indicator) {
 		super(fragmentManager);
 		mContext = context;
+		mIndicator = indicator;
 		mFragmentManager = fragmentManager;
 		mTabHost = tabHost;
 		mViewPager = pager;
 		mTabHost.setOnTabChangedListener(this);
 		mViewPager.setAdapter(this);
-		mViewPager.setOnPageChangeListener(this);
+//		mViewPager.setOnPageChangeListener(this);
+		mIndicator.setViewPager(mViewPager);
+		mIndicator.setOnPageChangeListener(this);
 	}
 
 	public void onRestoreInstanceState(Bundle savedInstanceState) {

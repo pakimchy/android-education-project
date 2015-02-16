@@ -9,11 +9,15 @@ import android.view.MenuItem;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 
+import com.viewpagerindicator.PageIndicator;
+import com.viewpagerindicator.UnderlinePageIndicator;
+
 public class MainActivity extends ActionBarActivity {
 
 	TabHost tabHost;
 	ViewPager pager;
 	TabsAdapter mAdapter;
+    PageIndicator indicator;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +26,8 @@ public class MainActivity extends ActionBarActivity {
 		tabHost = (TabHost)findViewById(android.R.id.tabhost);
 		tabHost.setup();
 		pager = (ViewPager)findViewById(R.id.pager);
-		mAdapter = new TabsAdapter(this, getSupportFragmentManager(), tabHost, pager);
+		indicator = (UnderlinePageIndicator)findViewById(R.id.indicator);
+		mAdapter = new TabsAdapter(this, getSupportFragmentManager(), tabHost, pager, indicator);
 		mAdapter.addTab(tabHost.newTabSpec("tab1").setIndicator("TAB1"), OneFragment.class, null);
 		mAdapter.addTab(tabHost.newTabSpec("tab2").setIndicator("TAB2"), TwoFragment.class, null);
 		mAdapter.addTab(tabHost.newTabSpec("tab3").setIndicator("TAB3"), ThreeFragment.class, null);
