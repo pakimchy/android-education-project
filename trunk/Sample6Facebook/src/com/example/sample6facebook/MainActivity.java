@@ -239,15 +239,21 @@ public class MainActivity extends ActionBarActivity {
 
 	private void login(Session.StatusCallback callback) {
 		Session session = Session.getActiveSession();
-		if (session == null) {
-			session = Session.openActiveSessionFromCache(this);
-		}
-
+		
 		if (session != null && session.isOpened()) {
 			session.addCallback(callback);
 			callback.call(session, null, null);
 			return;
 		}
+		
+		if (session == null) {
+			session = Session.openActiveSessionFromCache(this);
+			if (session != null && session.isOpened()) {
+				session.addCallback(callback);
+				return;
+			}
+		} 
+
 		Session.openActiveSession(this, true, callback);
 	}
 
