@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ExampleBasicWidget</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_message"><![CDATA[<font color="red">Hi</font>, <h1>Android</h1>]]></string>
+</resources>
