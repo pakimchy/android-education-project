@@ -95,6 +95,11 @@ public class ChattingService extends Service {
 		XMPPManager.getInstance().registerMessageListener(mMessageListener);
 		XMPPManager.getInstance().registerOnFileReceiveListener(mFileListener);
 	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		XMPPManager.getInstance().unregisterMessageListener(mMessageListener);
+	}
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
