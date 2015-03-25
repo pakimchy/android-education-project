@@ -42,31 +42,35 @@ public class ChattingActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				final String message = messageView.getText().toString();
-				XMPPManager.getInstance().sendChatMessage(mChat, message, new OnActionListener<Void>() {
-					
-					@Override
-					public void onSuccess(Void... data) {
-						ChatMessage cm = new ChatMessage();
-						cm.mateId = mUserId;
-						cm.message = message;
-						cm.bReceived = false;
-						cm.created = System.currentTimeMillis();
-						DBManager.getInstance().addChatMessage(cm);
-						mAdapter.add(cm);
-					}
-					
-					@Override
-					public void onFail(int code) {
-						// TODO Auto-generated method stub
-						
-					}
-				});
+				sendMessage();
 			}
 		});
 		mUserId = getIntent().getStringExtra(EXTRA_USER_ID);
 		mChat = XMPPManager.getInstance().getChat(mUserId);
 		
+	}
+	
+	private void sendMessage() {
+		final String message = messageView.getText().toString();
+		XMPPManager.getInstance().sendChatMessage(mChat, message, new OnActionListener<Void>() {
+			
+			@Override
+			public void onSuccess(Void... data) {
+				ChatMessage cm = new ChatMessage();
+				cm.mateId = mUserId;
+				cm.message = message;
+				cm.bReceived = false;
+				cm.created = System.currentTimeMillis();
+				DBManager.getInstance().addChatMessage(cm);
+				mAdapter.add(cm);
+				messageView.setText("");
+			}
+			
+			@Override
+			public void onFail(int code) {
+				// TODO Auto-generated method stub
+			}
+		});
 	}
 	
 	BroadcastReceiver mReceiver = new BroadcastReceiver() {

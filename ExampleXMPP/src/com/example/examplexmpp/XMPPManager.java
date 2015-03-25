@@ -11,6 +11,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManager;
 import org.jivesoftware.smack.ChatManagerListener;
@@ -18,6 +19,7 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterGroup;
 import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -209,14 +211,14 @@ public class XMPPManager {
 		ChatManager chatManager = mXmppConnection.getChatManager();
 		chatManager.addChatListener(mChatManagerListener);
 		
-		mFileManager = new FileTransferManager(mXmppConnection);
-		mFileManager.addFileTransferListener(new FileTransferListener() {
-			
-			@Override
-			public void fileTransferRequest(FileTransferRequest request) {
-				broadcastFileRequest(request);
-			}
-		});
+//		mFileManager = new FileTransferManager(mXmppConnection);
+//		mFileManager.addFileTransferListener(new FileTransferListener() {
+//			
+//			@Override
+//			public void fileTransferRequest(FileTransferRequest request) {
+//				broadcastFileRequest(request);
+//			}
+//		});
 	}
 	
 	public void setPresence(final String status, final OnActionListener<Void> listener) {
@@ -241,6 +243,22 @@ public class XMPPManager {
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	private boolean addAccount(String userid, String password , Map<String, String> attributes) {
+		if (!connect()) {
+			return false;
+		}
+		AccountManager accountManager = mXmppConnection.getAccountManager();
+		if (accountManager.supportsAccountCreation()) {
+			try {
+				accountManager.createAccount(userid, password, attributes);
+				return true;
+			} catch (XMPPException e) {
+				e.printStackTrace();
+			}
 		}
 		return false;
 	}
@@ -300,6 +318,29 @@ public class XMPPManager {
 		});
 	}
 	
+	private RosterEntry addRosterEntry(String user, String name, String... groups) {
+		if (!mXmppConnection.isAuthenticated()) {
+			return null;
+		}
+		Roster roster = mXmppConnection.getRoster();
+		if (!roster.contains(user)) {
+			for (String group : groups) {
+				RosterGroup rg = roster.getGroup(group);
+				if (rg == null) {
+					roster.createGroup(group);
+				}
+			}
+			try {
+				roster.createEntry(user, name, groups);
+				return roster.getEntry(user);
+			} catch (XMPPException e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+	}
+	
+	
 	public Chat getChat(String userId) {
 		Chat chat = mChatMap.get(userId);
 		if (chat == null) {
@@ -307,6 +348,18 @@ public class XMPPManager {
 			ChatManager chatManager = mXmppConnection.getChatManager();
 			chat = chatManager.createChat(userId, null);
 		}
+		return chat;
+	}
+	
+	public Chat createChat(String userId) {
+		ChatManager chatManager = mXmppConnection.getChatManager();
+		Chat chat = chatManager.createChat(userId, new MessageListener() {
+			
+			@Override
+			public void processMessage(Chat chat, Message message) {
+				broadcastMessage(chat, message);
+			}
+		});
 		return chat;
 	}
 	
