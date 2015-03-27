@@ -8,5 +8,6 @@
     <string name="title_activity_test">TestActivity</string>
     <string name="text_message"><![CDATA[<font color="red">Hi</font> Android]]></string>
     <string name="title_activity_progress">ProgressActivity</string>
+    <string name="title_activity_date_time">DateTimeActivity</string>
 
 </resources>

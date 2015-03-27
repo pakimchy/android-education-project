@@ -56,4 +56,12 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
+    <RatingBar
+        android:id="@+id/ratingBar1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:numStars="5"
+        android:rating="2.5"
+        android:stepSize="0.25" />
+
 </LinearLayout>
