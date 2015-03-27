@@ -19,11 +19,16 @@
         </activity>
         <activity
             android:name=".SimpleActivity"
-            android:label="@string/title_activity_simple" android:windowSoftInputMode="stateVisible|adjustResize">
+            android:label="@string/title_activity_simple"
+            android:windowSoftInputMode="stateVisible|adjustResize" >
         </activity>
         <activity
             android:name=".TestActivity"
             android:label="@string/title_activity_test" >
+        </activity>
+        <activity
+            android:name=".ProgressActivity"
+            android:label="@string/title_activity_progress" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
