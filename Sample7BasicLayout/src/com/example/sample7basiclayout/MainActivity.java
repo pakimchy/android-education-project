@@ -1,17 +1,39 @@
 package com.example.sample7basiclayout;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 
 public class MainActivity extends ActionBarActivity {
 
+	ImageView imageView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.frame_layout);
+        imageView = (ImageView)findViewById(R.id.image_src);
+        Button btn = (Button)findViewById(R.id.btn_show);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				imageView.setVisibility(View.VISIBLE);
+			}
+		});
+        
+        btn = (Button)findViewById(R.id.btn_hide);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				imageView.setVisibility(View.GONE);
+			}
+		});
     }
 
 
