@@ -1,16 +1,42 @@
 package com.example.sample7basicwidget;
 
-import android.support.v7.app.ActionBarActivity;
+import java.io.InputStream;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 public class TestActivity extends ActionBarActivity {
 
+	ImageView photoView;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_test);
+		photoView = (ImageView)findViewById(R.id.image_photo);
+		Button btn = (Button)findViewById(R.id.btn_change);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+//				photoView.setImageResource(R.drawable.photo1);
+				
+//				Drawable photo = getResources().getDrawable(R.drawable.photo1);
+//				photoView.setImageDrawable(photo);
+				
+				InputStream is = getResources().openRawResource(R.drawable.photo1);
+				
+				Bitmap bm = BitmapFactory.decodeStream(is);
+				photoView.setImageBitmap(bm);
+				
+			}
+		});
 	}
 
 	@Override
