@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -16,12 +18,14 @@ public class ProgressActivity extends ActionBarActivity {
 	ProgressBar progressView;
 	EditText maxView, currentView, secondaryView;
 	SeekBar seekView;
+	RatingBar ratingView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_progress);
 		seekView = (SeekBar)findViewById(R.id.seekBar1);
+		ratingView = (RatingBar)findViewById(R.id.ratingBar1);
 		progressView = (ProgressBar)findViewById(R.id.progressBar1);
 		maxView = (EditText)findViewById(R.id.edit_max);
 		secondaryView = (EditText)findViewById(R.id.edit_secondary);
@@ -62,6 +66,14 @@ public class ProgressActivity extends ActionBarActivity {
 				if (fromUser) {
 					current = progress;
 				}
+			}
+		});
+		ratingView.setOnRatingBarChangeListener(new OnRatingBarChangeListener() {
+			
+			@Override
+			public void onRatingChanged(RatingBar ratingBar, float rating,
+					boolean fromUser) {
+				
 			}
 		});
 	}
