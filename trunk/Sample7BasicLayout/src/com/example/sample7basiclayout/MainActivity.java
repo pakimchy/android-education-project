@@ -15,25 +15,25 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.frame_layout);
-        imageView = (ImageView)findViewById(R.id.image_src);
-        Button btn = (Button)findViewById(R.id.btn_show);
-        btn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				imageView.setVisibility(View.VISIBLE);
-			}
-		});
-        
-        btn = (Button)findViewById(R.id.btn_hide);
-        btn.setOnClickListener(new View.OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				imageView.setVisibility(View.GONE);
-			}
-		});
+        setContentView(R.layout.scroll_layout);
+//        imageView = (ImageView)findViewById(R.id.image_src);
+//        Button btn = (Button)findViewById(R.id.btn_show);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				imageView.setVisibility(View.VISIBLE);
+//			}
+//		});
+//        
+//        btn = (Button)findViewById(R.id.btn_hide);
+//        btn.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				imageView.setVisibility(View.GONE);
+//			}
+//		});
     }
 
 
