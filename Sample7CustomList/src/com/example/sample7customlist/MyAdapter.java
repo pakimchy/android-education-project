@@ -44,10 +44,8 @@ public class MyAdapter extends BaseAdapter implements ItemView.OnButtonClickList
 			view.setOnButtonClickListener(this);
 		} else {
 			view = (ItemView)convertView;
-		}
-		
-		view.setItemData(items.get(position));
-		
+		}		
+		view.setItemData(items.get(position));		
 		return view;
 	}
 
