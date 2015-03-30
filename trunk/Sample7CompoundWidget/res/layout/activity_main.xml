@@ -14,16 +14,16 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <com.example.sample7compoundwidget.ItemView
+    <com.example.sample7compoundwidget.ImageTextView
         android:id="@+id/item_myitem"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-    </com.example.sample7compoundwidget.ItemView>
+    </com.example.sample7compoundwidget.ImageTextView>
 
-    <com.example.sample7compoundwidget.ItemView
+    <com.example.sample7compoundwidget.ImageTextView
         android:id="@+id/item_myitem2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
-    </com.example.sample7compoundwidget.ItemView>
+    </com.example.sample7compoundwidget.ImageTextView>
 
 </LinearLayout>

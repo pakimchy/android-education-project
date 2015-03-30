@@ -1,31 +1,31 @@
 package com.example.sample7compoundwidget;
 
-import com.example.sample7compoundwidget.ItemView.OnImageClickListener;
-
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.sample7compoundwidget.ImageTextView.OnImageClickListener;
+
 
 public class MainActivity extends ActionBarActivity {
 
-	ItemView itemView;
-	ItemView itemView2;
+	ImageTextView itemView;
+	ImageTextView itemView2;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        itemView = (ItemView)findViewById(R.id.item_myitem);
+        itemView = (ImageTextView)findViewById(R.id.item_myitem);
         ItemData d = new ItemData();
         d.iconId = R.drawable.ic_launcher;
         d.title = "my item test";
         itemView.setItemData(d);
         itemView.setOnImageClickListener(listener);
         
-        itemView2 = (ItemView)findViewById(R.id.item_myitem2);
+        itemView2 = (ImageTextView)findViewById(R.id.item_myitem2);
         d = new ItemData();
         d.iconId = R.drawable.ic_launcher;
         d.title = "my item test 2";
@@ -36,7 +36,7 @@ public class MainActivity extends ActionBarActivity {
     OnImageClickListener listener = new OnImageClickListener() {
 		
 		@Override
-		public void onImageClicked(ItemView view, ItemData data) {
+		public void onImageClicked(ImageTextView view, ItemData data) {
 			Toast.makeText(MainActivity.this, "title : "+data.title, Toast.LENGTH_SHORT).show();
 		}
 	};
