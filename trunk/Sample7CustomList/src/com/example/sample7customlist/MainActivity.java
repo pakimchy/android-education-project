@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Adapter;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		listView = (ListView) findViewById(R.id.listView1);
+		listView.setEmptyView(findViewById(R.id.text_empty));
 		TextView headerView = new TextView(this);
 		headerView.setText("this is header view");
 		listView.addHeaderView(headerView, "headerview", true);
@@ -62,6 +64,24 @@ public class MainActivity extends ActionBarActivity {
 							"item clicked : " + data.title, Toast.LENGTH_SHORT)
 							.show();
 				}
+			}
+		});
+		
+		Button btn = (Button)findViewById(R.id.btn_clear);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mAdapter.clear();
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_add);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				initData();
 			}
 		});
 

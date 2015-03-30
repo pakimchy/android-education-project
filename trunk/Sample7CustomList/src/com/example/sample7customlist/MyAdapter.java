@@ -63,4 +63,9 @@ public class MyAdapter extends BaseAdapter implements ItemView.OnButtonClickList
 		}
 	}
 
+	public void clear() {
+		items.clear();
+		notifyDataSetChanged();
+	}
+
 }
