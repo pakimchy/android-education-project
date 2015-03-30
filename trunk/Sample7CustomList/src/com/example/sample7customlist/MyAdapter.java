@@ -5,13 +5,15 @@ import java.util.List;
 
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Adapter;
 import android.widget.BaseAdapter;
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter implements ItemView.OnButtonClickListener {
 
 	List<ItemData> items = new ArrayList<ItemData>();
-	public MyAdapter() {
-		
+	ItemView.OnButtonClickListener mListener;
+	public MyAdapter(ItemView.OnButtonClickListener listener) {
+		mListener = listener;
 	}
 	
 	public void add(ItemData item) {
@@ -36,9 +38,31 @@ public class MyAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ItemView view = new ItemView(parent.getContext());
+		ItemView view;
+		if (convertView == null) {
+			view = new ItemView(parent.getContext());
+			view.setOnButtonClickListener(this);
+		} else {
+			view = (ItemView)convertView;
+		}
+		
 		view.setItemData(items.get(position));
+		
 		return view;
+	}
+
+	public interface OnAdapterListener {
+		public void onAdapterAction(Adapter adapter, View view, ItemData data);
+	}
+	OnAdapterListener mAdapterListener;
+	public void setOnAdapterListener(OnAdapterListener listener) {
+		mAdapterListener = listener;
+	}
+	@Override
+	public void onButtonClick(View view, ItemData data) {
+		if (mAdapterListener != null) {
+			mAdapterListener.onAdapterAction(this, view, data);
+		}
 	}
 
 }
