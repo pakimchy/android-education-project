@@ -11,6 +11,9 @@ import android.widget.TextView;
 public class MyActivity extends ActionBarActivity {
 	TextView messageView;
 	public static final String EXTRA_MESSAGE = "message";
+	public static final String EXTRA_AGE = "age";
+	public static final String EXTRA_NAME = "name";
+	public static final String EXTRA_PERSON = "person";
 	public static final String PARAM_RESULT_MESSAGE = "resultMessage";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +23,10 @@ public class MyActivity extends ActionBarActivity {
 		
 		Intent intent = getIntent();
 		String message = intent.getStringExtra(EXTRA_MESSAGE);
+		int age = intent.getIntExtra(EXTRA_AGE, 0);
+		String name = intent.getStringExtra(EXTRA_NAME);
+//		Person p = (Person)intent.getSerializableExtra(EXTRA_PERSON);
+		Person p = intent.getParcelableExtra(EXTRA_PERSON);
 		messageView.setText(message);	
 				
 		Button btn = (Button)findViewById(R.id.btn_finish);
