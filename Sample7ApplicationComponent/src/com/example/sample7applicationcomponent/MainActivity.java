@@ -1,7 +1,10 @@
 package com.example.sample7applicationcomponent;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -77,6 +80,27 @@ public class MainActivity extends ActionBarActivity {
     	outState.putString("filename",mSavedFileName);
     }
     
+    @Override
+    protected void onResume() {
+    	super.onResume();
+    	IntentFilter filter = new IntentFilter(MyService.ACTION_MOD_ZERO);
+    	registerReceiver(mReceiver, filter);
+    }
+
+    BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra("count", 0);
+			Toast.makeText(MainActivity.this, " activity count : " + count, Toast.LENGTH_SHORT).show();
+			setResultCode(Activity.RESULT_OK);
+		}
+	};
+    @Override
+    protected void onPause() {
+    	super.onPause();
+    	unregisterReceiver(mReceiver);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
