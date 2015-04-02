@@ -16,6 +16,8 @@ public class MainActivity extends ActionBarActivity {
 
 	EditText inputView;
 	private static final int REQUEST_CODE_MY = 0;
+	int state = 0;
+	String mSavedFileName;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,9 +32,49 @@ public class MainActivity extends ActionBarActivity {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
 				String text = inputView.getText().toString();
 				i.putExtra(MyActivity.EXTRA_MESSAGE, text);
+				i.putExtra(MyActivity.EXTRA_AGE, 41);
+				i.putExtra(MyActivity.EXTRA_NAME, "ysi");
+				Person p = new Person();
+				p.name = "ysi";
+				p.age = 41;
+				i.putExtra(MyActivity.EXTRA_PERSON, p);
 				startActivityForResult(i, REQUEST_CODE_MY);
 			}
 		});
+        
+        
+        btn = (Button)findViewById(R.id.btn_start);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, MyService.class);
+				intent.putExtra("count" , 100);
+				startService(intent);
+			}
+		});
+        
+        btn = (Button)findViewById(R.id.btn_stop);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, MyService.class);
+				stopService(intent);
+			}
+		});
+        
+        if (savedInstanceState != null) {
+        	state = savedInstanceState.getInt("state",0);
+        	mSavedFileName = savedInstanceState.getString("filename");
+        }
+    }
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	super.onSaveInstanceState(outState);
+    	outState.putInt("state", state);
+    	outState.putString("filename",mSavedFileName);
     }
     
 
