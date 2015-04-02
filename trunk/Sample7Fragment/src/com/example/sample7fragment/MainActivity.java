@@ -11,8 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends ActionBarActivity implements OneFragment.MessageReceiver {
 
 	FragmentManager mFragmentManager;
 	Button btnTab1, btnTab2;
@@ -91,6 +92,10 @@ public class MainActivity extends ActionBarActivity {
 			btnTab2.setSelected(true);
 		}
 	}
+	
+	public void calledFragment(String message) {
+		Toast.makeText(this, "message : " + message, Toast.LENGTH_SHORT).show();
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,5 +114,10 @@ public class MainActivity extends ActionBarActivity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void receiveMessage(String message) {
+		Toast.makeText(this, "message : " + message, Toast.LENGTH_SHORT).show();
 	}
 }
