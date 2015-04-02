@@ -17,6 +17,12 @@ public class OneFragment extends Fragment {
 	EditText inputView;
 	String message = "";
 
+	public interface MessageReceiver {
+		public void receiveMessage(String message);
+	}
+	
+	MessageReceiver callback;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -38,7 +44,15 @@ public class OneFragment extends Fragment {
 
 			@Override
 			public void onClick(View v) {
-				messageView.setText(inputView.getText().toString());
+				String message = inputView.getText().toString();
+				messageView.setText(message);
+				Activity activity = getActivity();
+//				if (activity instanceof MessageReceiver) {
+//					((MessageReceiver)activity).receiveMessage(message);
+//				}
+				if (callback != null) {
+					callback.receiveMessage(message);
+				}
 			}
 		});
 		return view;
@@ -56,6 +70,9 @@ public class OneFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mActivity = activity;
+		if (activity instanceof MessageReceiver) {
+			callback = (MessageReceiver)activity;
+		}
 	}
 	
 	public void setText(String text) {

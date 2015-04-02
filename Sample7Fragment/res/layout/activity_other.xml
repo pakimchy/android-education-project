@@ -10,9 +10,16 @@
     tools:context="com.example.sample7fragment.OtherActivity" >
 
     <TextView
+        android:id="@+id/text_message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <Button
+        android:id="@+id/btn_finish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="finish" />
 
     <Button
         android:id="@+id/btn_get_fragment_value"
