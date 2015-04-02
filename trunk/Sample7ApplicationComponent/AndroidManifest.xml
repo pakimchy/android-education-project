@@ -6,6 +6,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="21" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -32,6 +33,11 @@
             android:label="@string/title_activity_my3" >
         </activity>
         <service android:name="MyService"></service>
+        <receiver android:name="MySMSReceiver">
+            <intent-filter>
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
