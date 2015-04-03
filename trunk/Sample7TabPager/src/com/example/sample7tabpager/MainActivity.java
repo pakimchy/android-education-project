@@ -41,6 +41,15 @@ public class MainActivity extends ActionBarActivity {
         	mAdapter.onRestoreInstanceState(savedInstanceState);
         }
     }
+    
+    @Override
+    public void onBackPressed() {
+    	if (tabHost.getCurrentTab() == 0) {
+    		super.onBackPressed();
+    	} else {
+    		tabHost.setCurrentTab(0);
+    	}
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
