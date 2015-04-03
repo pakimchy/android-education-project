@@ -1,12 +1,14 @@
 package com.example.sample7applicationcomponent;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -22,11 +24,14 @@ public class MyService extends Service {
 	int mCount = 0;
 	
 	public static final String ACTION_MOD_ZERO = "com.example.sample7applicationcomponent.action.MOD_ZERO";
-	
+	LocalBroadcastManager mLBM;
+	public static boolean isReceived = false;
+	Handler mHandler = new Handler(Looper.getMainLooper());
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		Toast.makeText(this, "onCreate...", Toast.LENGTH_SHORT).show();
+		mLBM = LocalBroadcastManager.getInstance(this);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -36,16 +41,27 @@ public class MyService extends Service {
 					if (mCount % 10 == 0) {
 						Intent intent = new Intent(ACTION_MOD_ZERO);
 						intent.putExtra("count", mCount);
-//						sendBroadcast(intent);
-						sendOrderedBroadcast(intent, null, new BroadcastReceiver() {
-							@Override
-							public void onReceive(Context context, Intent intent) {
-								int code = getResultCode();
-								if (code == Activity.RESULT_CANCELED) {
+						isReceived = false;
+						mLBM.sendBroadcastSync(intent);
+						if(!isReceived) {
+							mHandler.post(new Runnable() {
+								
+								@Override
+								public void run() {
 									Toast.makeText(MyService.this, "Ativity Not Processing", Toast.LENGTH_SHORT).show();
 								}
-							}
-						}, null, Activity.RESULT_CANCELED, null, null);
+							});
+						}
+//						sendBroadcast(intent);
+//						sendOrderedBroadcast(intent, null, new BroadcastReceiver() {
+//							@Override
+//							public void onReceive(Context context, Intent intent) {
+//								int code = getResultCode();
+//								if (code == Activity.RESULT_CANCELED) {
+//									Toast.makeText(MyService.this, "Ativity Not Processing", Toast.LENGTH_SHORT).show();
+//								}
+//							}
+//						}, null, Activity.RESULT_CANCELED, null, null);
 					}
 					mCount++;
 					try {
