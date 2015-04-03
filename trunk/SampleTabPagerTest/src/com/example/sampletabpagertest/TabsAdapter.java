@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,22 +25,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final FragmentManager mFragmentManager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private final static String FIELD_KEY_PREFIX = "tabinfo";
-
-	private final static int MESSAGE_PAGE_CURRENT = 1;
-	
-	Handler mHandler = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			switch(msg.what) {
-			case MESSAGE_PAGE_CURRENT :
-				int position = msg.arg1;
-				Fragment f = getTabFragment(position);
-				if (f != null && f instanceof PagerFragment) {
-					((PagerFragment)f).onPageCurrent();
-				}
-			}
-		}
-	};
 
 	ArrayList<Message> delayedMessage = new ArrayList<Message>();
 	
@@ -135,8 +118,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		mTabChangeListener = listener;
 	}
 
-	boolean isFirst = true;
-	private final static int FIRST_DELAY_INTERVAL = 20;
 	@Override
 	public void onTabChanged(String tabId) {
 		int position = mTabHost.getCurrentTab();
@@ -144,7 +125,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		if (mTabChangeListener != null) {
 			mTabChangeListener.onTabChanged(tabId);
 		}
-		mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0), FIRST_DELAY_INTERVAL);
 	}
 	
 	public Fragment getTabFragment(int position) {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class TwoFragment extends PagerFragment {
+public class TwoFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -20,9 +20,11 @@ public class TwoFragment extends PagerFragment {
 	}
 	
 	@Override
-	public void onPageCurrent() {
-		super.onPageCurrent();
-		getActivity().setTitle("TwoFragment");
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			getActivity().setTitle("TwoFragment");
+		}
 	}
 
 }
