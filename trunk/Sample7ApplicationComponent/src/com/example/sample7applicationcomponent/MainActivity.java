@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,11 +22,13 @@ public class MainActivity extends ActionBarActivity {
 	private static final int REQUEST_CODE_MY = 0;
 	int state = 0;
 	String mSavedFileName;
+	LocalBroadcastManager mLBM;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mLBM = LocalBroadcastManager.getInstance(this);
         inputView = (EditText)findViewById(R.id.edit_message);
         Button btn = (Button)findViewById(R.id.btn_my);
         btn.setOnClickListener(new View.OnClickListener() {
@@ -84,22 +87,31 @@ public class MainActivity extends ActionBarActivity {
     protected void onResume() {
     	super.onResume();
     	IntentFilter filter = new IntentFilter(MyService.ACTION_MOD_ZERO);
-    	registerReceiver(mReceiver, filter);
+//    	registerReceiver(mReceiver, filter);
+    	mLBM.registerReceiver(mReceiver, filter);
     }
 
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
 		
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			int count = intent.getIntExtra("count", 0);
-			Toast.makeText(MainActivity.this, " activity count : " + count, Toast.LENGTH_SHORT).show();
-			setResultCode(Activity.RESULT_OK);
+			final int count = intent.getIntExtra("count", 0);
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					Toast.makeText(MainActivity.this, " activity count : " + count, Toast.LENGTH_SHORT).show();
+				}
+			});
+			MyService.isReceived = true;
+//			setResultCode(Activity.RESULT_OK);
 		}
 	};
     @Override
     protected void onPause() {
     	super.onPause();
-    	unregisterReceiver(mReceiver);
+//    	unregisterReceiver(mReceiver);
+    	mLBM.unregisterReceiver(mReceiver);
     }
 
     @Override
