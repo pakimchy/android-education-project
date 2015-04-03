@@ -1,0 +1,47 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="android:textViewStyle">@style/MyTextStyle</item>
+        <item name="android:buttonStyle">@style/MyButtonStyle</item>
+    </style>
+    <style name="AppTheme.Blue">
+        <item name="android:textViewStyle">@style/MyTextStyle.Blue</item>
+    </style>
+    <style name="MyButtonStyle" parent="android:Widget.Button">
+        <item name="android:textColor">#ff0000</item>
+    </style>
+    <style name="MyTextStyle" parent="android:Widget.TextView">
+        <item name="android:textColor">#00FF00</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:shadowColor">#000000</item>
+        <item name="android:shadowDx">10</item>
+        <item name="android:shadowDy">10</item>
+        <item name="android:shadowRadius">10</item>
+    </style>
+    
+    <style name="MyTextStyle.Blue">
+        <item name="android:textColor">#0000FF</item>
+    </style>
+    
+    <style name="MyTitleTextStyle" parent="MyTextStyle">
+        <item name="android:textSize">40sp</item>
+    </style>
+
+    <style name="MyTextStyle.TitleStyle">
+        <item name="android:textSize">40sp</item>
+    </style>
+</resources>
