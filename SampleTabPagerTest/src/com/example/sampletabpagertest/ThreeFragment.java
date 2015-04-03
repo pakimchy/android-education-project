@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class ThreeFragment extends PagerFragment {
+public class ThreeFragment extends Fragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -20,9 +20,11 @@ public class ThreeFragment extends PagerFragment {
 	}
 	
 	@Override
-	public void onPageCurrent() {
-		super.onPageCurrent();
-		getActivity().setTitle("ThreeFragment");
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			getActivity().setTitle("ThreeFragment");
+		}
 	}
 
 }

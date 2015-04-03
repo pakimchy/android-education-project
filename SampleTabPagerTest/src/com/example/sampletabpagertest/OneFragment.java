@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-public class OneFragment extends PagerFragment {
+public class OneFragment extends Fragment {
 	boolean isInitialized = false;
 	boolean isSetStartFragment = false;
 
@@ -28,11 +28,14 @@ public class OneFragment extends PagerFragment {
 		super.onActivityCreated(savedInstanceState);
 		initFragment();
 	}
+	
 	@Override
-	public void onPageCurrent() {
-		super.onPageCurrent();
-		initFragment();
-		getActivity().setTitle("OneFragment");
+	public void setUserVisibleHint(boolean isVisibleToUser) {
+		super.setUserVisibleHint(isVisibleToUser);
+		if (isVisibleToUser) {
+			initFragment();
+			getActivity().setTitle("OneFragment");
+		}
 	}
 	
 	private void initFragment() {
