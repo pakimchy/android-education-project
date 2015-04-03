@@ -26,7 +26,6 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private final static String FIELD_KEY_PREFIX = "tabinfo";
 
-	ArrayList<Message> delayedMessage = new ArrayList<Message>();
 	
 	static final class TabInfo {
 		private final String tag;
