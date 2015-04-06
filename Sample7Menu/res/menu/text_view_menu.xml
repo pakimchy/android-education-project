@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/menu_text_one" android:title="TM1" android:orderInCategory="101"></item>
+    <item android:id="@+id/menu_text_two" android:orderInCategory="102" android:title="TM2"></item>
+    
+
+</menu>
