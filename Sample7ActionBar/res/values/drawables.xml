@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="action_background">#80eeeeee</drawable>
+    <drawable name="menu_item_background_normal">#333333</drawable>
+    <drawable name="menu_item_background_pressed">#00ffff</drawable>
+    
+</resources>

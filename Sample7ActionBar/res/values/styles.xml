@@ -1,0 +1,52 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="actionButtonStyle">@style/MyButtonStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/MyNavigationButton</item>
+        <item name="toolbarStyle">@style/MyToolbar</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <style name="AppTheme.CustomActionBar">
+        <item name="actionBarStyle">@style/MyActionBarStyle</item>
+        <item name="actionBarSize">@dimen/actionbar_height</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="toolbarStyle">@style/MyToolbar</item>
+        <item name="actionButtonStyle">@style/MyButtonStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/MyNavigationButton</item>
+    </style>
+    
+    <style name="MyActionBarStyle" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@drawable/action_background</item>
+        <!-- 
+        <item name="background">@drawable/action_background</item>
+         -->
+    </style>
+    
+    <style name="MyToolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+    </style>
+    <style name="MyNavigationButton" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">24dp</item>
+    </style>
+    <style name="MyButtonStyle" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="android:minHeight">64dp</item>
+        <item name="android:background">@drawable/menu_item_background</item>
+    </style>
+</resources>
