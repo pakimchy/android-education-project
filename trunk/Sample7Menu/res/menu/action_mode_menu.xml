@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/menu_mode_one"
+        android:orderInCategory="101"
+        android:title="AM1"
+        android:icon="@android:drawable/btn_star">
+    </item>
+
+    <item
+        android:id="@+id/menu_mode_two"
+        android:orderInCategory="102"
+        android:title="AM2"
+        android:icon="@android:drawable/btn_minus">
+    </item>
+
+    <item
+        android:id="@+id/menu_mode_three"
+        android:orderInCategory="103"
+        android:title="AM3"
+        android:icon="@android:drawable/btn_plus">
+    </item>
+    
+</menu>
