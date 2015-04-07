@@ -4,5 +4,6 @@
     <string name="app_name">Sample7DrawerLayout</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+	<string name="open_desc">drawer-open</string>
+	<string name="close_desc">drawer-close</string>
 </resources>
