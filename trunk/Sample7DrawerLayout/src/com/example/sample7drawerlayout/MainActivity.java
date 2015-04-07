@@ -27,8 +27,10 @@ public class MainActivity extends ActionBarActivity implements LeftMenuFragment.
 		if (savedInstanceState == null) {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.contentcontainer, new MainFragment()).commit();
+			LeftMenuFragment menuFragment = new LeftMenuFragment();
+			menuFragment.setDrawerLayout(mDrawer);
 			getSupportFragmentManager().beginTransaction()
-					.add(R.id.leftmenu, new LeftMenuFragment()).commit();
+					.add(R.id.leftmenu, menuFragment).commit();
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.rightmenu, new RightMenuFragment()).commit();
 		}
@@ -146,6 +148,6 @@ public class MainActivity extends ActionBarActivity implements LeftMenuFragment.
 			Toast.makeText(this, "menu three", Toast.LENGTH_SHORT).show();
 			break;
 		}
-		mDrawer.closeDrawers();
+//		mDrawer.closeDrawers();
 	}
 }
