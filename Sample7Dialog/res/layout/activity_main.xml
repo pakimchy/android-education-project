@@ -9,38 +9,39 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.sample7dialog.MainActivity" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/btn_alert"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="alert" />
+        <Button
+            android:id="@+id/btn_alert"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="alert" />
 
-    <Button
-        android:id="@+id/btn_list"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="List" />
+        <Button
+            android:id="@+id/btn_list"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="List" />
 
-    <Button
-        android:id="@+id/btn_single"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="single" />
+        <Button
+            android:id="@+id/btn_single"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="single" />
 
-    <Button
-        android:id="@+id/btn_multi"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="multi" />
+        <Button
+            android:id="@+id/btn_multi"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="multi" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_progress"
@@ -55,5 +56,40 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="progress horizontal" />
+
+    <Button
+        android:id="@+id/btn_dialog_fragment"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog fragment" />
+
+    <Button
+        android:id="@+id/btn_dialog_stack"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dialog stack" />
+
+    <Button
+        android:id="@+id/btn_custom_dialog"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="custom dialog" />
+
+    <Button
+        android:id="@+id/btn_no_title"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="no title" />
+
+    <Button
+        android:id="@+id/btn_dialog_theme"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="theme" />
 
 </LinearLayout>
