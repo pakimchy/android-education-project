@@ -182,6 +182,56 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
         
+        btn = (Button)findViewById(R.id.btn_dialog_fragment);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyDialogFragment dialog = new MyDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+        
+        btn = (Button)findViewById(R.id.btn_dialog_stack);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ListDialogFragment dialog = new ListDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+        
+        btn = (Button)findViewById(R.id.btn_custom_dialog);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CustomDialogFragment dialog = new CustomDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+        
+        btn = (Button)findViewById(R.id.btn_no_title);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				NoTitleDialogFragment dialog = new NoTitleDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+
+        btn = (Button)findViewById(R.id.btn_dialog_theme);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ThemeDialogFragment dialog = new ThemeDialogFragment();
+				dialog.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+        
     }
 
 
