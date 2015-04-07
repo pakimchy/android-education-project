@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,12 @@ public class LeftMenuFragment extends Fragment {
 		public void selectedItem(int menuId);
 	}
 	
+	DrawerLayout mDrawer;
 	MenuCallback callback = null;
+	
+	public void setDrawerLayout(DrawerLayout drawer) {
+		mDrawer = drawer;
+	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,6 +56,9 @@ public class LeftMenuFragment extends Fragment {
 				MenuItem item = (MenuItem)listView.getItemAtPosition(position);
 				if (callback != null) {
 					callback.selectedItem(item.menuId);
+				}
+				if (mDrawer != null) {
+					mDrawer.closeDrawer(GravityCompat.START);
 				}
 			}
 		});
