@@ -5,6 +5,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu.OnOpenedListener;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
 
@@ -25,6 +26,13 @@ public class MainActivity extends SlidingFragmentActivity {
         mSliding.setSecondaryMenu(R.layout.right_menu_layout);
         mSliding.setSecondaryShadowDrawable(R.drawable.shadowright);
         mSliding.setMode(SlidingMenu.LEFT_RIGHT);
+        mSliding.setOnOpenedListener(new OnOpenedListener() {
+			
+			@Override
+			public void onOpened() {
+				
+			}
+		});
         setSlidingActionBarEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_drawer);
