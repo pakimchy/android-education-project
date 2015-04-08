@@ -34,6 +34,7 @@ public class MainActivity extends ActionBarActivity {
     		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyCustomFont);
     		String fontname = ta.getString(R.styleable.MyCustomFont_customFont);
     		int style = ta.getInt(R.styleable.MyCustomFont_android_textStyle, Typeface.NORMAL);
+    		ta.recycle();
     		Typeface font = FontManager.getInstance().getFont(this, fontname);
     		TextView tv = (TextView)super.onCreateView(name, context, attrs);
     		if (tv == null) {
