@@ -1,5 +1,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -7,18 +8,22 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.sample7customtypeface.MainActivity" >
+    tools:context="com.example.sample7customtypeface.MainActivity"
+    tools:ignore="MissingPrefix" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="@string/hello_world"
+        app:customFont="nanum" />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Large Text"
+        app:customFont="noto"
+        android:textStyle="italic"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -26,6 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Large Text"
+        app:customFont="roboto"
+        android:textStyle="bold"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </LinearLayout>

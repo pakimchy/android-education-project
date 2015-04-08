@@ -1,6 +1,7 @@
 package com.example.sample7customtypeface;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -27,12 +28,20 @@ public class MainActivity extends ActionBarActivity {
     public View onCreateView(String name, @NonNull Context context,
     		@NonNull AttributeSet attrs) {
     	if (name.equals("TextView")) {
-    		Typeface namum = FontManager.getInstance().getFont(this, FontManager.FONT_NAMUM);
+//    		TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.fontFamily});
+//    		String fontname = ta.getString(0);
+//    		ta.recycle();
+    		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyCustomFont);
+    		String fontname = ta.getString(R.styleable.MyCustomFont_customFont);
+    		int style = ta.getInt(R.styleable.MyCustomFont_android_textStyle, Typeface.NORMAL);
+    		Typeface font = FontManager.getInstance().getFont(this, fontname);
     		TextView tv = (TextView)super.onCreateView(name, context, attrs);
     		if (tv == null) {
     			tv = new TextView(context, attrs);
     		}
-    		tv.setTypeface(namum);
+    		if (font != null) {
+    			tv.setTypeface(font,style);
+    		}
     		return tv;
     	}
     	return super.onCreateView(name, context, attrs);
