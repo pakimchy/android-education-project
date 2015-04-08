@@ -15,15 +15,15 @@ public class FontManager {
 		
 	}
 	
-	public static final String FONT_NAMUM = "namumgothic";
-	Typeface namum;
+	public static final String FONT_NAMUM = "nanumgothic";
+	Typeface nanum;
 	
 	public Typeface getFont(Context context, String name) {
 		if (FONT_NAMUM.equals(name)) {
-			if (namum == null) {
-				namum = Typeface.createFromAsset(context.getAssets(), "nanumgothic.ttf");
+			if (nanum == null) {
+				nanum = Typeface.createFromAsset(context.getAssets(), "nanumgothic.ttf");
 			}
-			return namum;
+			return nanum;
 		}
 		return null;
 	}
