@@ -11,7 +11,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF" >
 
         <TextView
             android:id="@+id/textView1"
@@ -19,6 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#FFFFFF"
+            android:gravity="center"
             android:tag="item 1"
             android:text="Item 1"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -29,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#FFFFFF"
+            android:gravity="center"
             android:tag="item 2"
             android:text="Item 2"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -39,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="#FFFFFF"
+            android:gravity="center"
             android:tag="item 3"
             android:text="Item 3"
             android:textAppearance="?android:attr/textAppearanceMedium" />
