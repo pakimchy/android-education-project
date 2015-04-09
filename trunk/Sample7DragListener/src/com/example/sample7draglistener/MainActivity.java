@@ -2,6 +2,7 @@ package com.example.sample7draglistener;
 
 import android.content.ClipData;
 import android.content.ClipDescription;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.DragEvent;
@@ -42,6 +43,12 @@ public class MainActivity extends ActionBarActivity {
 				switch(event.getAction()) {
 				case DragEvent.ACTION_DRAG_STARTED :
 					return true;
+				case DragEvent.ACTION_DRAG_ENTERED :
+					v.setBackgroundColor(Color.GREEN);
+					return true;
+				case DragEvent.ACTION_DRAG_EXITED :
+					v.setBackgroundColor(Color.TRANSPARENT);
+					return true;
 				case DragEvent.ACTION_DROP :
 					ClipData data = event.getClipData();
 					ClipData.Item item = data.getItemAt(0);
@@ -54,6 +61,9 @@ public class MainActivity extends ActionBarActivity {
 					} else {
 						mAdapter.insert(item.getText().toString(), position);
 					}
+					return true;
+				case DragEvent.ACTION_DRAG_ENDED :
+					v.setBackgroundColor(Color.TRANSPARENT);
 					return true;
 				}
 				return false;
