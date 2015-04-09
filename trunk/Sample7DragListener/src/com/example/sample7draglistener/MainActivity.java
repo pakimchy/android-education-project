@@ -40,8 +40,10 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public boolean onDrag(View v, DragEvent event) {
+				View source = (View)event.getLocalState();
 				switch(event.getAction()) {
-				case DragEvent.ACTION_DRAG_STARTED :
+				case DragEvent.ACTION_DRAG_STARTED :					
+					source.setVisibility(View.INVISIBLE);
 					return true;
 				case DragEvent.ACTION_DRAG_ENTERED :
 					v.setBackgroundColor(Color.GREEN);
@@ -52,7 +54,6 @@ public class MainActivity extends ActionBarActivity {
 				case DragEvent.ACTION_DROP :
 					ClipData data = event.getClipData();
 					ClipData.Item item = data.getItemAt(0);
-					View source = (View)event.getLocalState();
 					int x = (int)event.getX();
 					int y = (int)event.getY();
 					int position = listView.pointToPosition(x, y);
@@ -63,6 +64,7 @@ public class MainActivity extends ActionBarActivity {
 					}
 					return true;
 				case DragEvent.ACTION_DRAG_ENDED :
+					source.setVisibility(View.VISIBLE);
 					v.setBackgroundColor(Color.TRANSPARENT);
 					return true;
 				}
