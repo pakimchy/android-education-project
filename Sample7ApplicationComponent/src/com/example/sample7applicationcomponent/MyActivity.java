@@ -39,6 +39,7 @@ public class MyActivity extends ActionBarActivity {
 				data.putExtra(PARAM_RESULT_MESSAGE, rmessage);
 				setResult(Activity.RESULT_OK, data);
 				finish();
+//				overridePendingTransition(R.anim.abc_slide_in_top, R.anim.abc_slide_out_bottom);
 			}
 		});
 	}

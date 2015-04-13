@@ -24,7 +24,7 @@
         </activity>
         <activity
             android:name=".MyActivity"
-            android:label="@string/my_activity">
+            android:label="@string/my_activity" android:theme="@style/AppTheme.Popup">
         </activity>
         <activity 
             android:name=".My2Activity"></activity>

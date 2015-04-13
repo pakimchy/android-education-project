@@ -45,6 +45,7 @@ public class MainActivity extends ActionBarActivity {
 				p.age = 41;
 				i.putExtra(MyActivity.EXTRA_PERSON, p);
 				startActivityForResult(i, REQUEST_CODE_MY);
+//				overridePendingTransition(R.anim.slide_left_in, R.anim.slide_left_out);
 			}
 		});
         
