@@ -23,6 +23,14 @@ public class OneFragment extends Fragment {
 	
 	MessageReceiver callback;
 	
+	public interface OnMessageListener {
+		public void onReceiveMessage(String message);
+	}
+	OnMessageListener mListener;
+	public void setOnMessageListener(OnMessageListener listener) {
+		mListener = listener;
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -52,6 +60,10 @@ public class OneFragment extends Fragment {
 //				}
 				if (callback != null) {
 					callback.receiveMessage(message);
+				}
+				
+				if (mListener != null) {
+					mListener.onReceiveMessage(message);
 				}
 			}
 		});

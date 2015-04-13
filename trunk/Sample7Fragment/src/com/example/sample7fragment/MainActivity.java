@@ -75,6 +75,7 @@ public class MainActivity extends ActionBarActivity implements OneFragment.Messa
 			String text = ((EditText)findViewById(R.id.edit_message)).getText().toString();
 			bundle.putString("message", text);
 			f1.setArguments(bundle);
+			ft.setCustomAnimations(R.anim.slide_left_in, R.anim.set_anim);
 			ft.replace(R.id.container, f1, TAG_F1);
 			ft.commit();
 			btnTab2.setSelected(false);
@@ -86,6 +87,7 @@ public class MainActivity extends ActionBarActivity implements OneFragment.Messa
 		Fragment f = mFragmentManager.findFragmentByTag(TAG_F2);
 		if (f == null) {
 			FragmentTransaction ft = mFragmentManager.beginTransaction();
+			ft.setCustomAnimations(R.anim.slide_left_in, R.anim.set_anim);
 			ft.replace(R.id.container, f2, TAG_F2);
 			ft.commit();
 			btnTab1.setSelected(false);
