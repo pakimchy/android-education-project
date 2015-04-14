@@ -44,7 +44,7 @@
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:ptrMode="pullUpFromBottom" >
+        app:ptrMode="pullDownFromTop" >
     </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
 </LinearLayout>
