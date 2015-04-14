@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory android:title="Backup Sync..." >
+        <CheckBoxPreference
+            android:defaultValue="true"
+            android:icon="@android:drawable/ic_lock_lock"
+            android:key="perf_sync"
+            android:summary="google backup "
+            android:title="sync message" />
+
+        <EditTextPreference
+            android:dependency="perf_sync"
+            android:key="perf_name"
+            android:summary="backup file name"
+            android:title="backup file name" />
+
+        <ListPreference
+            android:dependency="perf_sync"
+            android:entries="@array/sync_connection_type_entries"
+            android:entryValues="@array/sync_connection_value_entries"
+            android:key="perfs_sync_type"
+            android:summary="This Type ...."
+            android:title="Select Sync Type" />
+    </PreferenceCategory>
+
+    <PreferenceScreen
+        android:summary="notification ..."
+        android:title="notification" >
+        <CheckBoxPreference
+            android:key="pref_noti"
+            android:summary="server push..."
+            android:title="notification" />
+
+        <SwitchPreference
+            android:key="prefs_delay_idle"
+            android:summary="push type..."
+            android:switchTextOff="wake up"
+            android:switchTextOn="real time"
+            android:title="notification type" />
+    </PreferenceScreen>
+
+    <RingtonePreference
+        android:key="prefs_ringtone"
+        android:ringtoneType="ringtone"
+        android:showDefault="true"
+        android:showSilent="true"
+        android:summary="ringtone..."
+        android:title="ringtone" />
+
+    <Preference
+        android:summary="google site ..."
+        android:title="show google" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.google.com" />
+    </Preference>
+
+</PreferenceScreen>

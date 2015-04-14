@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="sync_connection_type_entries">
+        <item >TYPE 1</item>
+        <item >TYPE 2</item>
+        <item >TYPE 3</item>
+    </string-array>
+    <string-array name="sync_connection_value_entries">
+        <item >value 1</item>
+        <item >value 2</item>
+        <item >value 3</item>
+    </string-array>
+    
+</resources>
