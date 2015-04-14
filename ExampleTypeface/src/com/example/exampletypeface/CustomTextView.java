@@ -18,7 +18,7 @@ public class CustomTextView extends TextView {
 
 	private void init() {
 		setTypeface(TypefaceManager.getInstance().getTypeface(getContext(),
-				TypefaceManager.FONT_NAME_NAUM));
+				TypefaceManager.FONT_NAMUM));
 	}
 
 }

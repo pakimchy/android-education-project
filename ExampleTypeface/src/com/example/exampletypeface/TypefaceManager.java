@@ -14,17 +14,34 @@ public class TypefaceManager {
 		
 	}
 	
-	public static final String FONT_NAME_NAUM = "nanumgothic";
-	private Typeface nanumgothic;
+	public static final String FONT_NAMUM = "nanum";
+	Typeface nanum;
 	
+	public static final String FONT_NOTO = "noto";
+	Typeface noto;
 	
-	public Typeface getTypeface(Context context, String fontName) {
-		if (FONT_NAME_NAUM.equals(fontName)) {
-			if (nanumgothic == null) {
-				nanumgothic = Typeface.createFromAsset(context.getAssets(), "nanumgothic.ttf");
+	public static final String FONT_ROBOTO = "roboto";
+	Typeface roboto;
+	
+	public Typeface getTypeface(Context context, String name) {
+		if (FONT_NAMUM.equals(name)) {
+			if (nanum == null) {
+				nanum = Typeface.createFromAsset(context.getAssets(), "nanumgothic.ttf");
 			}
-			return nanumgothic;
+			return nanum;
 		}
-		return Typeface.DEFAULT;
+		if (FONT_NOTO.equals(name)) {
+			if (noto == null) {
+				noto = Typeface.createFromAsset(context.getAssets(), "NotoSansKR-Regular.otf");
+			}
+			return noto;
+		}
+		if (FONT_ROBOTO.equals(name)) {
+			if (roboto == null) {
+				roboto = Typeface.createFromAsset(context.getAssets(), "Roboto-Regular.ttf");
+			}
+			return roboto;
+		}
+		return null;
 	}
 }
