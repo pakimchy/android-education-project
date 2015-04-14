@@ -12,7 +12,7 @@ import com.begentgroup.xmlparser.XMLParser;
 public class MovieRequest extends NetworkRequest<NaverMovies> {
 
 	String mKeyword;
-	private String URL = "http://openapi.naver.com/search?key=c1b406b32dbbbbeee5f2a36ddc14067f&query=%s&display=10&start=1&target=movie";
+	private String URL = "http://openapi.naver.com/search?key=55f1e342c5bce1cac340ebb6032c7d9a&query=%s&display=100&start=1&target=movie";
 	public MovieRequest(String keyword) {
 		mKeyword = keyword;
 	}

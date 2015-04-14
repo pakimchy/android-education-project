@@ -17,14 +17,16 @@ public class MainActivity extends ActionBarActivity {
 
 	ListView listView;
 	EditText keywordView;
-	ArrayAdapter<MovieItem> mAdapter;
+//	ArrayAdapter<MovieItem> mAdapter;
+	MyAdapter mAdapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = (ListView)findViewById(R.id.listView1);
-        mAdapter = new ArrayAdapter<MovieItem>(this, android.R.layout.simple_list_item_1);
+//        mAdapter = new ArrayAdapter<MovieItem>(this, android.R.layout.simple_list_item_1);
+        mAdapter = new MyAdapter();
         listView.setAdapter(mAdapter);
         keywordView = (EditText)findViewById(R.id.edit_keyword);
         Button btn = (Button)findViewById(R.id.btn_search);
@@ -41,9 +43,10 @@ public class MainActivity extends ActionBarActivity {
 						public void onSuccess(
 								NetworkRequest<NaverMovies> request,
 								NaverMovies result) {
-							for (MovieItem item : result.movielist) {
-								mAdapter.add(item);
-							}
+//							for (MovieItem item : result.movielist) {
+//								mAdapter.add(item);
+//							}
+							mAdapter.addAll(result.movielist);
 						}
 
 						@Override
