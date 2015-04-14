@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<preference-headers xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <header
+        android:fragment="com.example.examplepreferencesettings.SettingFragment"
+        android:summary="sync settings detail..."
+        android:title="Sync Settings" />
+    <header
+        android:fragment="com.example.examplepreferencesettings.SettingFragment"
+        android:summary="sync settings detail..."
+        android:title="Sync Settings2" />
+    <header
+        android:summary="sync settings detail..."
+        android:title="Sync Settings" >
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:data="http://www.google.com" />
+    </header>
+
+</preference-headers>
