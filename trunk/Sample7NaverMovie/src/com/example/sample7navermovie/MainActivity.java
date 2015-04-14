@@ -144,6 +144,7 @@ public class MainActivity extends ActionBarActivity {
 
 								@Override
 								public void onSuccess(NaverMovies result) {
+									mAdapter.clear();
 									mAdapter.addAll(result.movielist);
 									mAdapter.setKeyword(keyword);
 									mAdapter.setTotal(result.total);
