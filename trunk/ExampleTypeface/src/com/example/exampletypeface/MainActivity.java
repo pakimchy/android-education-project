@@ -1,7 +1,6 @@
 package com.example.exampletypeface;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -49,19 +48,24 @@ public class MainActivity extends ActionBarActivity {
 	@Override
 	public View onCreateView(String name, @NonNull Context context,
 			@NonNull AttributeSet attrs) {
-		View view = super.onCreateView(name, context, attrs);
-		if (view == null && name.equals("TextView")) {
-			TypedArray ta = context.obtainStyledAttributes(attrs, new int[] {android.R.attr.fontFamily});
-			String fontFamily = ta.getString(0);
-			ta.recycle();
-			Typeface tf = null;
-			tf = TypefaceManager.getInstance().getTypeface(context, TypefaceManager.FONT_NAME_NAUM);
-			if (tf != null) {
-				TextView tv = new TextView(context, attrs);
-				tv.setTypeface(tf);
-				view = tv;
-			}
-		}
-		return view;
+    	if (name.equals("TextView")) {
+//    		TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.fontFamily});
+//    		String fontname = ta.getString(0);
+//    		ta.recycle();
+    		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyCustomFont);
+    		String fontname = ta.getString(R.styleable.MyCustomFont_customFont);
+    		int style = ta.getInt(R.styleable.MyCustomFont_android_textStyle, Typeface.NORMAL);
+    		ta.recycle();
+    		Typeface font = TypefaceManager.getInstance().getTypeface(this, fontname);
+    		TextView tv = (TextView)super.onCreateView(name, context, attrs);
+    		if (tv == null) {
+    			tv = new TextView(context, attrs);
+    		}
+    		if (font != null) {
+    			tv.setTypeface(font,style);
+    		}
+    		return tv;
+    	}
+    	return super.onCreateView(name, context, attrs);
 	}
 }
