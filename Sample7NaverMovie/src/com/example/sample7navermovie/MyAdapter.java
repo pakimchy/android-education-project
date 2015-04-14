@@ -37,6 +37,12 @@ public class MyAdapter extends BaseAdapter {
 		}
 		return -1;
 	}
+	
+	public void clear() {
+		items.clear();
+		notifyDataSetChanged();
+	}
+	
 	public void addAll(List<MovieItem> list) {
 		items.addAll(list);
 		notifyDataSetChanged();
