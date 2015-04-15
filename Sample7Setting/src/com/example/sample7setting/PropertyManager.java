@@ -2,6 +2,7 @@ package com.example.sample7setting;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 public class PropertyManager {
 	private static PropertyManager instance;
@@ -19,7 +20,7 @@ public class PropertyManager {
 	
 	private PropertyManager() {
 		Context context = MyApplication.getContext();
-		mPrefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		mEditor = mPrefs.edit();
 	}
 	
