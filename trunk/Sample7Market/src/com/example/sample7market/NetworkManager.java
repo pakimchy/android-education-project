@@ -105,4 +105,34 @@ public class NetworkManager {
 		});
 		
 	}
+	
+	public static final String DETAIL_URL = SERVER + "/11st/common/products/%s";
+	
+	public void getProductDetail(Context context, int productCode, final OnResultListener<ProductDetail> listener) {
+		String url = String.format(DETAIL_URL, ""+productCode);
+		RequestParams params = new RequestParams();
+		params.put("version", "1");
+		
+		Header[] headers = new Header[2];
+		headers[0] = new BasicHeader("Accept", "application/json");
+		headers[1] = new BasicHeader("appKey", "48c9c3df-13a2-34cd-ba58-4cc714287efe");
+		
+		client.get(context, url, headers, params, new TextHttpResponseHandler() {
+			
+			@Override
+			public void onSuccess(int statusCode, Header[] headers,
+					String responseString) {
+				Gson gson = new Gson();
+				ProductInfoResult result = gson.fromJson(responseString, ProductInfoResult.class);
+				listener.onSuccess(result.productInfo.product);
+			}
+			
+			@Override
+			public void onFailure(int statusCode, Header[] headers,
+					String responseString, Throwable throwable) {
+				listener.onFail(statusCode);
+			}
+		});
+		
+	}
 }

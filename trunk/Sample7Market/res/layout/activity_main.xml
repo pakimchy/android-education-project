@@ -35,13 +35,18 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Search" />
-
     </LinearLayout>
 
-    <ListView
-        android:id="@+id/listView1"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-    </ListView>
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </LinearLayout>
