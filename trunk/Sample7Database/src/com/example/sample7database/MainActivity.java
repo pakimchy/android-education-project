@@ -1,9 +1,10 @@
 package com.example.sample7database;
 
-import java.util.List;
-
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Telephony.Mms.Addr;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,28 +15,43 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.example.sample7database.DBConstant.AddressTable;
+
 
 public class MainActivity extends ActionBarActivity {
 
 	ListView listView;
 	ArrayAdapter<ItemData> mAdapter;
+	SimpleCursorAdapter mCursorAdapter;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         listView = (ListView)findViewById(R.id.listView1);
-        mAdapter = new ArrayAdapter<ItemData>(this, android.R.layout.simple_list_item_1);
-        listView.setAdapter(mAdapter);
+//        mAdapter = new ArrayAdapter<ItemData>(this, android.R.layout.simple_list_item_1);
+//        listView.setAdapter(mAdapter);
+        String[] from = {AddressTable.NAME, AddressTable.EMAIL, AddressTable.PHONE, AddressTable.ADDRESS};
+        int[] to = {R.id.text_name, R.id.text_email, R.id.text_phone, R.id.text_address};
+        mCursorAdapter = new SimpleCursorAdapter(this, R.layout.item_address, null, from, to, 0);
+        listView.setAdapter(mCursorAdapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ItemData item = (ItemData)listView.getItemAtPosition(position);
+//				ItemData item = (ItemData)listView.getItemAtPosition(position);
+				Cursor c = (Cursor)listView.getItemAtPosition(position);
+				ItemData item = new ItemData();
+				item.id = c.getLong(c.getColumnIndex(AddressTable._ID));
+				item.name = c.getString(c.getColumnIndex(AddressTable.NAME));
+				item.email = c.getString(c.getColumnIndex(AddressTable.EMAIL));
+				item.phone = c.getString(c.getColumnIndex(AddressTable.PHONE));
+				item.address = c.getString(c.getColumnIndex(AddressTable.ADDRESS));
 				Intent intent = new Intent(MainActivity.this, ContentActivity.class);
 				intent.putExtra(ContentActivity.EXTRA_ITEM, item);
 				startActivity(intent);
+				
 			}
 		});
         Button btn = (Button)findViewById(R.id.btn_add);
@@ -52,11 +68,13 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
     	super.onResume();
-    	mAdapter.clear();
-    	List<ItemData> list = DBManager.getInstance().getList(null);
-    	for (ItemData item : list) {
-    		mAdapter.add(item);
-    	}
+//    	mAdapter.clear();
+//    	List<ItemData> list = DBManager.getInstance().getList(null);
+//    	for (ItemData item : list) {
+//    		mAdapter.add(item);
+//    	}
+    	Cursor c = DBManager.getInstance().getCursor(null);
+    	mCursorAdapter.changeCursor(c);
     }
 
 
