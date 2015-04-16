@@ -45,16 +45,7 @@ public class DBManager extends SQLiteOpenHelper implements AddressTable {
 	
 	public List<ItemData> getList(String keyword) {
 		List<ItemData> list = new ArrayList<ItemData>();
-		String[] columns = {_ID, NAME, EMAIL, PHONE ,ADDRESS};
-		String selection = null;
-		String[] selectionArgs = null;
-		String orderBy = NAME+" ASC";
-		if (keyword != null && !keyword.equals("")) {
-			selection = NAME+" LIKE ? AND "+ADDRESS+" LIKE ?";
-			selectionArgs = new String[] {"%"+keyword + "%","%"+keyword + "%"};
-		}
-		SQLiteDatabase db = getReadableDatabase();
-		Cursor c = db.query(TABLE, columns, selection, selectionArgs, null, null, orderBy);
+		Cursor c = getCursor(keyword);
 		while(c.moveToNext()) {
 			ItemData d = new ItemData();
 			d.id = c.getLong(c.getColumnIndex(_ID));
@@ -66,6 +57,19 @@ public class DBManager extends SQLiteOpenHelper implements AddressTable {
 		}
 		c.close();
 		return list;
+	}
+	
+	public Cursor getCursor(String keyword) {
+		String[] columns = {_ID, NAME, EMAIL, PHONE ,ADDRESS};
+		String selection = null;
+		String[] selectionArgs = null;
+		String orderBy = NAME+" ASC";
+		if (keyword != null && !keyword.equals("")) {
+			selection = NAME+" LIKE ? AND "+ADDRESS+" LIKE ?";
+			selectionArgs = new String[] {"%"+keyword + "%","%"+keyword + "%"};
+		}
+		SQLiteDatabase db = getReadableDatabase();
+		return db.query(TABLE, columns, selection, selectionArgs, null, null, orderBy);
 	}
 
 	public long addItem(ItemData item) {
