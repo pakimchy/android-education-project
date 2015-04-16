@@ -3,8 +3,8 @@ package com.example.sample7database;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.provider.Telephony.Mms.Addr;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,6 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.sample7database.DBConstant.AddressTable;
 
@@ -23,6 +24,7 @@ public class MainActivity extends ActionBarActivity {
 	ListView listView;
 	ArrayAdapter<ItemData> mAdapter;
 	SimpleCursorAdapter mCursorAdapter;
+	int nameIndex = -1, emailIndex = -1, phoneIndex = -1, addressIndex = -1;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,19 @@ public class MainActivity extends ActionBarActivity {
         String[] from = {AddressTable.NAME, AddressTable.EMAIL, AddressTable.PHONE, AddressTable.ADDRESS};
         int[] to = {R.id.text_name, R.id.text_email, R.id.text_phone, R.id.text_address};
         mCursorAdapter = new SimpleCursorAdapter(this, R.layout.item_address, null, from, to, 0);
+        mCursorAdapter.setViewBinder(new ViewBinder() {
+			
+			@Override
+			public boolean setViewValue(View view, Cursor cursor, int columnIndex) {
+				if (columnIndex == nameIndex) {
+					TextView nameView = (TextView)view;
+					String name = cursor.getString(columnIndex);
+					nameView.setText("name : " + name);
+					return true;
+				}
+				return false;
+			}
+		});
         listView.setAdapter(mCursorAdapter);
         listView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -74,6 +89,10 @@ public class MainActivity extends ActionBarActivity {
 //    		mAdapter.add(item);
 //    	}
     	Cursor c = DBManager.getInstance().getCursor(null);
+    	nameIndex = c.getColumnIndex(AddressTable.NAME);
+    	emailIndex = c.getColumnIndex(AddressTable.EMAIL);
+    	phoneIndex = c.getColumnIndex(AddressTable.PHONE);
+    	addressIndex = c.getColumnIndex(AddressTable.ADDRESS);
     	mCursorAdapter.changeCursor(c);
     }
 
