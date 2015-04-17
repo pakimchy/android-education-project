@@ -4,11 +4,15 @@ import java.io.IOException;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -21,8 +25,13 @@ public class MainActivity extends ActionBarActivity {
 		PREPARED,
 		STARTED,
 		PAUSED,
-		STOPPED
+		STOPPED,
+		END
 	}
+	
+	Handler mHandler = new Handler(Looper.getMainLooper());
+	SeekBar progressView;
+	boolean isTouchProgress = false;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +39,35 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
         mState = PlayState.PREPARED;
-        
+        progressView = (SeekBar)findViewById(R.id.seek_progress);
+        int duration = mPlayer.getDuration();
+        progressView.setMax(duration);
+        progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			int progress;
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				if (progress != -1) {
+					if (mState == PlayState.STARTED) {
+						mPlayer.seekTo(progress);
+					} 
+				}
+				isTouchProgress = false;
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				progress = -1;
+				isTouchProgress = true;
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					this.progress = progress;
+				}
+			}
+		});
         Button btn = (Button)findViewById(R.id.btn_play);
         btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -65,9 +102,23 @@ public class MainActivity extends ActionBarActivity {
     	if (mPlayer != null) {
     		mPlayer.release();
     		mPlayer = null;
+    		mState = PlayState.END;
     	}
     }
 
+    Runnable updateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (mState == PlayState.STARTED) {
+				if (!isTouchProgress) {
+					int position = mPlayer.getCurrentPosition();
+					progressView.setProgress(position);
+				}
+				mHandler.postDelayed(this, 100);
+			}
+		}
+	};
     private void start() {
     	if (mState == PlayState.INITIIALIZED || mState == PlayState.STOPPED) {
     		try {
@@ -81,8 +132,10 @@ public class MainActivity extends ActionBarActivity {
     	}
     	
     	if (mState == PlayState.PREPARED || mState == PlayState.PAUSED) {
+    		mPlayer.seekTo(progressView.getProgress());
     		mPlayer.start();
     		mState = PlayState.STARTED;
+    		mHandler.post(updateRunnable);
     	}
     }
     
@@ -97,6 +150,7 @@ public class MainActivity extends ActionBarActivity {
     	if (mState == PlayState.STARTED || mState == PlayState.PAUSED) {
     		mPlayer.stop();
     		mState = PlayState.STOPPED;
+    		progressView.setProgress(0);
     	}
     }
     @Override
