@@ -1,0 +1,105 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.sampletransitionactivity.MainActivity" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ball"
+        android:transitionName="hero" />
+
+    <TextView
+        android:id="@+id/start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" />
+    
+    <LinearLayout android:layout_height="0px"
+                  android:layout_width="match_parent"
+                  android:layout_weight="2"
+                  android:orientation="vertical"
+            >
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Ducky"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Woot!"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Ball"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Block"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Jelly Bean"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Mug"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Pencil"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+        <View android:layout_width="match_parent"
+              android:layout_height="2dp"
+              android:background="#808080"/>
+        <TextView android:layout_height="wrap_content"
+                  android:layout_width="match_parent"
+                  android:text="Scissors"
+                  android:textSize="30sp"
+                  android:textColor="#FFF"
+                />
+
+    </LinearLayout>
+    
+</LinearLayout>
