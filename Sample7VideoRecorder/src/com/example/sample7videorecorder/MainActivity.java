@@ -6,6 +6,7 @@ import java.io.IOException;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.AudioEncoder;
 import android.media.MediaRecorder.AudioSource;
@@ -35,6 +36,7 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
 	SurfaceHolder mHolder;
 	Gallery gallery;
 	MyAdapter mAdapter;
+	Camera mCamera;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,9 +70,18 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     
     File mSaveFile;
     
+    int[] orientation = {90, 0, 270, 180};
+    
     private void startRecording() {
     	if (!isRecording) {
     		mRecorder = new MediaRecorder();
+    		
+    		mCamera = Camera.open();
+    		int rotation = getWindowManager().getDefaultDisplay().getRotation();
+    		mCamera.setDisplayOrientation(orientation[rotation]);
+    		mCamera.unlock();
+    		mRecorder.setCamera(mCamera);
+    		
     		mRecorder.setAudioSource(AudioSource.MIC);
     		mRecorder.setVideoSource(VideoSource.CAMERA);
     		
@@ -111,6 +122,9 @@ public class MainActivity extends ActionBarActivity implements SurfaceHolder.Cal
     		mRecorder.stop();
     		mRecorder.release();
     		mRecorder = null;
+    		
+    		mCamera.release();
+    		mCamera = null;
     		
     		addToMediaStore();
     		isRecording = false;
