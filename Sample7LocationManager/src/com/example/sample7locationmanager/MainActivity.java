@@ -1,8 +1,14 @@
 package com.example.sample7locationmanager;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -13,18 +19,29 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity {
 
 	LocationManager mLM;
 	String mProvider;
+	ListView listView;
+	ArrayAdapter<Address> mAdapter;
+	EditText keywordView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		listView = (ListView)findViewById(R.id.listView1);
+		mAdapter = new ArrayAdapter<Address>(this, android.R.layout.simple_list_item_1);
+		listView.setAdapter(mAdapter);
+		keywordView = (EditText)findViewById(R.id.edit_keyword);
+		
 		mProvider = LocationManager.GPS_PROVIDER;
 		mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		
@@ -37,6 +54,18 @@ public class MainActivity extends ActionBarActivity {
 				intent.putExtra("count", 10);
 				PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 				mLM.requestSingleUpdate(mProvider, pi);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					geocoding(keyword);
+				}
 			}
 		});
 	}
@@ -70,9 +99,42 @@ public class MainActivity extends ActionBarActivity {
 							+ location.getLongitude(), Toast.LENGTH_SHORT)
 					.show();
 			mLM.removeUpdates(this);
+			reverseGeocoding(location.getLatitude(), location.getLongitude());
 		}
 	};
+	
+	private void reverseGeocoding(double lat, double lng) {
+		if (Geocoder.isPresent()) {
+			Geocoder geo = new Geocoder(this, Locale.KOREAN);
+			try {
+				List<Address> addresses = geo.getFromLocation(lat, lng, 10);
+				mAdapter.clear();
+				for (Address addr : addresses) {
+					mAdapter.add(addr);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
 
+	private void geocoding(String keyword) {
+		if (Geocoder.isPresent()) {
+			Geocoder geo = new Geocoder(this, Locale.KOREAN);
+			try {
+				List<Address> addresses = geo.getFromLocationName(keyword, 10);
+				mAdapter.clear();
+				for (Address addr : addresses) {
+					mAdapter.add(addr);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
 	boolean isFirst = true;
 	@Override
 	protected void onStart() {
