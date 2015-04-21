@@ -13,12 +13,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -68,8 +71,36 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
+		
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Address addr = (Address)listView.getItemAtPosition(position);
+				addProximity(addr);
+			}
+		});
 	}
 
+	private void addProximity(Address addr) {
+		int aid = DataManager.addAddress(addr);
+		Intent intent = new Intent(this, ProximityService.class);
+		intent.setData(Uri.parse("myscheme://com.example.sample7locationmanager/"+aid));
+		intent.putExtra("address", addr);
+		PendingIntent pi = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		long expiration = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+		mLM.addProximityAlert(addr.getLatitude(), addr.getLongitude(), 100, expiration, pi);
+	}
+	
+	private void removeProximity(Address addr) {
+		int aid = DataManager.getId(addr);
+		Intent intent = new Intent(this, ProximityService.class);
+		intent.setData(Uri.parse("myscheme://com.example.sample7locationmanager/"+aid));
+		PendingIntent pi = PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+		mLM.removeProximityAlert(pi);
+	}
+	
 	LocationListener mListener = new LocationListener() {
 
 		@Override
