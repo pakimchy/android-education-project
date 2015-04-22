@@ -8,10 +8,14 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
@@ -24,6 +28,7 @@ import com.example.sample7googlemap.NetworkManager.OnResultListener;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -88,10 +93,53 @@ public class MainActivity extends ActionBarActivity implements
 					int position, long id) {
 				POI poi = (POI)listView.getItemAtPosition(position);
 				Marker marker = mMarkerResolver.get(poi);
-				moveMap(marker.getPosition().latitude, marker.getPosition().longitude);
-				marker.showInfoWindow();
+//				marker.showInfoWindow();
+				if (mAnimateRunnable != null) {
+					mHandler.removeCallbacks(mAnimateRunnable);
+					mAnimateRunnable = null;
+				}
+				mAnimateRunnable = new AnimateRunnable(marker);
+				moveMap(marker.getPosition().latitude, marker.getPosition().longitude, new Runnable() {
+					
+					@Override
+					public void run() {
+						mHandler.post(mAnimateRunnable);
+					}
+				});
 			}
 		});
+    }
+    
+    Handler mHandler = new Handler(Looper.getMainLooper());
+    AnimateRunnable mAnimateRunnable = null;
+    
+    class AnimateRunnable implements Runnable {
+    	Marker marker;
+    	long startTime = -1;
+    	BounceInterpolator interpolator;
+    	
+    	public AnimateRunnable(Marker marker) {
+    		this.marker = marker;
+    		interpolator = new BounceInterpolator();
+    	}
+    	
+    	@Override
+    	public void run() {
+    		long currentTime = SystemClock.uptimeMillis();
+    		if (startTime == -1) {
+    			startTime = currentTime;
+    			marker.showInfoWindow();
+    		}
+    		float interval = (float)(currentTime - startTime) / 2000;
+    		if (interval < 1) {
+    			float delta = interpolator.getInterpolation(interval);
+    			marker.setAnchor(0.5f, 2-delta);
+    			mHandler.postDelayed(this, 100);
+    		} else {
+    			marker.setAnchor(0.5f, 1);
+    			mAnimateRunnable = null;
+    		}    		
+    	}
     }
 
     private void searchPOI(String keyword) {
@@ -185,6 +233,10 @@ public class MainActivity extends ActionBarActivity implements
 		
 	}
 	private void moveMap(double lat, double lng) {
+		moveMap(lat, lng, null);
+	}
+	
+	private void moveMap(double lat, double lng, final Runnable action) {
 		if (mMap != null) {
 			LatLng latlng = new LatLng(lat, lng);
 			CameraPosition position;
@@ -201,7 +253,20 @@ public class MainActivity extends ActionBarActivity implements
 //			update = CameraUpdateFactory.zoomIn();
 			
 //			mMap.moveCamera(update);
-			mMap.animateCamera(update);
+			mMap.animateCamera(update, new CancelableCallback() {
+				
+				@Override
+				public void onFinish() {
+					if (action != null) {
+						action.run();
+					}
+				}
+				
+				@Override
+				public void onCancel() {
+					
+				}
+			});
 			
 			
 		}
