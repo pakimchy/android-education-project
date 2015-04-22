@@ -312,6 +312,7 @@ public class MainActivity extends ActionBarActivity implements
     	mMap.setOnMarkerClickListener(this);
     	mMap.setOnInfoWindowClickListener(this);
     	mMap.setOnMarkerDragListener(this);
+    	mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this, mPOIResolver));
     }
 
     @Override
