@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,6 +16,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.MeasureSpec;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,6 +24,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sample7googlemap.NetworkManager.OnResultListener;
@@ -48,11 +51,17 @@ public class MainActivity extends ActionBarActivity implements
 	ListView listView;
 	EditText keywordView;
 	ArrayAdapter<POI> mAdapter;
+	View markerView;
+	TextView nameView, addressView;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        markerView = getLayoutInflater().inflate(R.layout.info_layout, null);
+        nameView= (TextView)markerView.findViewById(R.id.text_name);
+        addressView = (TextView)markerView.findViewById(R.id.text_address);
         
         listView = (ListView)findViewById(R.id.listView1);
         keywordView = (EditText)findViewById(R.id.edit_keyword);
@@ -182,7 +191,16 @@ public class MainActivity extends ActionBarActivity implements
 		options.position(latLng);
 		options.title(poi.name);
 		options.snippet(poi.lowerAddrName);
-		options.icon(BitmapDescriptorFactory.defaultMarker());
+		
+		nameView.setText(poi.name);
+		addressView.setText(poi.lowerAddrName);
+		int widthMeasureSpec = MeasureSpec.makeMeasureSpec(300, MeasureSpec.AT_MOST);
+		int heightMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
+		markerView.measure(widthMeasureSpec, heightMeasureSpec);
+		markerView.layout(0, 0, markerView.getMeasuredWidth(), markerView.getMeasuredHeight());
+		Bitmap bm = getViewBitmap(markerView);
+
+		options.icon(BitmapDescriptorFactory.fromBitmap(bm));
 		options.anchor(0.5f, 1);
 		options.draggable(true);
 		Marker marker = mMap.addMarker(options);
@@ -362,4 +380,32 @@ public class MainActivity extends ActionBarActivity implements
 		// TODO Auto-generated method stub
 		
 	}
+	
+    private Bitmap getViewBitmap(View v) {
+        v.clearFocus();
+        v.setPressed(false);
+
+        boolean willNotCache = v.willNotCacheDrawing();
+        v.setWillNotCacheDrawing(false);
+
+        // Reset the drawing cache background color to fully transparent
+        // for the duration of this operation
+        int color = v.getDrawingCacheBackgroundColor();
+        v.setDrawingCacheBackgroundColor(0);
+
+        if (color != 0) {
+            v.destroyDrawingCache();
+        }
+        v.buildDrawingCache();
+        Bitmap cacheBitmap = v.getDrawingCache();
+
+        Bitmap bitmap = Bitmap.createBitmap(cacheBitmap);
+
+        // Restore the view
+        v.destroyDrawingCache();
+        v.setWillNotCacheDrawing(willNotCache);
+        v.setDrawingCacheBackgroundColor(color);
+
+        return bitmap;
+    }
 }
