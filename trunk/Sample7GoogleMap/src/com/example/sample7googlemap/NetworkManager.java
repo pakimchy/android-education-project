@@ -15,6 +15,7 @@ import org.apache.http.message.BasicHeader;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.MySSLSocketFactory;
 import com.loopj.android.http.PersistentCookieStore;
@@ -23,24 +24,30 @@ import com.loopj.android.http.TextHttpResponseHandler;
 
 public class NetworkManager {
 	private static NetworkManager instance;
+
 	public static NetworkManager getInstnace() {
 		if (instance == null) {
 			instance = new NetworkManager();
 		}
 		return instance;
 	}
-	
+
 	AsyncHttpClient client;
+
 	private NetworkManager() {
-		
+
 		try {
-			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			KeyStore trustStore = KeyStore.getInstance(KeyStore
+					.getDefaultType());
 			trustStore.load(null, null);
-			MySSLSocketFactory socketFactory = new MySSLSocketFactory(trustStore);
-			socketFactory.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+			MySSLSocketFactory socketFactory = new MySSLSocketFactory(
+					trustStore);
+			socketFactory
+					.setHostnameVerifier(MySSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 			client = new AsyncHttpClient();
-			client.setSSLSocketFactory(socketFactory);			
-			client.setCookieStore(new PersistentCookieStore(MyApplication.getContext()));
+			client.setSSLSocketFactory(socketFactory);
+			client.setCookieStore(new PersistentCookieStore(MyApplication
+					.getContext()));
 			client.setTimeout(30000);
 		} catch (KeyStoreException e) {
 			e.printStackTrace();
@@ -56,19 +63,20 @@ public class NetworkManager {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public HttpClient getHttpClient() {
 		return client.getHttpClient();
 	}
-	
+
 	public interface OnResultListener<T> {
 		public void onSuccess(T result);
+
 		public void onFail(int code);
 	}
-	
+
 	private static final String SERVER = "https://apis.skplanetx.com";
-	private static final String URL_POI = SERVER+"/tmap/pois";
-	
+	private static final String URL_POI = SERVER + "/tmap/pois";
+
 	public void searchPOI(Context context, String keyword,
 			final OnResultListener<SearchPoiResult> listener) {
 		RequestParams params = new RequestParams();
@@ -76,18 +84,58 @@ public class NetworkManager {
 		params.put("searchKeyword", keyword);
 		params.put("resCoordType", "WGS84GEO");
 		params.put("reqCoordType", "WGS84GEO");
-		
+
 		Header[] headers = new Header[2];
 		headers[0] = new BasicHeader("Accept", "application/json");
-		headers[1] = new BasicHeader("appKey", "458a10f5-c07e-34b5-b2bd-4a891e024c2a");
+		headers[1] = new BasicHeader("appKey",
+				"458a10f5-c07e-34b5-b2bd-4a891e024c2a");
+
+		client.get(context, URL_POI, headers, params,
+				new TextHttpResponseHandler() {
+
+					@Override
+					public void onSuccess(int statusCode, Header[] headers,
+							String responseString) {
+						Gson gson = new Gson();
+						SearchPoiResult result = gson.fromJson(responseString,
+								SearchPoiResult.class);
+						listener.onSuccess(result);
+					}
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers,
+							String responseString, Throwable throwable) {
+						listener.onFail(statusCode);
+					}
+				});
+	}
+
+	private static final String URL_CAR_ROUTE = SERVER
+			+ "/tmap/routes?version=1";
+
+	public void searchCarRoute(Context context, double startLat,
+			double startLng, double endLat, double endLng,
+			final OnResultListener<CarRouteInfo> listener) {
+		RequestParams params = new RequestParams();
+		params.put("resCoordType", "WGS84GEO");
+		params.put("reqCoordType", "WGS84GEO");
+		params.put("startX", ""+startLng);
+		params.put("startY", ""+startLat);
+		params.put("endX", ""+endLng);
+		params.put("endY", "" + endLat);
+
+		Header[] headers = new Header[2];
+		headers[0] = new BasicHeader("Accept", "application/json");
+		headers[1] = new BasicHeader("appKey",
+				"458a10f5-c07e-34b5-b2bd-4a891e024c2a");
 		
-		client.get(context, URL_POI, headers, params, new TextHttpResponseHandler() {
+		client.post(context, URL_CAR_ROUTE, headers, params, null, new TextHttpResponseHandler() {
 			
 			@Override
 			public void onSuccess(int statusCode, Header[] headers,
 					String responseString) {
-				Gson gson = new Gson();
-				SearchPoiResult result = gson.fromJson(responseString, SearchPoiResult.class);
+				Gson gson = new GsonBuilder().registerTypeAdapter(Geometry.class, new GeometryDeserializer()).create();
+				CarRouteInfo result = gson.fromJson(responseString, CarRouteInfo.class);
 				listener.onSuccess(result);
 			}
 			
@@ -97,7 +145,6 @@ public class NetworkManager {
 				listener.onFail(statusCode);
 			}
 		});
-		
 	}
 
 }
