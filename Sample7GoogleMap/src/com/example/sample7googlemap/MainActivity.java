@@ -5,6 +5,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -24,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +40,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 
 public class MainActivity extends ActionBarActivity implements
@@ -53,12 +56,13 @@ public class MainActivity extends ActionBarActivity implements
 	ArrayAdapter<POI> mAdapter;
 	View markerView;
 	TextView nameView, addressView;
-	
+	POI start, end;
+	RadioGroup group;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
+        group = (RadioGroup)findViewById(R.id.radioGroup1);
         markerView = getLayoutInflater().inflate(R.layout.info_layout, null);
         nameView= (TextView)markerView.findViewById(R.id.text_name);
         addressView = (TextView)markerView.findViewById(R.id.text_address);
@@ -117,7 +121,55 @@ public class MainActivity extends ActionBarActivity implements
 				});
 			}
 		});
+        
+        btn = (Button)findViewById(R.id.btn_route);
+        btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (start != null && end != null) {
+					NetworkManager.getInstnace().searchCarRoute(MainActivity.this, start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude(), new OnResultListener<CarRouteInfo>() {
+
+						@Override
+						public void onSuccess(CarRouteInfo result) {
+							if (result != null && result.features != null && result.features.size() > 0) {
+								CarFeature feature = result.features.get(0);
+								int totaltime = feature.properties.totalTime;
+								int totaldistance = feature.properties.totalDistance;
+								Toast.makeText(MainActivity.this, "total : " + totaltime + "," + totaldistance, Toast.LENGTH_SHORT).show();
+							}
+							
+							PolylineOptions options = new PolylineOptions();
+							for (CarFeature feature : result.features) {
+								if (feature.geometry.type.equals("LineString")) {
+									double[] coord = feature.geometry.coordinates;
+									for (int i = 0 ; i < coord.length ; i+=2) {
+										options.add(new LatLng(coord[i+1], coord[i]));
+									}
+								}
+							}
+							
+							options.width(5);
+							options.color(Color.RED);
+							
+							mMap.addPolyline(options);
+						}
+
+						@Override
+						public void onFail(int code) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
+				} else {
+					Toast.makeText(MainActivity.this, "start or end is null", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
     }
+    
+    
     
     Handler mHandler = new Handler(Looper.getMainLooper());
     AnimateRunnable mAnimateRunnable = null;
@@ -361,6 +413,14 @@ public class MainActivity extends ActionBarActivity implements
 	public void onInfoWindowClick(Marker marker) {
 		POI poi = mPOIResolver.get(marker);
 		if  (poi != null) {
+			switch(group.getCheckedRadioButtonId()) {
+			case R.id.radio_start :
+				start = poi;
+				break;
+			case R.id.radio_end :
+				end = poi;
+				break;
+			}
 			Toast.makeText(this, "poi : " + poi.name, Toast.LENGTH_SHORT).show();
 		}
 		marker.hideInfoWindow();
