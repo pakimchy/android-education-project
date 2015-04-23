@@ -80,10 +80,20 @@ public class MainActivity extends ActionBarActivity {
 				setButtonLable();
 			}
 		};
+		
+		btn = (Button)findViewById(R.id.btn_post_activity);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startActivity(new Intent(MainActivity.this, PostActivity.class));
+			}
+		});
 	}
 	
 	@Override
 	protected void onDestroy() {
+		super.onDestroy();
 		tracker.stopTracking();
 	}
 	
