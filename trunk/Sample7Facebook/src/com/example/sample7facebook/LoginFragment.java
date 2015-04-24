@@ -1,11 +1,5 @@
 package com.example.sample7facebook;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +8,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.sample7facebook.NetworkManager.OnResultListener;
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 public class LoginFragment extends Fragment {
 
@@ -34,6 +36,31 @@ public class LoginFragment extends Fragment {
 			@Override
 			public void onSuccess(LoginResult result) {
 				Toast.makeText(getActivity(), "fragment login...", Toast.LENGTH_SHORT).show();
+				AccessToken token = AccessToken.getCurrentAccessToken();
+				NetworkManager.getInstance().loginFacebook(getActivity(), token.getToken(), new OnResultListener<String>() {
+					
+					@Override
+					public void onSuccess(String result) {
+						if (result.equals("success")) {
+							AccessToken token = AccessToken.getCurrentAccessToken();
+							PropertyManager.getInstance().setFacebookId(token.getUserId());
+							startActivity(new Intent(getActivity(), MainActivity.class));
+							getActivity().finish();
+						} else if (result.equals("notregistered")) {
+							// signup activity....
+							startActivity(new Intent(getActivity(), SignupFacebookActivity.class));
+							getActivity().finish();
+						} else {
+							Toast.makeText(getActivity(), "fail...", Toast.LENGTH_SHORT).show();
+						}
+					}
+					
+					@Override
+					public void onError(int code) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 			}
 			
 			@Override

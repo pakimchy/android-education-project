@@ -7,5 +7,7 @@
     <string name="app_id">1044558095573903</string>
     <string name="title_activity_other">OtherActivity</string>
     <string name="title_activity_post">PostActivity</string>
+    <string name="title_activity_splash">SplashActivity</string>
+    <string name="title_activity_signup_facebook">SignupFacebookActivity</string>
 
 </resources>

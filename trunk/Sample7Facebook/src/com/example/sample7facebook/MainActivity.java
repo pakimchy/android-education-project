@@ -112,6 +112,7 @@ public class MainActivity extends ActionBarActivity {
 
 	private void logout() {
 		mLoginManager.logOut();
+		PropertyManager.getInstance().setFacebookId("");
 	}
 	
 	private void login() {
