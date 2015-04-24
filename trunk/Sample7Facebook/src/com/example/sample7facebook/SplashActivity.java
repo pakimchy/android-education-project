@@ -66,6 +66,7 @@ public class SplashActivity extends ActionBarActivity {
 				@Override
 				public void run() {
 					startActivity(new Intent(SplashActivity.this, OtherActivity.class));
+					finish();
 				}
 			}, 1000);
 		}
@@ -104,6 +105,7 @@ public class SplashActivity extends ActionBarActivity {
 			Toast.makeText(this, "user facebook id changed...", Toast.LENGTH_SHORT).show();
 			mLM.logOut();
 			startActivity(new Intent(this, OtherActivity.class));
+			finish();
 		}
 	}
 
