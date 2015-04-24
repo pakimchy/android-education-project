@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" android:updatePeriodMillis="1800000" android:minHeight="110dp" android:initialLayout="@layout/app_widget_layout" android:minWidth="110dp" android:previewImage="@drawable/gallery_photo_1" android:widgetCategory="home_screen">
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" android:updatePeriodMillis="0" android:minHeight="110dp" android:initialLayout="@layout/app_widget_layout" android:minWidth="110dp" android:previewImage="@drawable/gallery_photo_1" android:widgetCategory="home_screen">
     
 
 </appwidget-provider>
