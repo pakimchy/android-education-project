@@ -64,6 +64,7 @@ public class PostActivity extends ActionBarActivity {
 				if (token != null) {
 					if (token.getPermissions().contains("publish_actions")) {
 						sendPost();
+						return;
 					}
 				}
 				mLM.logInWithPublishPermissions(PostActivity.this, Arrays.asList("publish_actions"));
