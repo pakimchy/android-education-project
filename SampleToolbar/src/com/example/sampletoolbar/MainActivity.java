@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 		toolbar = (Toolbar)findViewById(R.id.toolbar);
 		setSupportActionBar(toolbar);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeAsUpIndicator(getResources().getDrawable(android.support.v7.appcompat.R.drawable.abc_ic_ab_back_mtrl_am_alpha));
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
