@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
@@ -18,6 +18,29 @@
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
         <item name="windowActionModeOverlay">true</item> 
+        <item name="toolbarStyle">@style/MyToolbar</item>
+        <item name="actionButtonStyle">@style/MyButtonStyle</item>
+        <item name="toolbarNavigationButtonStyle">@style/MyNavigationButton</item>
+        <item name="homeAsUpIndicator">@drawable/abc_ic_ab_back_mtrl_am_alpha</item>
+        <item name="colorControlNormal">?android:attr/textColorSecondary</item>
+        <item name="android:textColorSecondary">@color/abc_secondary_text_material_light</item>
     </style>
 
+    <style name="MyToolbar" parent="@style/Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="titleTextAppearance">@style/MyTitleAppearance</item>
+        <item name="collapseIcon">?attr/homeAsUpIndicator</item>
+        <item name="navigationIcon">?attr/homeAsUpIndicator</item>
+    </style>
+    <style name="MyTitleAppearance">
+        <item name="android:textSize">@dimen/abc_text_size_title_material</item>
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <style name="MyNavigationButton" parent="@style/Widget.AppCompat.Toolbar.Button.Navigation">
+        <item name="android:minWidth">24dp</item>
+    </style>
+    <style name="MyButtonStyle" parent="@style/Widget.AppCompat.ActionButton">
+        <item name="android:minHeight">64dp</item>
+    </style>    
 </resources>
