@@ -19,7 +19,7 @@
         <item name="actionButtonStyle">@style/MyButtonStyle</item>
         <item name="toolbarNavigationButtonStyle">@style/MyNavigationButton</item>
         <item name="toolbarStyle">@style/MyToolbar</item>
-        <item name="windowActionBarOverlay">true</item>
+        <item name="windowActionBarOverlay">false</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 

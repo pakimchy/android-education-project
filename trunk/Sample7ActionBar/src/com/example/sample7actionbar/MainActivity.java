@@ -21,6 +21,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setDisplayHomeAsUpEnabled(true);
 //        actionBar.setDisplayShowHomeEnabled(true);
 //        actionBar.setIcon(R.drawable.ic_launcher);
